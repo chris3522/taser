@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/taser-app/static/css/main.c13a211e.chunk.css",
+    "main.js": "/taser-app/static/js/main.5803c479.chunk.js",
+    "main.js.map": "/taser-app/static/js/main.5803c479.chunk.js.map",
+    "runtime-main.js": "/taser-app/static/js/runtime-main.e4e904ce.js",
+    "runtime-main.js.map": "/taser-app/static/js/runtime-main.e4e904ce.js.map",
+    "static/css/2.72cb3470.chunk.css": "/taser-app/static/css/2.72cb3470.chunk.css",
+    "static/js/2.cd145c8a.chunk.js": "/taser-app/static/js/2.cd145c8a.chunk.js",
+    "static/js/2.cd145c8a.chunk.js.map": "/taser-app/static/js/2.cd145c8a.chunk.js.map",
+    "index.html": "/taser-app/index.html",
+    "precache-manifest.56dd0aa60c8561763a3daf4482015cac.js": "/taser-app/precache-manifest.56dd0aa60c8561763a3daf4482015cac.js",
+    "service-worker.js": "/taser-app/service-worker.js",
+    "static/css/2.72cb3470.chunk.css.map": "/taser-app/static/css/2.72cb3470.chunk.css.map",
+    "static/css/main.c13a211e.chunk.css.map": "/taser-app/static/css/main.c13a211e.chunk.css.map",
+    "static/js/2.cd145c8a.chunk.js.LICENSE.txt": "/taser-app/static/js/2.cd145c8a.chunk.js.LICENSE.txt",
+    "static/media/semantic.min.css": "/taser-app/static/media/outline-icons.ef60a4f6.woff"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.e4e904ce.js",
+    "static/css/2.72cb3470.chunk.css",
+    "static/js/2.cd145c8a.chunk.js",
+    "static/css/main.c13a211e.chunk.css",
+    "static/js/main.5803c479.chunk.js"
+  ]
+}
