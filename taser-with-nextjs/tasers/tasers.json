@@ -1,0 +1,12 @@
+{
+   "tasers":{
+      "numberOfTasers" : "4",
+      "byId":{
+         "1":{"name":"Par","auth":false,"id":"1", "desc":"Taser des Pars"},
+         "2":{"name":"Cpr","auth":false,"id":"2", "desc":"Taser des Cprs"}
+      },
+      "allIds":[
+         "1","2"
+      ]
+   }
+}

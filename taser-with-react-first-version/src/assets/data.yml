@@ -1,0 +1,19 @@
+store:
+  - taserName: "Par"
+    taserDays:
+        -   dayDate: "2020-06-10"
+            dayWorks:
+                -   user: "jean"
+                    vacation: "jPar"
+    users:
+        -   name: "jean"
+            id: "1234"
+            partialTime:
+            -   quotite: 100
+                startDate: "2018-06-10"
+                endDate: null
+    vacations:
+        -   name: "jPar"
+            shortKey: "p"
+            isNeeded: True
+            

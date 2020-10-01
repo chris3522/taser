@@ -1,0 +1,19 @@
+.inputCell {
+    max-width: 54px;
+    max-height: 20px;
+    /*font-size: 12px;*/
+    text-align: center;
+   
+}
+
+.dismissBorderCell{
+     border :1px solid #d2cbcb;
+}
+
+.borderCell{
+     border :1px solid black;
+}
+
+textarea:focus, input:focus{
+    outline: none;
+}

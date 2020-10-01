@@ -1,0 +1,44 @@
+{
+   "desideratas":{
+      "byId":{
+         "0":{
+            "name":"Aucun",
+            "color":"white",
+            "shortKey":"x"
+         },
+         "1":{
+            "name":"Congés",
+            "color":"#CC3330",
+            "shortKey":"c"
+         },
+         "xxxxJN":{
+            "name":"Jour et nuit libre",
+            "color":"#FF3399",
+            "shortKey":"x"
+         },
+         "xxxxJ":{
+            "name":"Jour libre",
+            "color":"#FFFF00",
+            "shortKey":"x"
+         },
+         "xxxxN":{
+            "name":"Nuit libre",
+            "color":"#55FFEE",
+            "shortKey":"x"
+         },
+         "z":{
+            "name":"Aucun",
+            "color":"white",
+            "shortKey":"q"
+         }
+      },
+      "allIds":[
+         "0",
+         "1",
+         "xxxxJN",
+         "xxxxJ",
+         "xxxxN",
+         "z"
+      ]
+   }
+}

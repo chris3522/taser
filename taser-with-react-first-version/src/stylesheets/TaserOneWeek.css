@@ -1,0 +1,46 @@
+.mainTaser{
+    border : 1px solid black;
+    padding-top: 5px;
+    padding-bottom:10px;
+    margin: 10px 0;
+}
+
+.activeCell{
+    color: white;
+    background-color: #4A90E2;
+    border-radius: 50%;
+    vertical-align: middle;
+    text-align: center;
+    padding : 3px;
+   /* padding: 8px;
+    width: 30px;
+    margin: 6px;*/
+}
+.noActiveCell{
+    text-align: center;
+   /* padding: 8px;
+   
+    width: 30px;
+    margin: 6px;*/
+}
+
+.weekEndStyle > span {
+    color: #CC3330;
+}
+.ui.compact.table td {
+    padding:0 !important;
+   
+}
+
+.ui.table thead th {
+    padding:5px !important;
+}
+
+.ui.small.table {
+    max-width :70px;
+    font-size: .85em;
+}
+
+.ui.blue.table {
+    border-top: .4em solid #4A90E2;
+}
