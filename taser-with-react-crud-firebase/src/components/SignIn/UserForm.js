@@ -14,9 +14,9 @@ const Input = ({ value, onChange, ...props }) =>
     />
 
 const SubmitButton = props =>
-    <button {...props}>submit</button>
+<button {...props} className="u-full-width" >{props.children}</button>
 
-const UserForm = ({ onClick }) => {
+const UserForm = ({ onClick, children }) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const handleClick = (e) => {
@@ -24,18 +24,11 @@ const UserForm = ({ onClick }) => {
         onClick(email, password)
     }
 
-
     return (
-        <div className="row">
-            <Field>
-                <label>Email</label> 
-                <Input value={email} onChange={setEmail} type="email" placeholder="test@mailbox.com"/>
-            </Field>
-            <Field>
-                <label>Password</label> 
-                <Input value={password} onChange={setPassword} type="password" />
-            </Field>
-            <SubmitButton onClick={handleClick} />
+        <div >
+            <Input value={email} onChange={setEmail} type="email" placeholder="test@mailbox.com"/>
+            <Input value={password} onChange={setPassword} type="password" placeholder="*******"/>   
+            <SubmitButton onClick={handleClick} >{children}</SubmitButton>
         </div>
     )
 }

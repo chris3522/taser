@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import './index.css'
+import 'skeleton-css/css/skeleton.css'
 import { App } from "components"
 import * as serviceWorker from './serviceWorker'
 

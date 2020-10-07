@@ -1,20 +1,18 @@
 import React from 'react'
-import 'skeleton-css/css/skeleton.css'
-
-const name = 'Tableaux de Service'
-export const siteTitle = 'tableaux de Service'
+import Head from './Head'
 
 const Layout = ({ children, home }) => {
   return ( 
-        /*<head>
-            <link rel="icon" href="/favicon.ico" />
-            <meta
-            name="description"
-            content="Tableau de service"
-            />
-        </head>*/
-        <div className={ "container" }>
+        <div className="container">
+            <Head>
+                <meta
+                name="description"
+                content="Tableau de service"
+                />
+                <title>Tableau de Service</title>
+            </Head>
             <header >
+                <h1>Tableau de service</h1>
             </header>
             <main>{children}</main>
             <footer >
