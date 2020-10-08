@@ -21,7 +21,7 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
     return (
         <Layout>
             {user && (
-                <div>
+                <header>
                     <Link to="#log-out" onClick={() => {
                         signOut()
                         //navigate("/");
@@ -30,7 +30,7 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
                         Log Out
                     </Link>
                     {user.photoURL && (<img alt="Profile" src={user.photoURL} className="avatar" />)}
-                </div>
+                </header>
             )}
             <Router>
                 <SignIn

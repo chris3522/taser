@@ -1,9 +1,5 @@
+//A version of UserForm with useState
 import React, { useState } from 'react'
-
-const Field = ({ children }) =>
-    <div className="six columns">
-        {children}
-    </div>
 
 const Input = ({ value, onChange, ...props }) =>
     <input 

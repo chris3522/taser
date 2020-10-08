@@ -2,7 +2,7 @@
 
 import React from "react"
 import { navigate } from "@reach/router"
-import UserForm from "./UserForm"
+import UserForm2 from "./UserForm2"
 
 const SignIn = ({ user, signIns: { signInWithGoogle, signInWithEmailAndPassword } }) => {
     if (user) {
@@ -16,7 +16,7 @@ const SignIn = ({ user, signIns: { signInWithGoogle, signInWithEmailAndPassword 
                     <button onClick={signInWithGoogle} className="u-full-width">Connexion avec Google</button>
                 </div>
                 <div className="six columns">
-                    <UserForm onClick={signInWithEmailAndPassword}>Connexion avec Email</UserForm>
+                    <UserForm2 onClick={signInWithEmailAndPassword}>Connexion avec Email</UserForm2>
                 </div>
             </div>
         )
