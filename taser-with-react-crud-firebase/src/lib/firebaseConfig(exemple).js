@@ -1,0 +1,10 @@
+/* src/lib/firebaseConfig.js */
+  export default  {
+    apiKey: "###################",
+    authDomain: "###################",
+    databaseURL: "###################",
+    projectId: "###################",
+    storageBucket: "###################",
+    messagingSenderId: "###################",
+    appId: "###################"
+  }

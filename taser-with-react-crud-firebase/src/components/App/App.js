@@ -13,14 +13,14 @@ const createComponentWithAuth = withFirebaseAuth({
 })
 
 const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) => {
-  /*  useEffect(() => {
-        if (!user) {
-            //navigate("/")
-        }
-    }, [user])*/
+    /*  useEffect(() => {
+          if (!user) {
+              //navigate("/")
+          }
+      }, [user])*/
     //A un user loggé en admin correspond un tableau de service
     return (
-        <Layout>
+        <Layout user={user}>
             {user && (
                 <header>
                     <div className="user-profile">

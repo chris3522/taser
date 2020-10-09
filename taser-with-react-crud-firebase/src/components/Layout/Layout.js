@@ -1,7 +1,8 @@
 import React from 'react'
 import Head from './Head'
+import * as h from "../../lib/helpers"
 
-const Layout = ({ children, home }) => {
+const Layout = ({ children, home, user }) => {
     return (
         <div className="container">
             <Head>
@@ -12,7 +13,8 @@ const Layout = ({ children, home }) => {
                 <title>Tableau de Service</title>
             </Head>
             <header className="header">
-                <h2>Tableaux de service</h2>
+                <h2>Tableaux de service  {user && user.email && (<span>{`/`}</span>)}</h2>
+                {user && user.email && (<h5>{`${h.slugify(user.email)}`}</h5>)}
                 {
                     React.Children.map(children, (child, i) => {
                         if (child && child.type === 'header') return child.props.children

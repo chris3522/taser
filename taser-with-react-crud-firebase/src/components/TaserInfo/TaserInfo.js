@@ -1,62 +1,113 @@
 /* src/components/TaserInfo/TaserInfo.js */
-import React, { useState, useEffect } from "react"
+import React, { useEffect, useRef } from "react"
 import useSWR, { mutate } from "swr"
-import { db } from "lib/firebase"
-import { Link, navigate } from "@reach/router"
+import { navigate } from "@reach/router"
 import "./TaserInfo.css"
 import * as libInfo from "../../lib/getTaserInfo"
 import * as h from "../../lib/helpers"
 //A faire
-//utiliser useRef
-//ajouter des inputs
 //css form reutilisable
 
 const TaserInfo = ({ user, className }) => {
-    const [taserName, setTaserName] = useState("")
-    const { data, error } = useSWR(h.slugify(user.email), libInfo.getTaserInfo)
-
     useEffect(() => {
         if (!user) {
             navigate("/admin")
         }
     }, [user])
 
+    const taserId = h.slugify(user.email)
+    const { data, error } = useSWR(taserId, libInfo.getTaserInfo)
+
+    const inputTaserName = useRef(null)
+    const inputTaserDesc = useRef(null)
+    const inputTaserNumberOfDays = useRef(null)
+    const inputTaserNumberOfTasers = useRef(null)
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        if (taserId) {
+            libInfo.createInfo(
+                taserId,
+                inputTaserName.current.value,
+                inputTaserDesc.current.value,
+                inputTaserNumberOfDays.current.value,
+                inputTaserNumberOfTasers.current.value
+            )
+            mutate(taserId)
+        }
+    }
+
     if (error) return <p>Error loading data!</p>
     else if (!data) return <p>Loading...</p>
     else {
+        let dataDefautName = ""
+        if (data[0] && data[0].name && dataDefautName !== data[0].name) {
+            dataDefautName = data[0].name
+        }
+        let dataDefautDesc = ""
+        if (data[0] && data[0].desc && dataDefautDesc !== data[0].desc) {
+            dataDefautDesc = data[0].desc
+        }
+        let dataDefautNumberOfDays = ""
+        if (data[0] && data[0].numberOfDays && dataDefautNumberOfDays !== data[0].numberOfDays) {
+            dataDefautNumberOfDays = data[0].numberOfDays
+        }
+        let dataDefautNumberOfTasers = ""
+        if (data[0] && data[0].numberOfTasers && dataDefautNumberOfTasers !== data[0].numberOfTasers) {
+            dataDefautNumberOfTasers = data[0].numberOfTasers
+        }
         return (
             <div className={`${className}`}>
-                <form
-                    onSubmit={(e) => {
-                        e.preventDefault()
-                        if (taserName) {
-                            setTaserName("")
-                            libInfo.createInfo("NewTaserId", taserName)
-                            mutate("NewTaserId")
-                        }
-                    }}
-
-                >
+                <form onSubmit={handleSubmit}>
+                    <label>id</label>
                     <input
                         className="u-full-width"
                         type="text"
-                        placeholder="Le nom de votre tableau de service..."
-                        value={taserName}
-                        onChange={(e) => setTaserName(e.target.value)}
+                        value={taserId}
+                        readOnly={true}
                     />
-                    <button type="submit">Create</button>
+                    <label>Titre</label>
+                    <input
+                        className="u-full-width"
+                        type="text"
+                        placeholder="*Titre du tableau..."
+                        required
+                        defaultValue={dataDefautName}
+                        ref={inputTaserName}
+                    />
+                    <label>Description</label>
+                    <input
+                        className="u-full-width"
+                        type="text"
+                        placeholder="Description courte de votre tableau..."
+                        defaultValue={dataDefautDesc}
+                        ref={inputTaserDesc}
+                    />
+                    <label>Longueur d'un tableau (7 jours par défaut)</label>
+                    <input
+                        className="u-full-width"
+                        type="text"
+                        placeholder="Longueur d'un tableau (en jours)..."
+                        defaultValue={dataDefautNumberOfDays}
+                        ref={inputTaserNumberOfDays}
+                    />
+                    <label>Nombre de taleaux affichés sur une page (4 par défaut)</label>
+                    <input
+                        className="u-full-width"
+                        type="text"
+                        placeholder="Nombre de taleaux affichés sur une page..."
+                        defaultValue={dataDefautNumberOfTasers}
+                        ref={inputTaserNumberOfTasers}
+                    />
+                    <button type="submit">Create or Update</button>
                 </form>
-                <ul className="files-list">
-                    {data.map((info) => {
+                <div className={`${className}`}>
+                    {data[0] && data[0].id && data.map((info) => {
                         return (
-                            <li key={info.id} className="file">
-                                <Link to={`/user/NewTaserId/editor/${info.id}`} className="link">
-                                    {info.name}
-                                </Link>
-                            </li>
+                            info.id && (<div key={info.id}>{`${info.name} ${info.desc}`}</div>)
                         )
                     })}
-                </ul>
+                </div>
             </div>
         )
     }
