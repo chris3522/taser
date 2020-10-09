@@ -6,15 +6,18 @@ import { Link, navigate } from "@reach/router"
 import "./TaserInfo.css"
 import * as libInfo from "../../lib/getTaserInfo"
 import * as h from "../../lib/helpers"
+//A faire
+//utiliser useRef
+//ajouter des inputs
+//css form reutilisable
 
-
-const TaserInfo = ({ user }) => {
+const TaserInfo = ({ user, className }) => {
     const [taserName, setTaserName] = useState("")
     const { data, error } = useSWR(h.slugify(user.email), libInfo.getTaserInfo)
 
     useEffect(() => {
         if (!user) {
-            navigate("/")
+            navigate("/admin")
         }
     }, [user])
 
@@ -22,7 +25,7 @@ const TaserInfo = ({ user }) => {
     else if (!data) return <p>Loading...</p>
     else {
         return (
-            <div>
+            <div className={`${className}`}>
                 <form
                     onSubmit={(e) => {
                         e.preventDefault()
@@ -32,17 +35,16 @@ const TaserInfo = ({ user }) => {
                             mutate("NewTaserId")
                         }
                     }}
-                    className="new-file-form"
+
                 >
                     <input
+                        className="u-full-width"
                         type="text"
-                        placeholder="Your new taser name..."
+                        placeholder="Le nom de votre tableau de service..."
                         value={taserName}
                         onChange={(e) => setTaserName(e.target.value)}
                     />
-                    <button type="submit" className="add-button">
-                        Create
-          </button>
+                    <button type="submit">Create</button>
                 </form>
                 <ul className="files-list">
                     {data.map((info) => {

@@ -7,12 +7,12 @@ const Layout = ({ children, home }) => {
             <Head>
                 <meta
                     name="description"
-                    content="Tableau de service"
+                    content="Tableaux de service"
                 />
                 <title>Tableau de Service</title>
             </Head>
-            <header >
-                <h1>Tableau de service</h1>
+            <header className="header">
+                <h2>Tableaux de service</h2>
                 {
                     React.Children.map(children, (child, i) => {
                         if (child && child.type === 'header') return child.props.children

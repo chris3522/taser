@@ -13,32 +13,35 @@ const createComponentWithAuth = withFirebaseAuth({
 })
 
 const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) => {
-    useEffect(() => {
+  /*  useEffect(() => {
         if (!user) {
-            navigate("/")
+            //navigate("/")
         }
-    }, [user])
+    }, [user])*/
+    //A un user loggé en admin correspond un tableau de service
     return (
         <Layout>
             {user && (
                 <header>
-                    <Link to="#log-out" onClick={() => {
-                        signOut()
-                        //navigate("/");
-                    }}
-                    >
-                        Log Out
-                    </Link>
-                    {user.photoURL && (<img alt="Profile" src={user.photoURL} className="avatar" />)}
+                    <div className="user-profile">
+                        <Link className="log-out-link" to="#log-out" onClick={() => {
+                            signOut()
+                            //navigate("/admin");
+                        }}
+                        >
+                            Log Out
+                        </Link>
+                        {user.photoURL && (<img alt="Profile" src={user.photoURL} className="avatar" />)}
+                    </div>
                 </header>
             )}
             <Router>
-                <SignIn
-                    path="/"
+                <SignIn className="section"
+                    path="/admin"
                     user={user}
                     signIns={{ signInWithGoogle, signInWithEmailAndPassword }}
                 />
-                {user && (<TaserInfo path="/tasers" user={user} />)}
+                {user && (<TaserInfo className="section" path="/admin/tasers" user={user} />)}
                 {/* <Editor path="taser/:taserId/editor/:infoId" />*/}
             </Router>
         </Layout>

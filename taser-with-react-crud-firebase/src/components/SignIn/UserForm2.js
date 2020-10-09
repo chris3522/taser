@@ -2,7 +2,7 @@
 import React, { useRef } from 'react'
 
 const SubmitButton = props =>
-<button {...props} className="u-full-width" >{props.children}</button>
+<button {...props} className="button log-in" >{props.children}</button>
 
 const UserForm = ({ onClick, children }) => {
     const inputEmail = useRef(null)
@@ -14,9 +14,9 @@ const UserForm = ({ onClick, children }) => {
     }
 
     return (
-        <div >
-            <input className="u-full-width" ref={inputEmail} type="email" placeholder="test@mailbox.com"/>
-            <input className="u-full-width" ref={inputPwd} type="password" placeholder="*******"/>   
+        <div className="row log-in-div">
+            <input className="log-in" ref={inputEmail} type="email" placeholder="test@mailbox.com"/>
+            <input className="log-in" ref={inputPwd} type="password" placeholder="*******"/>   
             <SubmitButton onClick={handleClick} >{children}</SubmitButton>
         </div>
     )
