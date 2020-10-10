@@ -40,7 +40,10 @@ const TaserInfo = ({ user, className }) => {
     if (error) return <p>Error loading data!</p>
     else if (!data) return <p>Loading...</p>
     else {
-        let dataDefautName = ""
+        //in one line !!!
+        const { name, desc, numberOfDays, numberOfTasers } = {...data[0]}
+        //the same in 16 lines !!!
+        /*let dataDefautName
         if (data[0] && data[0].name && dataDefautName !== data[0].name) {
             dataDefautName = data[0].name
         }
@@ -55,7 +58,7 @@ const TaserInfo = ({ user, className }) => {
         let dataDefautNumberOfTasers = ""
         if (data[0] && data[0].numberOfTasers && dataDefautNumberOfTasers !== data[0].numberOfTasers) {
             dataDefautNumberOfTasers = data[0].numberOfTasers
-        }
+        }*/
         return (
             <div className={`${className}`}>
                 <form onSubmit={handleSubmit}>
@@ -72,7 +75,7 @@ const TaserInfo = ({ user, className }) => {
                         type="text"
                         placeholder="*Titre du tableau..."
                         required
-                        defaultValue={dataDefautName}
+                        defaultValue={name}
                         ref={inputTaserName}
                     />
                     <label>Description</label>
@@ -80,7 +83,7 @@ const TaserInfo = ({ user, className }) => {
                         className="u-full-width"
                         type="text"
                         placeholder="Description courte de votre tableau..."
-                        defaultValue={dataDefautDesc}
+                        defaultValue={desc}
                         ref={inputTaserDesc}
                     />
                     <label>Longueur d'un tableau (7 jours par défaut)</label>
@@ -88,7 +91,7 @@ const TaserInfo = ({ user, className }) => {
                         className="u-full-width"
                         type="text"
                         placeholder="Longueur d'un tableau (en jours)..."
-                        defaultValue={dataDefautNumberOfDays}
+                        defaultValue={numberOfDays}
                         ref={inputTaserNumberOfDays}
                     />
                     <label>Nombre de taleaux affichés sur une page (4 par défaut)</label>
@@ -96,7 +99,7 @@ const TaserInfo = ({ user, className }) => {
                         className="u-full-width"
                         type="text"
                         placeholder="Nombre de taleaux affichés sur une page..."
-                        defaultValue={dataDefautNumberOfTasers}
+                        defaultValue={numberOfTasers}
                         ref={inputTaserNumberOfTasers}
                     />
                     <button type="submit">Create or Update</button>
