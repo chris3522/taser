@@ -1,5 +1,5 @@
 import { db } from "lib/firebase"
-//{"name":"Par","auth":true,"id":"1", "desc":"Taser des Pars", "numberOfDays" : "7","numberOfTasers":"3"}
+//{"name":"Par","id":"1", "desc":"Taser des Pars", "numberOfDays" : "7","numberOfTasers":"3"}
 export const getTaserInfo = async (taserId) => {
     const doc = await db.collection("tasers").doc(taserId).get()
 
@@ -42,4 +42,12 @@ export const createInfo = async (taserId, name, desc, numberOfDays,  numberOfTas
         numberOfTasers: numberOfTasers
     })
     return res
+}
+
+export const deleteTaser = async (taserId) => {
+    let res = await db
+        .collection("tasers")
+        .doc(taserId)
+        .delete();
+    return res;
 }

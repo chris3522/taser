@@ -1,12 +1,10 @@
 /* src/components/TaserInfo/TaserInfo.js */
 import React, { useEffect, useRef } from "react"
 import useSWR, { mutate } from "swr"
-import { navigate } from "@reach/router"
+import { navigate, Link } from "@reach/router"
 import "./TaserInfo.css"
-import * as libInfo from "../../lib/getTaserInfo"
+import * as crudTaser from "../../lib/getTaserInfo"
 import * as h from "../../lib/helpers"
-//A faire
-//css form reutilisable
 
 const TaserInfo = ({ user, className }) => {
     useEffect(() => {
@@ -16,7 +14,7 @@ const TaserInfo = ({ user, className }) => {
     }, [user])
 
     const taserId = h.slugify(user.email)
-    const { data, error } = useSWR(taserId, libInfo.getTaserInfo)
+    const { data, error } = useSWR(taserId, crudTaser.getTaserInfo)
 
     const inputTaserName = useRef(null)
     const inputTaserDesc = useRef(null)
@@ -26,7 +24,7 @@ const TaserInfo = ({ user, className }) => {
     const handleSubmit = (e) => {
         e.preventDefault()
         if (taserId) {
-            libInfo.createInfo(
+            crudTaser.createInfo(
                 taserId,
                 inputTaserName.current.value,
                 inputTaserDesc.current.value,
@@ -40,25 +38,7 @@ const TaserInfo = ({ user, className }) => {
     if (error) return <p>Error loading data!</p>
     else if (!data) return <p>Loading...</p>
     else {
-        //in one line !!!
         const { name, desc, numberOfDays, numberOfTasers } = {...data[0]}
-        //the same in 16 lines !!!
-        /*let dataDefautName
-        if (data[0] && data[0].name && dataDefautName !== data[0].name) {
-            dataDefautName = data[0].name
-        }
-        let dataDefautDesc = ""
-        if (data[0] && data[0].desc && dataDefautDesc !== data[0].desc) {
-            dataDefautDesc = data[0].desc
-        }
-        let dataDefautNumberOfDays = ""
-        if (data[0] && data[0].numberOfDays && dataDefautNumberOfDays !== data[0].numberOfDays) {
-            dataDefautNumberOfDays = data[0].numberOfDays
-        }
-        let dataDefautNumberOfTasers = ""
-        if (data[0] && data[0].numberOfTasers && dataDefautNumberOfTasers !== data[0].numberOfTasers) {
-            dataDefautNumberOfTasers = data[0].numberOfTasers
-        }*/
         return (
             <div className={`${className}`}>
                 <form onSubmit={handleSubmit}>
@@ -105,11 +85,20 @@ const TaserInfo = ({ user, className }) => {
                     <button type="submit">Create or Update</button>
                 </form>
                 <div className={`${className}`}>
-                    {data[0] && data[0].id && data.map((info) => {
-                        return (
-                            info.id && (<div key={info.id}>{`${info.name} ${info.desc}`}</div>)
-                        )
-                    })}
+                    {name && (
+                        <div key={taserId}>    
+                            <Link to={`/admin/tasers/${taserId}`} className="link">
+                                <h5><span className="square">></span>{`${taserId} - ${name} - ${desc}`}</h5>
+                            </Link>
+                           {/*  <button
+                                onClick={() => {
+                                    crudTaser.deleteTaser(taserId).then(() => mutate(taserId))
+                                }}
+                                className=""
+                            >
+                                x
+                            </button> */}
+                        </div>)}                 
                 </div>
             </div>
         )
