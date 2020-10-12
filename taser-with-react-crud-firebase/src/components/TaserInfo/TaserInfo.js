@@ -12,9 +12,10 @@ const TaserInfo = ({ user, className }) => {
             navigate("/admin")
         }
     }, [user])
-
+// a faire mutate après le premier fetch car on cree un tableau par defaut
+// separer la ceration par defaut dans une fonction à part
     const taserId = h.slugify(user.email)
-    const { data, error } = useSWR(taserId, crudTaser.getTaserInfo)
+    const { data, error } = useSWR([taserId,"info"], crudTaser.getTaserInfo)
 
     const inputTaserName = useRef(null)
     const inputTaserDesc = useRef(null)
@@ -31,7 +32,7 @@ const TaserInfo = ({ user, className }) => {
                 inputTaserNumberOfDays.current.value,
                 inputTaserNumberOfTasers.current.value
             )
-            mutate(taserId)
+            mutate([taserId,"info"])
         }
     }
 
@@ -92,7 +93,7 @@ const TaserInfo = ({ user, className }) => {
                             </Link>
                            {/*  <button
                                 onClick={() => {
-                                    crudTaser.deleteTaser(taserId).then(() => mutate(taserId))
+                                    crudTaser.deleteTaser(taserId).then(() => mutate([taserId,"info"]))
                                 }}
                                 className=""
                             >

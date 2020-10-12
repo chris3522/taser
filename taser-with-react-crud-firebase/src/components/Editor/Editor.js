@@ -18,8 +18,8 @@ const Editor = ({ user, taserId, className }) => {
             navigate("/admin")
         }
     }, [user])
-
-    const { data, error } = useSWR(taserId, crudTaser.getTaserUsers)
+    //const swrUserKey = `${taserId}-Users`
+    const { data, error } = useSWR([taserId,"users"], crudTaser.getTaserUsers)
 
     const inputUserName = useRef(null)
     const inputUserId = useRef(null)
@@ -28,11 +28,11 @@ const Editor = ({ user, taserId, className }) => {
     const handleSubmit = (e) => {
         e.preventDefault()
         if (taserId) {
-            crudTaser.createUser(
+            const id = crudTaser.createUser(
                 taserId,
                 inputUserName.current.value
             )
-            mutate(taserId)
+            mutate([taserId,"users"])
         }
     }
     const displayUpdateUserForm = (e, taserId, userId, userName) => {
@@ -45,7 +45,7 @@ const Editor = ({ user, taserId, className }) => {
     const updateUser = (e) => {
         e.preventDefault()
         crudTaser.updateUser(taserId, inputModalUserId.current.value, inputModalUserName.current.value).then(
-            mutate(taserId)
+            mutate([taserId,"users"])
         )
         inputModalUserId.current.value = ""
         inputModalUserName.current.value = ""
@@ -81,7 +81,7 @@ const Editor = ({ user, taserId, className }) => {
                                         theme="light"
                                         size="small"
                                         onClick={() => {
-                                            crudTaser.deleteUser(taserId, user.id).then(() => mutate(taserId))
+                                            crudTaser.deleteUser(taserId, user.id).then(() => mutate([taserId,"users"]))
                                         }}
                                     /></td>
                                 </tr>

@@ -11,17 +11,15 @@ export const getTaserInfo = async (taserId) => {
             .collection("info")
             .get()
 
-        let taserInfo = []
-        snapshot.forEach((info) => {
-            let { id, name, desc, numberOfDays, numberOfTasers } = info.data()
-            taserInfo.push({ id: id, name: name, desc: desc, numberOfDays: numberOfDays, numberOfTasers: numberOfTasers })
-        })
-
+        const taserInfo = snapshot.docs.map((taser) =>
+            ({ id: taser.id, ...taser.data() })
+        )
         return taserInfo
     } else {
         console.log("Taser not found in database, creating new entry...")
-        db.collection("tasers").doc(taserId).set({}).then(
+        await db.collection("tasers").doc(taserId).set({}).then(
             db.collection("tasers").doc(taserId).collection("info").doc(taserId).set({
+        //await db.collection("tasers").doc(taserId).collection("info").doc(taserId).set({
                 id: taserId,
                 name: "",
                 desc: "",
