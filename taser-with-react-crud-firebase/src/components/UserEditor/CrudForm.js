@@ -1,5 +1,5 @@
 import React from "react"
-import "./Editor.css"
+import "./UserEditor.css"
 
 
  const CrudForm = ({buttonName, displayForm, onSubmit, inputRef1, inputRef2}) =>

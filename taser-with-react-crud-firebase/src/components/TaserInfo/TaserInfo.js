@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react"
 import useSWR, { mutate } from "swr"
 import { navigate, Link } from "@reach/router"
 import "./TaserInfo.css"
-import * as crudTaser from "../../lib/getTaserInfo"
+import * as api from "../../api/info"
 import * as h from "../../lib/helpers"
 
 const TaserInfo = ({ user, className }) => {
@@ -12,11 +12,10 @@ const TaserInfo = ({ user, className }) => {
             navigate("/admin")
         }
     }, [user])
-// a faire mutate après le premier fetch car on cree un tableau par defaut
-// separer la ceration par defaut dans une fonction à part
-    const taserId = h.slugify(user.email)
-    const { data, error } = useSWR([taserId,"info"], crudTaser.getTaserInfo)
 
+    const taserId = h.slugify(user.email)
+    const swrKey = "/admin/taser"
+    const { data, error } = useSWR([taserId,swrKey], api.getInfo)
     const inputTaserName = useRef(null)
     const inputTaserDesc = useRef(null)
     const inputTaserNumberOfDays = useRef(null)
@@ -25,21 +24,22 @@ const TaserInfo = ({ user, className }) => {
     const handleSubmit = (e) => {
         e.preventDefault()
         if (taserId) {
-            crudTaser.createInfo(
-                taserId,
-                inputTaserName.current.value,
-                inputTaserDesc.current.value,
-                inputTaserNumberOfDays.current.value,
-                inputTaserNumberOfTasers.current.value
-            )
-            mutate([taserId,"info"])
+            const newData = {
+                "name":inputTaserName.current.value,
+                "desc":inputTaserDesc.current.value,
+                "numberOfDays":inputTaserNumberOfDays.current.value,
+                "numberOfTasers":inputTaserNumberOfTasers.current.value
+            }
+            mutate([taserId,swrKey],{...data,...newData })
+            api.updateInfo(taserId,newData)
+            .then((newData) => console.log(newData))
         }
     }
 
     if (error) return <p>Error loading data!</p>
     else if (!data) return <p>Loading...</p>
     else {
-        const { name, desc, numberOfDays, numberOfTasers } = {...data[0]}
+        const  { name, desc, numberOfDays, numberOfTasers }  = {...data}
         return (
             <div className={`${className}`}>
                 <form onSubmit={handleSubmit}>
@@ -88,12 +88,12 @@ const TaserInfo = ({ user, className }) => {
                 <div className={`${className}`}>
                     {name && (
                         <div key={taserId}>    
-                            <Link to={`/admin/tasers/${taserId}`} className="link">
+                            <Link to={`/admin/${taserId}/users`} className="link">
                                 <h5><span className="square">></span>{`${taserId} - ${name} - ${desc}`}</h5>
                             </Link>
                            {/*  <button
                                 onClick={() => {
-                                    crudTaser.deleteTaser(taserId).then(() => mutate([taserId,"info"]))
+                                    api.deleteTaser(taserId).then(() => mutate([taserId,swrKey]))
                                 }}
                                 className=""
                             >

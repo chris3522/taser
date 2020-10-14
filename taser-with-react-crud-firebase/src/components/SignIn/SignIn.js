@@ -6,7 +6,7 @@ import UserForm2 from "./UserForm2"
 
 const SignIn = ({ className, user, signIns: { signInWithGoogle, signInWithEmailAndPassword } }) => {
     if (user) {
-        navigate("/admin/tasers") 
+        navigate("/admin/taser") 
         console.log(user.email)
     return null
     } else {
