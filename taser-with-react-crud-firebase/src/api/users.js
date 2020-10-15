@@ -1,47 +1,26 @@
-import { db } from "lib/firebase"
+/************************ ******************/
+//Here we can choose which API to be called
+//by components
+//and switch between differents API
+//firestore based API available for now
+/************************ ******************/
 
-export const getUsers = async (taserId) => {
-    const snapshot = await db
-        .collection("tasers")
-        .doc(taserId)
-        .collection("users")
-        .get()
-    const snapshot2 = await db
-        .collection("tasers")
-        .doc(taserId)
-        .collection("users")
-        .limit(1).get().then(query => {
-            console.log(query.size === 0 ? "Users not found" : 'Users found')
-        })
-    const taserUsers = snapshot.docs.map((user) =>
-        ({ id: user.id, ...user.data() })
-    )
+import * as firestore_api from './api-firebase/users'
 
-    return taserUsers
-
+export const getUsers = (taserId,keys) => {
+    //console.log(keys)
+    //firestore_api.getUsers(taserId).then(result => console.log(result))
+    return firestore_api.getUsers(taserId)
 }
 
-export const createUser = async (taserId, newData) => {
-    return await db.collection("tasers").doc(taserId).collection("users").add(newData)
-        .then(docRef =>
-            db.collection("tasers").doc(taserId).collection("users").doc(docRef.id).get())
-        .then(user => ({ id: user.id, ...user.data() }))
+export const createUser = (taserId, newData) => {
+    return firestore_api.createUser(taserId, newData)
 }
 
-export const updateUser = async (taserId, newUserData) => {
-    return await db.collection("tasers")
-        .doc(taserId)
-        .collection("users")
-        .doc(newUserData.id)
-        .update(newUserData)
+export const updateUser = (taserId, newUserData) => {
+    return firestore_api.updateUser(taserId, newUserData)
 }
 
-export const deleteUser = async (taserId, userId) => {
-    return await db
-        .collection("tasers")
-        .doc(taserId)
-        .collection("users")
-        .doc(userId)
-        .delete()
+export const deleteUser = (taserId, userId) => {
+    return firestore_api.deleteUser(taserId, userId)
 }
-

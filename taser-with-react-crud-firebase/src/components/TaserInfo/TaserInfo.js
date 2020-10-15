@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react"
 import useSWR, { mutate } from "swr"
 import { navigate, Link } from "@reach/router"
 import "./TaserInfo.css"
-import * as api from "../../api/info"
+import * as api_root from "../../api/info"
 import * as h from "../../lib/helpers"
 
 const TaserInfo = ({ user, className }) => {
@@ -15,7 +15,7 @@ const TaserInfo = ({ user, className }) => {
 
     const taserId = h.slugify(user.email)
     const swrKey = "/admin/taser"
-    const { data, error } = useSWR([taserId,swrKey], api.getInfo)
+    const { data, error } = useSWR([taserId,swrKey], api_root.getInfo)
     const inputTaserName = useRef(null)
     const inputTaserDesc = useRef(null)
     const inputTaserNumberOfDays = useRef(null)
@@ -31,7 +31,7 @@ const TaserInfo = ({ user, className }) => {
                 "numberOfTasers":inputTaserNumberOfTasers.current.value
             }
             mutate([taserId,swrKey],{...data,...newData })
-            api.updateInfo(taserId,newData)
+            api_root.updateInfo(taserId,newData)
             .then((newData) => console.log(newData))
         }
     }
@@ -93,7 +93,7 @@ const TaserInfo = ({ user, className }) => {
                             </Link>
                            {/*  <button
                                 onClick={() => {
-                                    api.deleteTaser(taserId).then(() => mutate([taserId,swrKey]))
+                                    api_root.deleteTaser(taserId).then(() => mutate([taserId,swrKey]))
                                 }}
                                 className=""
                             >

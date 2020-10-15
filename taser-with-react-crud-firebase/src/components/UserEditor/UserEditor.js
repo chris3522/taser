@@ -2,9 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from "react"
 import useSWR, { mutate } from "swr"
 import { navigate, Link } from "@reach/router"
 import "./UserEditor.css"
-import * as api from "../../api/users"
-import * as api_wrapper from "../../api/users-wrapper"
-import * as h from "../../lib/helpers"
+import * as api_root from "../../api/users"
 import Icon from "react-crud-icons"
 import '../../../node_modules/react-crud-icons/dist/css/react-crud-icons.css'
 import CrudForm from './CrudForm'
@@ -19,9 +17,8 @@ const Editor = ({ user, taserId, className }) => {
     }, [user])
 
     const swrKey = `/admin/${taserId}/users`
-    const { data, error } = useSWR([taserId, swrKey], api_wrapper.wrapGetUsers)
-    //const { data, error } = useSWR([taserId, swrKey], api.getUsers)
-
+    const { data, error } = useSWR([taserId, swrKey], api_root.getUsers)
+   
     const inputUserName = useRef(null)
     const inputUserId = useRef(null)
     const inputModalUserName = useRef(null)
@@ -33,7 +30,7 @@ const Editor = ({ user, taserId, className }) => {
             const newData = {
                 "name": inputUserName.current.value,
             }
-            api.createUser(taserId, newData)
+            api_root.createUser(taserId, newData)
                 .then((newDataFromApi) => mutate([taserId, swrKey]))
         }
     }
@@ -51,7 +48,7 @@ const Editor = ({ user, taserId, className }) => {
             "id":inputModalUserId.current.value,
             "name": inputModalUserName.current.value
         }
-        api.updateUser(taserId, newUserData).then(
+        api_root.updateUser(taserId, newUserData).then(
             mutate([taserId, swrKey])
         )
         inputModalUserId.current.value = ""
@@ -88,7 +85,7 @@ const Editor = ({ user, taserId, className }) => {
                                         theme="light"
                                         size="small"
                                         onClick={() => {
-                                            api.deleteUser(taserId, user.id).then(() => mutate([taserId, swrKey]))
+                                            api_root.deleteUser(taserId, user.id).then(() => mutate([taserId, swrKey]))
                                         }}
                                     /></td>
                                 </tr>
