@@ -1,0 +1,31 @@
+table {
+    border: 1px solid rgba(34,36,38,.15);
+    box-shadow: none;
+    border-radius: .28571429rem;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font: normal 11px Arial, sans-serif;
+    margin :10px;
+}
+table thead th {
+    background: #f9fafb;
+    border: 1px solid rgba(34,36,38,.15);
+    color: rgba(0,0,0,.87);
+    padding: 10px;
+    text-align: left;
+    text-shadow: 1px 1px 1px #fff;
+}
+table tbody td {
+    border: 1px solid rgba(34,36,38,.15);
+    color: #333;
+    padding: 2px 6px;
+    text-shadow: 1px 1px 1px #fff;
+}
+
+.dayPi{
+    height:220px;
+}
+.dateCurrent{
+    text-align: center;
+    text-transform: capitalize;
+}

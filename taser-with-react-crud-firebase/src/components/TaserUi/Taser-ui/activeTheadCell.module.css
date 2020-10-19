@@ -1,0 +1,13 @@
+.dateSelected {
+    border-radius: 10px;
+    background-color: #badaff;
+    padding: 0.50em;
+}
+
+.weekend {
+    background-color:#f5a9a9;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}

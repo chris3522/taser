@@ -4,7 +4,7 @@ import React, { useEffect } from "react"
 import { Router, navigate, Link } from "@reach/router"
 import withFirebaseAuth from "react-with-firebase-auth"
 import { firebaseAppAuth, providers } from "../../lib/firebase"
-import { SignIn, TaserInfo, Layout, UserEditor } from "components"
+import { SignIn, TaserInfo, Layout, UserEditor, Home, TaserUi } from "components"
 import './App.css'
 
 const createComponentWithAuth = withFirebaseAuth({
@@ -36,7 +36,10 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
                 </header>
             )}
             <Router>
-                <SignIn className="section"
+                <Home className="section" path="/"/>
+                <TaserUi className="section" path="/:taserId"/>
+                <SignIn 
+                    className="section"
                     path="/admin"
                     user={user}
                     signIns={{ signInWithGoogle, signInWithEmailAndPassword }}

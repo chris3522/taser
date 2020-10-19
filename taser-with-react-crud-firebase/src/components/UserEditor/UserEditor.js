@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import useSWR, { mutate } from "swr"
 import { navigate, Link } from "@reach/router"
 import "./UserEditor.css"
@@ -31,7 +31,7 @@ const Editor = ({ user, taserId, className }) => {
                 "name": inputUserName.current.value,
             }
             api_root.createUser(taserId, newData)
-                .then((newDataFromApi) => mutate([taserId, swrKey]))
+                .then(() => mutate([taserId, swrKey]))
         }
     }
 

@@ -16,7 +16,7 @@ const Layout = ({ children, home, user }) => {
             </Head>
             <header className="header">
                 <h2>Tableaux de service  {email && (<span>{`/`}</span>)}</h2>           
-                {email && (<h5>{`${h.slugify(email)}`}</h5>)}  
+                {email && (<p>{`${h.slugify(email)}`}</p>)}  
                 {
                     React.Children.map(children, (child, i) => {
                         if (child && child.type === 'header') return child.props.children
