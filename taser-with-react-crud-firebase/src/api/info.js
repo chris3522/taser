@@ -20,3 +20,7 @@ export const updateInfo = (taserId, newData) => {
 export const deleteTaser = (taserId) => {
     return firestore_api.deleteTaser(taserId)
 }
+
+export const getInfoOnly = (taserId) => {
+    return firestore_api.getInfoOnly(taserId)
+}

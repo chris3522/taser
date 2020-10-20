@@ -4,7 +4,7 @@ import React, { useEffect } from "react"
 import { Router, navigate, Link } from "@reach/router"
 import withFirebaseAuth from "react-with-firebase-auth"
 import { firebaseAppAuth, providers } from "../../lib/firebase"
-import { SignIn, TaserInfo, Layout, UserEditor, Home, TaserUi } from "components"
+import { SignIn, TaserInfo, Layout, UserEditor, Home, TaserUi, VacationEditor } from "components"
 import './App.css'
 
 const createComponentWithAuth = withFirebaseAuth({
@@ -19,6 +19,7 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
           }
       }, [user])*/
     //A un user loggé en admin correspond un tableau de service
+    const NotFound = () => <p>Sorry, nothing here</p>
     return (
         <Layout user={user}>
             {user && (
@@ -36,8 +37,10 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
                 </header>
             )}
             <Router>
+                <NotFound default />
                 <Home className="section" path="/"/>
-                <TaserUi className="section" path="/:taserId"/>
+                {/*ajouter les taserId authoriser avant de continuer sur TaserUi*/}
+                <TaserUi className="section" path="/taser/:taserId"/>
                 <SignIn 
                     className="section"
                     path="/admin"
@@ -46,6 +49,7 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
                 />
                 {user && (<TaserInfo className="section" path="/admin/taser" user={user} />)}
                 {user && (<UserEditor className="section" path="/admin/:taserId/users" user={user} />)}
+                {user && (<VacationEditor className="section" path="/admin/:taserId/vacations" user={user} />)}
             </Router>
         </Layout>
     )

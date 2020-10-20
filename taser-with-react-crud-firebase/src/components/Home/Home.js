@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from "react"
 import useSWR, { mutate } from "swr"
 import { navigate, Link } from "@reach/router"
-import * as api from "../../api/api-firebase/tasers"
-import * as api_root from "../../api/info"
+import * as api_root_tasers from "../../api/tasers"
+
 
 
 const Home = ({ className }) => {
 
     const swrKey = `/tasers`
-    const { data, error } = useSWR([swrKey], api.getTasers)
+    const { data, error } = useSWR([swrKey], api_root_tasers.getTasers)
     if (error) return <p>Error loading data!</p>
     else if (!data) return <p>Loading...</p>
     else {
@@ -21,7 +21,7 @@ const Home = ({ className }) => {
                     console.log(taser)
                     return taser.name && (
                     <li key={taser.id}>
-                        <Link to={`/${taser.id}`} className="link">
+                        <Link to={`/taser/${taser.id}`} className="link">
                             {taser.name}
                         </Link>
                     </li>

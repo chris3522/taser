@@ -89,7 +89,10 @@ const TaserInfo = ({ user, className }) => {
                     {name && (
                         <div key={taserId}>    
                             <Link to={`/admin/${taserId}/users`} className="link">
-                                <h5><span className="square">></span>{`${taserId} - ${name} - ${desc}`}</h5>
+                                <h5><span className="square">></span>{`Gérer les utilisateurs`}</h5>
+                            </Link>
+                            <Link to={`/admin/${taserId}/vacations`} className="link">
+                                <h5><span className="square">></span>{`Gérer les vacations`}</h5>
                             </Link>
                            {/*  <button
                                 onClick={() => {

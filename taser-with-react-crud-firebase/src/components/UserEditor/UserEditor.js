@@ -7,7 +7,7 @@ import Icon from "react-crud-icons"
 import '../../../node_modules/react-crud-icons/dist/css/react-crud-icons.css'
 import CrudForm from './CrudForm'
 
-const Editor = ({ user, taserId, className }) => {
+const UserEditor = ({ user, taserId, className }) => {
     const [isDisplay, setIsDisplay] = useState(true)
 
     useEffect(() => {
@@ -99,4 +99,4 @@ const Editor = ({ user, taserId, className }) => {
     }
 }
 
-export default Editor
+export default UserEditor

@@ -41,7 +41,7 @@ export default function Taser({ taserId }) {
     // Init data fetching (initial data SSR with props)
     /**************************************************** */
     console.log(taserId)
-    const { data : dataInfo, error : errorInfo } = useSWR([taserId, "info"], api_root_info.getInfo)
+    const { data : dataInfo, error : errorInfo } = useSWR([taserId, "info"], api_root_info.getInfoOnly)
     //const { dataInfo, isLoadingInfo, isErrorInfo, mutateInfo } = useTaserInfo(taserInfo.id, taserInfo)
 
     //const { dataDays, isLoadingDays, isErrorDays, mutateDays } = useTaserDays(taserInfo.id, taserDays)

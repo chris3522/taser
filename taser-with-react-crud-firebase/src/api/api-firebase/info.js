@@ -40,3 +40,14 @@ export const deleteTaser = async (taserId) => {
         .doc(taserId)
         .delete()
 }
+
+
+export const getInfoOnly = async (taserId) => { 
+    const doc = await db.collection("tasers").doc(taserId).collection("info").doc(taserId).get()
+    if (doc.exists) {
+        console.log("Taser not found in database")
+        return doc.data()
+    } else {
+        throw new Error('No such document!')
+    }
+}
