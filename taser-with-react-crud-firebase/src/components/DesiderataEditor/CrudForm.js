@@ -1,8 +1,8 @@
 import React from "react"
-import "./VacationEditor.css"
+import "./DesiderataEditor.css"
 
 
-const CrudForm = ({ buttonName, displayForm, onSubmit, inputRef1, inputRef2, inputRef3 }) =>
+const CrudForm = ({ buttonName, displayForm, onSubmit, inputRef1, inputRef2, inputRef3, inputRef4 }) =>
 
     <form className={displayForm} onSubmit={onSubmit}>
         <div className="row">
@@ -20,8 +20,8 @@ const CrudForm = ({ buttonName, displayForm, onSubmit, inputRef1, inputRef2, inp
                     ref={inputRef2}
                     className="u-full-width"
                     type="text"
-                    placeholder="nom (4 lettres max)"
-                    maxLength = "4"
+                    placeholder="nom (10 lettres max)"
+                    maxLength="10"
                     required
                 />
             </div>
@@ -31,11 +31,19 @@ const CrudForm = ({ buttonName, displayForm, onSubmit, inputRef1, inputRef2, inp
                     className="u-full-width"
                     type="text"
                     placeholder="shortKey"
-                    maxLength = "1"
-                    required
+                    maxLength="1"
+                    readOnly
+                    defaultValue="x"
                 />
             </div>
-            <div className="four columns">
+            <div className="two columns">
+                <input
+                    ref={inputRef4}
+                    className="u-full-width"
+                    type="color"
+                />
+            </div>
+            <div className="two columns">
                 <button type="submit"
                     className={buttonName === "Update" ? "submitButton " : null}
                 >{buttonName}</button>

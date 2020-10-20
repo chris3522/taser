@@ -15,7 +15,7 @@ const TaserTable = (props) => {
 
     return (
         <div>
-            <table>
+            <table className="taserui">
                 <thead>
                     <TaserTheadLine selectedDate={selectedDate} numberOfDays={numberOfDays} activeSelectedDate={activeSelectedDate} />
                 </thead>

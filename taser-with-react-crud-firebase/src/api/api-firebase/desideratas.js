@@ -29,7 +29,7 @@ export const createDesiderata = async (taserId, newData) => {
         .then(desiderata => ({ id: desiderata.id, ...desiderata.data() }))
 }
 
-export const updateDesiderata = async (taserId, newUDesiderataData) => {
+export const updateDesiderata = async (taserId, newDesiderataData) => {
     return await db.collection("tasers")
         .doc(taserId)
         .collection("desideratas")

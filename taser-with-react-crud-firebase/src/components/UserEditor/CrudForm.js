@@ -11,7 +11,7 @@ const CrudForm = ({ buttonName, displayForm, onSubmit, inputRef1, inputRef2 }) =
                     ref={inputRef1}
                     className="u-full-width"
                     placeholder="id"
-                    type="text"
+                    type="hidden"
                     readOnly
                 />
             </div>
@@ -20,7 +20,7 @@ const CrudForm = ({ buttonName, displayForm, onSubmit, inputRef1, inputRef2 }) =
                     ref={inputRef2}
                     className="u-full-width"
                     type="text"
-                    placeholder="Ajouter le nom d'un agent au tableau"
+                    placeholder="Ajouter le nom d'un agent"
                     required
                 />
             </div>

@@ -94,6 +94,9 @@ const TaserInfo = ({ user, className }) => {
                             <Link to={`/admin/${taserId}/vacations`} className="link">
                                 <h5><span className="square">></span>{`Gérer les vacations`}</h5>
                             </Link>
+                            <Link to={`/admin/${taserId}/desideratas`} className="link">
+                                <h5><span className="square">></span>{`Gérer les désidératas`}</h5>
+                            </Link>
                            {/*  <button
                                 onClick={() => {
                                     api_root.deleteTaser(taserId).then(() => mutate([taserId,swrKey]))

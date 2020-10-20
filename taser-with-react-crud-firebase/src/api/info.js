@@ -10,6 +10,7 @@ import * as firestore_api from './api-firebase/info'
 export const getInfo = (taserId,keys) => {
     //console.log(keys)
     //firestore_api.getInfo(taserId).then(result => console.log(result))
+    //create default ifo if not exist
     return firestore_api.getInfo(taserId)
 }
 
@@ -22,5 +23,6 @@ export const deleteTaser = (taserId) => {
 }
 
 export const getInfoOnly = (taserId) => {
+    //don't create defaut info
     return firestore_api.getInfoOnly(taserId)
 }

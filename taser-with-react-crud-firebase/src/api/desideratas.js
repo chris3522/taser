@@ -22,5 +22,5 @@ export const updateDesiderata = (taserId, newDesiderataData) => {
 }
 
 export const deleteDesiderata = (taserId, desiderataId) => {
-    return firestore_api.updateDesiderata(taserId, desiderataId)
+    return firestore_api.deleteDesiderata(taserId, desiderataId)
 }
