@@ -2,11 +2,11 @@ import React from "react"
 import "./VacationEditor.css"
 
 
-const CrudForm = ({ buttonName, displayForm, onSubmit, inputRef1, inputRef2, inputRef3 }) =>
+const CrudForm = ({ buttonName, displayForm, onSubmit, inputRef1, inputRef2, inputRef3, inputRef4 }) =>
 
     <form className={displayForm} onSubmit={onSubmit}>
         <div className="row">
-            <div className={`one columns`} >
+            <div className={`zero columns`} >
                 <input
                     ref={inputRef1}
                     className="u-full-width"
@@ -14,10 +14,18 @@ const CrudForm = ({ buttonName, displayForm, onSubmit, inputRef1, inputRef2, inp
                     type="hidden"
                     readOnly
                 />
+                <input
+                    ref={inputRef2}
+                    className="u-full-width"
+                    placeholder="nature"
+                    type="hidden"
+                    readOnly
+                    defaultValue="vacation"
+                />
             </div>
             <div className="four columns">
                 <input
-                    ref={inputRef2}
+                    ref={inputRef3}
                     className="u-full-width"
                     type="text"
                     placeholder="nom (4 lettres max)"
@@ -25,9 +33,9 @@ const CrudForm = ({ buttonName, displayForm, onSubmit, inputRef1, inputRef2, inp
                     required
                 />
             </div>
-            <div className="one columns">
+            <div className="two columns">
                 <input
-                    ref={inputRef3}
+                    ref={inputRef4}
                     className="u-full-width"
                     type="text"
                     placeholder="shortKey"

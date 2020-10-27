@@ -4,7 +4,7 @@ const inputHandleKeyPress = (e, buffer, tabVacationsAndDesideratas, colorCell) =
     e.preventDefault()
     const oneVacationAndDesiderata_entry = tabVacationsAndDesideratas.filter(vd => vd.shortKey === _entryKey)
     const oneVacationAndDesiderata_name = oneVacationAndDesiderata_entry[buffer] ? oneVacationAndDesiderata_entry[buffer].name : null
-    const oneVacationAndDesiderata_color = oneVacationAndDesiderata_entry[buffer] ? oneVacationAndDesiderata_entry[buffer].color : ""
+    const oneVacationAndDesiderata_color = oneVacationAndDesiderata_entry[buffer] && oneVacationAndDesiderata_entry[buffer].nature === "desiderata" ? oneVacationAndDesiderata_entry[buffer].color : ""
     colorCell = oneVacationAndDesiderata_color
     let eraseDesiderataNameAndKeepColorInstead = colorCell === "" ? false : true
 

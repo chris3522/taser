@@ -16,7 +16,6 @@ export const getUsers = async (taserId) => {
     const taserUsers = snapshot.docs.map((user) =>
         ({ id: user.id, ...user.data() })
     )
-
     return taserUsers
 
 }

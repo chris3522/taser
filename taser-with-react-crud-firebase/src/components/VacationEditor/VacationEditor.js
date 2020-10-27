@@ -22,9 +22,11 @@ const VacationEditor = ({ user, taserId, className }) => {
     const inputVacationName = useRef(null)
     const inputVacationShortKey = useRef(null)
     const inputVacationId = useRef(null)
+    const inputVacationNature = useRef("vacation")
     const inputModalVacationName = useRef(null)
     const inputModalVacationShortKey = useRef(null)
     const inputModalVacationId = useRef(null)
+     const inputModalVacationNature = useRef("vacation")
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -32,17 +34,19 @@ const VacationEditor = ({ user, taserId, className }) => {
             const newData = {
                 "name": inputVacationName.current.value,
                 "shortKey": inputVacationShortKey.current.value,
+                "nature": inputVacationNature.current.value,
             }
             api_root.createVacation(taserId, newData)
                 .then(() => mutate([taserId, swrKey]))
         }
     }
 
-    const displayUpdateVacationForm = (e, taserId, vacationId, vacationName, vacationShortKey) => {
+    const displayUpdateVacationForm = (e, taserId, vacationId, vacationNature, vacationName, vacationShortKey) => {
         e.preventDefault()
         inputModalVacationId.current.value = vacationId
         inputModalVacationName.current.value = vacationName
         inputModalVacationShortKey.current.value = vacationShortKey
+        inputModalVacationNature.current.value = vacationNature
         setIsDisplay(false)
     }
 
@@ -51,7 +55,8 @@ const VacationEditor = ({ user, taserId, className }) => {
         const newVacationData = {
             "id":inputModalVacationId.current.value,
             "name": inputModalVacationName.current.value,
-            "shortKey": inputModalVacationShortKey.current.value
+            "shortKey": inputModalVacationShortKey.current.value,
+            "nature": inputModalVacationNature.current.value
         }
         api_root.updateVacation(taserId, newVacationData).then(
             mutate([taserId, swrKey])
@@ -59,6 +64,7 @@ const VacationEditor = ({ user, taserId, className }) => {
         inputModalVacationId.current.value = ""
         inputModalVacationName.current.value = ""
         inputModalVacationShortKey.current.value = ""
+        inputModalVacationNature.current.value = ""
         setIsDisplay(true)
     }
 
@@ -67,8 +73,8 @@ const VacationEditor = ({ user, taserId, className }) => {
     else {
         return (
             <div className={className}>
-                <CrudForm buttonName="Create" displayForm={isDisplay ? "displayInBlock" : "displayNone"} onSubmit={handleSubmit} inputRef1={inputVacationId} inputRef2={inputVacationName} inputRef3={inputVacationShortKey}/>
-                <CrudForm buttonName="Update" displayForm={isDisplay ? "displayNone" : "displayInBlock"} onSubmit={updateVacation} inputRef1={inputModalVacationId} inputRef2={inputModalVacationName} inputRef3={inputModalVacationShortKey}/>
+                <CrudForm buttonName="Create" displayForm={isDisplay ? "displayInBlock" : "displayNone"} onSubmit={handleSubmit} inputRef1={inputVacationId} inputRef2={inputVacationNature} inputRef3={inputVacationName} inputRef4={inputVacationShortKey}/>
+                <CrudForm buttonName="Update" displayForm={isDisplay ? "displayNone" : "displayInBlock"} onSubmit={updateVacation} inputRef1={inputModalVacationId} inputRef2={inputModalVacationNature} inputRef3={inputModalVacationName} inputRef4={inputModalVacationShortKey}/>
                 <table>
                     <thead><tr><th>id</th><th>nom</th><th>shortKey</th><th></th><th></th></tr></thead>
                     <tbody>
@@ -82,7 +88,7 @@ const VacationEditor = ({ user, taserId, className }) => {
                                             theme="light"
                                             size="small"
                                             onClick={(e) => {
-                                                displayUpdateVacationForm(e, taserId, vacation.id, vacation.name, vacation.shortKey)
+                                                displayUpdateVacationForm(e, taserId, vacation.id, vacation.nature, vacation.name, vacation.shortKey)
                                             }}
 
                                         /></td>

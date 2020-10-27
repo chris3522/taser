@@ -8,14 +8,11 @@ import inputHandleKeyUp from './../Taser-ui-handler/cellKeyUpHandler'
 import inputHandleKeyPress from './../Taser-ui-handler/cellKeyPressHandler'
 import './taser.css'
 
-
-//import useTaserInfo from '../../swr-data/use-taserInfo'
 import * as api_root_info from "../../../api/info"
-//import useTaserDays from '../../swr-data/use-taserDays'
-//import useTaserDesideratas from '../../swr-data/use-taserDesideratas'
-//import useTaserVacations from '../../swr-data/use-taserVacations'
-//import useTaserUsers from '../../swr-data/use-taserUsers'
 import * as api_root_users from "../../../api/users"
+import * as api_root_vacations from "../../../api/vacations"
+import * as api_root_desideratas from "../../../api/desideratas"
+import * as api_root_days from "../../../api/days"
 
 import DayPicker from 'react-day-picker'
 import 'react-day-picker/lib/style.css'
@@ -47,6 +44,8 @@ export default function Taser({ taserId }) {
     //const { dataDays, isLoadingDays, isErrorDays, mutateDays } = useTaserDays(taserInfo.id, taserDays)
     //const { dataDesideratas, isLoadingDesideratas, isErrorDesideratas, mutateDesideratas } = useTaserDesideratas(taserInfo.id, taserDesideratas)
     const { data : taserUsers, error : errorUsers } = useSWR([taserId, "users"], api_root_users.getUsers)
+    const { data : taserVacations, error : errorVacations } = useSWR([taserId, "vacations"], api_root_vacations.getVacations)
+    const { data : taserDesideratas, error : errorDesideratas } = useSWR([taserId, "desiderats"], api_root_desideratas.getDesideratas)
     //const { dataUsers, isLoadingUsers, isErrorUsers, mutateUsers } = useTaserUsers(taserInfo.id, taserUsers)
     //const { dataVacations, isLoadingVacations, isErrorVacations, mutateVacations } = useTaserVacations(taserInfo.id, taserVacations)
 
@@ -81,14 +80,17 @@ export default function Taser({ taserId }) {
             : [...Object.values(taserVacations.vacations.byId), ...Object.values(taserDesideratas.desideratas.byId)]
 
     */
+    
 
     //key pressed must match tabVacationsAndDesirata shortKey
     //buffer used to iterate with the same shortkey
 
-    /*
-    const handleKeyPress = tabVacationsAndDesideratas === undefined ?
-        () => console.log('keypressed')
-        : e => {
+    
+
+    let buffer = 0
+    let colorCell = "white"
+    let eraseDesiderataNameAndKeepColorInstead = false
+    const handleKeyPress = (e,tabVacationsAndDesideratas) => {
             let { eraseDesiderataNameAndKeepColorInstead1, buffer1 } = inputHandleKeyPress(e, buffer, tabVacationsAndDesideratas, colorCell, eraseDesiderataNameAndKeepColorInstead)
             eraseDesiderataNameAndKeepColorInstead = eraseDesiderataNameAndKeepColorInstead1
             buffer = buffer1
@@ -109,7 +111,7 @@ export default function Taser({ taserId }) {
         setSelectedDay(day)
         dayDate = moment(day).format('YYYY-MM-DD')
     }
-*/
+/*
 
     const handleKeyPress = e => {
 
@@ -126,20 +128,22 @@ export default function Taser({ taserId }) {
     const handleFocus = e => {
        
     }
+    
     const handleDayClick = (day) => {
         setSelectedDay(day)
         dayDate = moment(day).format('YYYY-MM-DD')
     }
     /************************************** */
-    const taserVacations = ""
-    const taserDesideratas = ""
-  
+
     const dataDays =""
-    const dataDesideratas =""
+
     if (errorInfo) return <p>Error loading data!</p>
     else if (!dataInfo) return <p>Loading...</p>
+    else if (!taserVacations) return <p>Loading...</p>
+    else if (!taserDesideratas) return <p>Loading...</p>
     else {
         const  { name, desc, numberOfDays, numberOfTasers }  = {...dataInfo}
+        const tabVacationsAndDesideratas = [...taserDesideratas, ...taserVacations]
         return (
             <div>
                 <p className={"dateCurrent"}>{`${moment(selectedDay).format('dddd DD MMMM YYYY')}`}</p>
@@ -156,11 +160,11 @@ export default function Taser({ taserId }) {
                             taserUsers={taserUsers}
                             taserDays={dataDays}
                             taserVacations={taserVacations}
-                            taserDesideratas={dataDesideratas}
+                            taserDesideratas={taserDesideratas}
                             /*handler*/
                             handleFocus={handleFocus}
                             handleBlur={handleBlur}
-                            handleKeyPress={handleKeyPress}
+                            handleKeyPress={(e)=>handleKeyPress(e,tabVacationsAndDesideratas)}
                             handleKeyUp={handleKeyUp} />)}
 
             </div>

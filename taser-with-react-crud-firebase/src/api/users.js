@@ -24,3 +24,4 @@ export const updateUser = (taserId, newUserData) => {
 export const deleteUser = (taserId, userId) => {
     return firestore_api.deleteUser(taserId, userId)
 }
+

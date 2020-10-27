@@ -22,11 +22,13 @@ const DesiderataEditor = ({ user, taserId, className }) => {
     const inputDesiderataName = useRef(null)
     const inputDesiderataShortKey = useRef("x")
     const inputDesiderataId = useRef(null)
+    const inputDesiderataNature = useRef("desiderata")
     const inputDesiderataColor = useRef(null)
 
     const inputModalDesiderataName = useRef(null)
     const inputModalDesiderataShortKey = useRef("x")
     const inputModalDesiderataId = useRef(null)
+    const inputModalDesiderataNature = useRef("desiderata")
     const inputModalDesiderataColor = useRef(null)
 
     const handleSubmit = (e) => {
@@ -36,15 +38,17 @@ const DesiderataEditor = ({ user, taserId, className }) => {
                 "name": inputDesiderataName.current.value,
                 "shortKey": inputDesiderataShortKey.current.value,
                 "color": inputDesiderataColor.current.value,
+                "nature": inputDesiderataNature.current.value,
             }
             api_root.createDesiderata(taserId, newData)
                 .then(() => mutate([taserId, swrKey]))
         }
     }
 
-    const displayUpdateDesiderataForm = (e, taserId, desiderataId, desiderataName, desiderataShortKey, desiderataColor) => {
+    const displayUpdateDesiderataForm = (e, taserId, desiderataId, desiderataNature, desiderataName, desiderataShortKey, desiderataColor) => {
         e.preventDefault()
         inputModalDesiderataId.current.value = desiderataId
+        inputModalDesiderataNature.current.value = desiderataNature
         inputModalDesiderataName.current.value = desiderataName
         inputModalDesiderataShortKey.current.value = desiderataShortKey
         inputModalDesiderataColor.current.value = desiderataColor
@@ -55,6 +59,7 @@ const DesiderataEditor = ({ user, taserId, className }) => {
         e.preventDefault()
         const newDesiderataData = {
             "id":inputModalDesiderataId.current.value,
+            "nature":inputModalDesiderataNature.current.value,
             "name": inputModalDesiderataName.current.value,
             "shortKey": inputModalDesiderataShortKey.current.value,
             "color": inputModalDesiderataColor.current.value
@@ -63,6 +68,7 @@ const DesiderataEditor = ({ user, taserId, className }) => {
             mutate([taserId, swrKey])
         )
         inputModalDesiderataId.current.value = ""
+        inputModalDesiderataNature.current.value = ""
         inputModalDesiderataName.current.value = ""
         inputModalDesiderataShortKey.current.value = ""
         inputModalDesiderataColor.current.value = ""
@@ -74,8 +80,8 @@ console.log(taserId)
     else {
         return (
             <div className={className}>
-                <CrudForm buttonName="Create" displayForm={isDisplay ? "displayInBlock" : "displayNone"} onSubmit={handleSubmit} inputRef1={inputDesiderataId} inputRef2={inputDesiderataName} inputRef3={inputDesiderataShortKey} inputRef4={inputDesiderataColor}/>
-                <CrudForm buttonName="Update" displayForm={isDisplay ? "displayNone" : "displayInBlock"} onSubmit={updateDesiderata} inputRef1={inputModalDesiderataId} inputRef2={inputModalDesiderataName} inputRef3={inputModalDesiderataShortKey} inputRef4={inputModalDesiderataColor}/>
+                <CrudForm buttonName="Create" displayForm={isDisplay ? "displayInBlock" : "displayNone"} onSubmit={handleSubmit} inputRef1={inputDesiderataId} inputRef2={inputDesiderataNature} inputRef3={inputDesiderataName} inputRef4={inputDesiderataShortKey} inputRef5={inputDesiderataColor}/>
+                <CrudForm buttonName="Update" displayForm={isDisplay ? "displayNone" : "displayInBlock"} onSubmit={updateDesiderata} inputRef1={inputModalDesiderataId} inputRef2={inputModalDesiderataNature} inputRef3={inputModalDesiderataName} inputRef4={inputModalDesiderataShortKey} inputRef5={inputModalDesiderataColor}/>
                 <table>
                     <thead><tr><th>id</th><th>nom</th><th>shortKey</th><th>couleur</th><th></th><th></th></tr></thead>
                     <tbody>
@@ -89,7 +95,7 @@ console.log(taserId)
                                             theme="light"
                                             size="small"
                                             onClick={(e) => {
-                                                displayUpdateDesiderataForm(e, taserId, desiderata.id, desiderata.name, desiderata.shortKey, desiderata.color)
+                                                displayUpdateDesiderataForm(e, taserId, desiderata.id, desiderata.nature, desiderata.name, desiderata.shortKey, desiderata.color)
                                             }}
 
                                         /></td>

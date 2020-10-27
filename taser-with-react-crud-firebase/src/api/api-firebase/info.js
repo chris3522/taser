@@ -1,6 +1,7 @@
 import { db } from "lib/firebase"
 
-export const getInfo = async (taserId) => {
+export const getInfo = async (...args) => {
+    const  [taserId , uid ]  = args
     const doc = await db.collection("tasers").doc(taserId).collection("info").doc(taserId).get()
     if (doc.exists) {
         console.log("Taser found in database")
@@ -17,7 +18,8 @@ export const getInfo = async (taserId) => {
                 name: "",
                 desc: "",
                 numberOfDays: "7",
-                numberOfTasers: "4"
+                numberOfTasers: "4",
+                adminUid : uid
             }
         )
         // Commit the batch
@@ -51,3 +53,4 @@ export const getInfoOnly = async (taserId) => {
         throw new Error('No such document!')
     }
 }
+

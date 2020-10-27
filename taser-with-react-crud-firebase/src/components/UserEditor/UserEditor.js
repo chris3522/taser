@@ -18,7 +18,6 @@ const UserEditor = ({ user, taserId, className }) => {
 
     const swrKey = `/admin/${taserId}/users`
     const { data, error } = useSWR([taserId, swrKey], api_root.getUsers)
-   
     const inputUserName = useRef(null)
     const inputUserId = useRef(null)
     const inputModalUserName = useRef(null)

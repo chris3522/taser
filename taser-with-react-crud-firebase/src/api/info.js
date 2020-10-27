@@ -7,11 +7,11 @@
 
 import * as firestore_api from './api-firebase/info'
 
-export const getInfo = (taserId,keys) => {
+export const getInfo = (...args) => {
     //console.log(keys)
     //firestore_api.getInfo(taserId).then(result => console.log(result))
     //create default ifo if not exist
-    return firestore_api.getInfo(taserId)
+    return firestore_api.getInfo(...args)
 }
 
 export const updateInfo = (taserId, newData) => {

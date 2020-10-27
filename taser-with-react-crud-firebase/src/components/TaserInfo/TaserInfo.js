@@ -14,8 +14,9 @@ const TaserInfo = ({ user, className }) => {
     }, [user])
 
     const taserId = h.slugify(user.email)
+    const uid = user.uid.toString()
     const swrKey = "/admin/taser"
-    const { data, error } = useSWR([taserId,swrKey], api_root.getInfo)
+    const { data, error } = useSWR([taserId, uid, swrKey], api_root.getInfo)
     const inputTaserName = useRef(null)
     const inputTaserDesc = useRef(null)
     const inputTaserNumberOfDays = useRef(null)
@@ -30,7 +31,7 @@ const TaserInfo = ({ user, className }) => {
                 "numberOfDays":inputTaserNumberOfDays.current.value,
                 "numberOfTasers":inputTaserNumberOfTasers.current.value
             }
-            mutate([taserId,swrKey],{...data,...newData })
+            mutate([taserId, uid, swrKey],{...data,...newData })
             api_root.updateInfo(taserId,newData)
             .then((newData) => console.log(newData))
         }
