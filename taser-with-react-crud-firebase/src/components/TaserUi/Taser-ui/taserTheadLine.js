@@ -6,7 +6,6 @@ import ActiveTheadCell from './activeTheadCell'
 const TaserTheadLine = (props) => {
     //selectedDate = date incluse dans la semaine du taser qui s'affiche
     //activeSelectedDate = date selectionnée par l'utisateur (pas forcément incluse dans ce taser)
-
     const { selectedDate, numberOfDays, activeSelectedDate } = props
     const activeSelectedDateFormat = moment(activeSelectedDate, 'YYYY-MM-DD').format('YYYY-MM-DD')
     const dateOfFirstMondayCurrentWeek = moment(selectedDate, 'YYYY-MM-DD').startOf('isoWeek').format("YYYY-MM-DD")

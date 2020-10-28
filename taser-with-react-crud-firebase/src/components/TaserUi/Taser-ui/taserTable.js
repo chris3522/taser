@@ -10,7 +10,8 @@ const TaserTable = (props) => {
         taserDays,
         taserUsers,
         taserVacations,
-        taserDesideratas } = props
+        taserDesideratas,
+        taserId } = props
     const { handleKeyPress, handleKeyUp, handleFocus, handleBlur } = props
 
     return (
@@ -28,6 +29,7 @@ const TaserTable = (props) => {
                             taserInfo={taserInfo}
                             taserUsers={taserUsers}
                             userId={user.id}
+                            taserId={taserId}
                             taserDays={taserDays}
                             taserVacations={taserVacations}
                             taserDesideratas={taserDesideratas}

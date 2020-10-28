@@ -1,4 +1,4 @@
-const inputHandleKeyPress = (e, buffer, tabVacationsAndDesideratas, colorCell) => {
+const inputHandleKeyPress = (e, buffer, tabVacationsAndDesideratas, colorCell, saveVacationOrDesiderataId) => {
     //init
     let _entryKey = e.key.toLowerCase()
     e.preventDefault()
@@ -11,14 +11,17 @@ const inputHandleKeyPress = (e, buffer, tabVacationsAndDesideratas, colorCell) =
     //set target value cell on shortkey pressed
     e.target.value = oneVacationAndDesiderata_name
     e.target.style.backgroundColor = colorCell
-    //saveInStoreVacationOrDesiderataId=oneVacationAndDesiderata_entry[buffer]
+    saveVacationOrDesiderataId = oneVacationAndDesiderata_entry[buffer]
 
     //check if keypressed is iterate in a same sequence as "x x x x"  for example
     buffer = oneVacationAndDesiderata_entry.length > 1 ? ++buffer : buffer = 0
     buffer = buffer === oneVacationAndDesiderata_entry.length ? 0 : buffer
-
     _entryKey = ""
-    return  {eraseDesiderataNameAndKeepColorInstead1:eraseDesiderataNameAndKeepColorInstead ,buffer1:buffer}
+    return {
+        eraseDesiderataNameAndKeepColorInstead1: eraseDesiderataNameAndKeepColorInstead,
+        buffer1: buffer,
+        saveVacationOrDesiderataId1: saveVacationOrDesiderataId
+    }
 }
 
 export default inputHandleKeyPress

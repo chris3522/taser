@@ -26,7 +26,7 @@ const VacationEditor = ({ user, taserId, className }) => {
     const inputModalVacationName = useRef(null)
     const inputModalVacationShortKey = useRef(null)
     const inputModalVacationId = useRef(null)
-     const inputModalVacationNature = useRef("vacation")
+    const inputModalVacationNature = useRef("vacation")
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -35,6 +35,7 @@ const VacationEditor = ({ user, taserId, className }) => {
                 "name": inputVacationName.current.value,
                 "shortKey": inputVacationShortKey.current.value,
                 "nature": inputVacationNature.current.value,
+                "color":""
             }
             api_root.createVacation(taserId, newData)
                 .then(() => mutate([taserId, swrKey]))
@@ -56,7 +57,8 @@ const VacationEditor = ({ user, taserId, className }) => {
             "id":inputModalVacationId.current.value,
             "name": inputModalVacationName.current.value,
             "shortKey": inputModalVacationShortKey.current.value,
-            "nature": inputModalVacationNature.current.value
+            "nature": inputModalVacationNature.current.value,
+            "color":""
         }
         api_root.updateVacation(taserId, newVacationData).then(
             mutate([taserId, swrKey])

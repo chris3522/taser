@@ -3,33 +3,22 @@ import styles from './taserInputCell.module.css'
 
 const TaserInputCell = (props) => {
     const {
-        isLoading,
-        //tabVacationsAndDesideratas,
-        taserVacations,
-        taserDesideratas,
-        //taserId,
         userId,
-        dayDate,
-        //desiderataColor,
-        taserDayOfThisUserId,
-        //dayDate,
+        dayNumber,
+        dayVacationOrDesiderata,
         auth,
+        mutation,
         /******Handlers********* */
         handleFocus,
         handleKeyPress,
         handleKeyUp,
         handleBlur
     } = props
-
-    //init from props through config data
-    const vacationId = taserDayOfThisUserId === undefined ? "" : taserDayOfThisUserId.vacationId
-    const desiderataId = taserDayOfThisUserId === undefined ? "" : taserDayOfThisUserId.desiderataId
-    const inputValue = vacationId === "" ? "" :  taserVacations.vacations.byId[vacationId].name
-    const desiderataColor = desiderataId === "" ? "" : taserDesideratas.desideratas.byId[desiderataId].color
+    const { name, color, nature } = dayVacationOrDesiderata
     const inputStyle = {
-        backgroundColor: desiderataColor
+        backgroundColor: color
     }
-
+    const inputValue = nature === "vacation" ? name : ""
     return (
         <input type="texte"
             className={!auth ? (`${styles.inputCell} ${styles.dismissBorderCell}`) : (`${styles.inputCell} ${styles.borderCell}`)}
@@ -39,13 +28,7 @@ const TaserInputCell = (props) => {
             onKeyPress={auth ? null : handleKeyPress}
             onKeyUp={auth ? null : handleKeyUp}
             onFocus={auth ? null : handleFocus}
-            onBlur={auth ? null : handleBlur}
-        /*
-         onKeyPress={auth ? null :onKeyPress } 
-         onKeyUp={dismiss ? null : handleKeyUp} 
-         onBlur={dismiss ? null : handleFocusOut} 
-         onFocus={dismiss ? null : handleFocusIn}
-         key={dayId}*/
+            onBlur={auth ? null : (e, ...args) => handleBlur({ e, dayNumber, userId, mutation, ...args })}
         />
     )
 }
