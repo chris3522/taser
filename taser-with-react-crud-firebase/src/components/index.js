@@ -8,3 +8,4 @@ export { default as DesiderataEditor } from "./DesiderataEditor/DesiderataEditor
 export { default as SignIn } from "./SignIn/SignIn"
 export { default as Layout } from "./Layout/Layout"
 export { default as TaserUi } from "./TaserUi/TaserUi"
+export { default as SignInUsers } from "./SignInUsers/SignInUsers"

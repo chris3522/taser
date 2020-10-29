@@ -25,10 +25,10 @@ const TaserInputCell = (props) => {
             readOnly={!auth}
             defaultValue={inputValue}
             style={inputStyle}
-            onKeyPress={auth ? null : handleKeyPress}
-            onKeyUp={auth ? null : handleKeyUp}
-            onFocus={auth ? null : handleFocus}
-            onBlur={auth ? null : (e, ...args) => handleBlur({ e, dayNumber, userId, mutation, ...args })}
+            onKeyPress={!auth ? null : handleKeyPress}
+            onKeyUp={!auth ? null : handleKeyUp}
+            onFocus={!auth ? null : handleFocus}
+            onBlur={!auth ? null : (e, ...args) => handleBlur({ e, dayNumber, userId, mutation, ...args })}
         />
     )
 }

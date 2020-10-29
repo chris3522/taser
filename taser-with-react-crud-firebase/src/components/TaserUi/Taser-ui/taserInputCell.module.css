@@ -3,15 +3,18 @@
     max-height: 20px;
     /*font-size: 12px;*/
     text-align: center;
-   
+    margin: 0;
 }
 
 .dismissBorderCell{
-     border :1px solid #d2cbcb;
+     /*border :1px solid #d2cbcb;*/
+     border:none;
 }
 
 .borderCell{
-     border :1px solid black;
+    border :1px solid #d2cbcb;
+     /*border :1px solid #d2cbcb;
+     background-color: #e9f9e4;*/
 }
 
 

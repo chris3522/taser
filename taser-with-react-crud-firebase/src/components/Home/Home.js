@@ -12,13 +12,13 @@ const Home = ({ className }) => {
     if (error) return <p>Error loading data!</p>
     else if (!data) return <p>Loading...</p>
     else {
-       console.log(data)
+       //console.log(data)
         return (
             <div className={`${className}`}>
                 <h1>Tableau</h1>
                 <ul>
                 {data.map((taser) => {
-                    console.log(taser)
+                    //console.log(taser)
                     return taser.name && (
                     <li key={taser.id}>
                         <Link to={`/taser/${taser.id}`} className="link">

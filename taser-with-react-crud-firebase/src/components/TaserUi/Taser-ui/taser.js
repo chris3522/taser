@@ -18,6 +18,8 @@ import 'react-day-picker/lib/style.css'
 import MomentLocaleUtils from 'react-day-picker/moment'
 import 'moment/locale/fr'
 
+import { SignInUsers } from 'components'
+
 
 //dayDate init with daypicker
 /************************************************ */
@@ -27,6 +29,8 @@ let dayDate = moment().format('YYYY-MM-DD')
 
 export default function Taser({ taserId }) {
     const [mounted, setMounted] = useState(false)
+    const [auth, setAuth] = useState(false)
+    const [userAuthId, setUserAuthId] = useState("")
     const [selectedDay, setSelectedDay] = useState(undefined)
     useEffect(() => {
         console.log("render")
@@ -37,10 +41,10 @@ export default function Taser({ taserId }) {
     // Init data fetching (initial data SSR with props)
     /**************************************************** */
 
-    const { data: dataInfo, error: errorInfo } = useSWR([taserId, "info"], api_root_info.getInfoOnly)
+    const { data: taserInfo, error: errorInfo } = useSWR([taserId, "taserInfo"], api_root_info.getInfoOnly)
     const { data: taserUsers, error: errorUsers } = useSWR([taserId, "users"], api_root_users.getUsers)
     const { data: taserVacations, error: errorVacations } = useSWR([taserId, "vacations"], api_root_vacations.getVacations)
-    const { data: taserDesideratas, error: errorDesideratas } = useSWR([taserId, "desiderats"], api_root_desideratas.getDesideratas)
+    const { data: taserDesideratas, error: errorDesideratas } = useSWR([taserId, "desideratas"], api_root_desideratas.getDesideratas)
 
     /************************************* */
     //handlers
@@ -72,19 +76,35 @@ export default function Taser({ taserId }) {
         setSelectedDay(day)
         dayDate = moment(day).format('YYYY-MM-DD')
     }
+    const handleSubmit = ({ ...args }) => {
+        const {taserUsers, userName} = args
+        const userId = taserUsers.filter(user => user.name===userName)[0] && taserUsers.filter(user => user.name===userName)[0].id ? taserUsers.filter(user => user.name===userName)[0].id : false
+        setUserAuthId(userId)
+        userName === "service" && (setUserAuthId("service"))
+        userName === "service" && (setAuth(!auth))
+        userId && (setAuth(!auth))
+        if (auth) {
+            setAuth(!auth) 
+            setUserAuthId("")
+        } 
+    }
     /************************************** */
 
     if (errorInfo) return <p>Error loading data!</p>
-    else if (!dataInfo) return <p>Loading...</p>
+    else if (!taserInfo) return <p>Loading...</p>
     else if (!taserVacations) return <p>Loading...</p>
     else if (!taserDesideratas) return <p>Loading...</p>
+    else if (!taserUsers) return <p>Loading...</p>
     else {
-        const { name, desc, numberOfDays, numberOfTasers } = { ...dataInfo }
+        const { name, desc, numberOfDays, numberOfTasers } = { ...taserInfo }
         const tabVacationsAndDesideratas = [...taserDesideratas, ...taserVacations]
         return (
             <div>
                 <p className={"dateCurrent"}>{`${moment(selectedDay).format('dddd DD MMMM YYYY')}`}</p>
-                <div className='dayPi' ><DayPicker selectedDays={selectedDay} onDayClick={handleDayClick} localeUtils={MomentLocaleUtils} locale={'fr'} /></div>
+                <div className={"row"}>
+                    <div className={'dayPi five columns'} ><DayPicker selectedDays={selectedDay} onDayClick={handleDayClick} localeUtils={MomentLocaleUtils} locale={'fr'} /></div>
+                    <SignInUsers className={'seven columns'} handleSubmit={(userName) => handleSubmit ({taserUsers, userName})} auth={auth}/>
+                </div>
                 <h3>{name}</h3>
                 {
                     [...Array(parseInt(numberOfTasers))].map((n, i) =>
@@ -92,9 +112,11 @@ export default function Taser({ taserId }) {
                             selectedDate={moment(dayDate, "YYYY-MM-DD").add(numberOfDays * i, "days").format("YYYY-MM-DD")}
                             numberOfDays={parseInt(numberOfDays)}
                             activeSelectedDate={dayDate}
-                            taserInfo={dataInfo}
+                            taserInfo={taserInfo}
                             taserUsers={taserUsers}
                             taserId={taserId}
+                            auth={auth}
+                            userAuthId={userAuthId}
                             /*handler*/
                             handleFocus={handleFocus}
                             handleBlur={handleBlur}
