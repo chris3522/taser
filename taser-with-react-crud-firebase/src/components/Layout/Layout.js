@@ -1,8 +1,11 @@
 import React from 'react'
 import Head from './Head'
-import { Match, Link } from "@reach/router"
+import { Match, Link, navigate } from "@reach/router"
 import * as h from "../../lib/helpers"
 import styles from "./Layout.module.css"
+import Icon from "react-crud-icons"
+import '../../../node_modules/react-crud-icons/dist/css/react-crud-icons.css'
+
 const Layout = ({ children, user }) => {
     const { email } = { ...user }
     console.log(email)
@@ -38,7 +41,7 @@ const Layout = ({ children, user }) => {
                                 <div className={styles.backToHome}>
                                     <Link to="/">
                                         ← Retour à l'accueil
-                                </Link>
+                                    </Link>
                                 </div>
                             )
                     }
@@ -52,16 +55,19 @@ const Layout = ({ children, user }) => {
                         //console.log(child)
                     })
                 }
-                {
-                    <a
-                        href="/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-
+                
+                    <Link to="/admin">
                         <img src="/calendar.svg" alt="calendar Logo" className={styles.logo} />
-                    </a>
-                }
+                    </Link>
+                    <Link to="/">
+                        <img src="/calendar.svg" alt="calendar Logo" className={styles.logo} />
+                    </Link>
+                    <Icon
+                        name="edit"
+                        theme="light"
+                        size="small"
+                        onClick={navigate("/admin")}
+                    />
             </footer>
         </div>
     )
