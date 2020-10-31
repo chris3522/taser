@@ -44,7 +44,7 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
             )}
             <Router>
                 <NotFound default />
-                <Home className="section" path="/"/>
+                <Home className="section" path="/" home/>
                 <TaserUi className="section" path="/taser/:taserId" user={user}/>
                 <SignIn 
                     className="section"

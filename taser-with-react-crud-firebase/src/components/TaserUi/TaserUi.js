@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
-import { navigate, Link } from "@reach/router"
+import React from "react"
 import Taser from './Taser-ui/taser'
 import useSWR from "swr"
 import * as api_root_info from "../../api/info"
@@ -14,7 +13,7 @@ const TaserUi = ({ className, taserId, user }) => {
         else {
             return (
                 <div className={`${className}`}>
-                    <Taser taserId={taserId} taserConnectedAdmin={taserConnectedAdmin}/>
+                    <Taser taserId={taserId} taserConnectedAdmin={taserConnectedAdmin} user={user}/>
                 </div>
             )
         }

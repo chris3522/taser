@@ -27,7 +27,7 @@ import { SignInUsers } from 'components'
 let dayDate = moment().format('YYYY-MM-DD')
 /************************************************ */
 
-export default function Taser({ taserId, taserConnectedAdmin }) {
+export default function Taser({ taserId, taserConnectedAdmin, user }) {
     const [mounted, setMounted] = useState(false)
     const [auth, setAuth] = useState(false)
     const [userAuthId, setUserAuthId] = useState("")
@@ -77,8 +77,8 @@ export default function Taser({ taserId, taserConnectedAdmin }) {
         dayDate = moment(day).format('YYYY-MM-DD')
     }
     const handleSubmit = ({ ...args }) => {
-        const {taserUsers, taserConnectedAdmin ,userName} = args
-        if (!taserConnectedAdmin.connected)  {
+        const {taserUsers, taserConnectedAdmin ,userName, user} = args
+        if (!taserConnectedAdmin.connected || user)  {
             const userId = taserUsers.filter(user => user.name===userName)[0] && taserUsers.filter(user => user.name===userName)[0].id ? taserUsers.filter(user => user.name===userName)[0].id : false
             setUserAuthId(userId)  
             userName === "service" && (setUserAuthId("service"))
@@ -108,9 +108,9 @@ export default function Taser({ taserId, taserConnectedAdmin }) {
                 <p className={"dateCurrent"}>{`${moment(selectedDay).format('dddd DD MMMM YYYY')}`}</p>
                 <div className={"row"}>
                     <div className={'dayPi five columns'} ><DayPicker selectedDays={selectedDay} onDayClick={handleDayClick} localeUtils={MomentLocaleUtils} locale={'fr'} /></div>
-                    <SignInUsers className={'seven columns'} handleSubmit={(userName) => handleSubmit ({taserUsers, taserConnectedAdmin, userName})} auth={auth}/>
+                    <SignInUsers className={'seven columns'} handleSubmit={(userName) => handleSubmit ({taserUsers, taserConnectedAdmin, userName, user})} auth={auth}/>
                 </div>
-                <h3>{name}</h3>
+                <h5>{name}</h5>
                 {
                     [...Array(parseInt(numberOfTasers))].map((n, i) =>
                         <TaserTable key={i}
