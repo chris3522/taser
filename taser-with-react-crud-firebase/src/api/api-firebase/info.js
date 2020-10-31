@@ -12,6 +12,7 @@ export const getInfo = async (...args) => {
         const docRef = db.collection("tasers").doc(taserId)
         batch.set(docRef, {})
         const docRef2 = db.collection("tasers").doc(taserId).collection("info").doc(taserId)
+        const docRef3 = db.collection("tasers").doc(taserId).collection("connected").doc("admin")
         batch.set(docRef2,
             {
                 id: taserId,
@@ -20,6 +21,13 @@ export const getInfo = async (...args) => {
                 numberOfDays: "7",
                 numberOfTasers: "4",
                 adminUid : uid
+            }
+        )
+        batch.set(docRef3,
+            {
+                id: taserId,
+                adminUid : uid,
+                connected:true
             }
         )
         // Commit the batch
@@ -54,3 +62,18 @@ export const getInfoOnly = async (taserId) => {
     }
 }
 
+export const getConnectedAdmin = async (taserId) => { 
+    const doc = await db.collection("tasers").doc(taserId).collection("connected").doc("admin").get()
+    if (doc.exists) {
+        console.log("Admin not found in database")
+        return doc.data()
+    } else {
+        throw new Error('No such document!')
+    }
+}
+
+export const updateConnectedAdmin = async (taserId,newData) => {
+    await db.collection("tasers").doc(taserId).collection("connected").doc("admin").update(newData)
+    const taserConnectedAdmin = await db.collection("tasers").doc(taserId).collection("connected").doc("admin").get()
+    return taserConnectedAdmin.data()
+}

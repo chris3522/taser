@@ -52,3 +52,8 @@ td {
 .submitButton{
     color:green;
 }
+label > .label-checkbox {
+    display: inline;
+    margin-left: .5rem;
+    font-weight: normal;
+}

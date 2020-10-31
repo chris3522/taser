@@ -6,6 +6,8 @@ import withFirebaseAuth from "react-with-firebase-auth"
 import { firebaseAppAuth, providers } from "../../lib/firebase"
 import { SignIn, TaserInfo, Layout, UserEditor, Home, TaserUi, VacationEditor, DesiderataEditor } from "components"
 import './App.css'
+import * as h from "../../lib/helpers"
+import * as api_root_info from "../../api/info"
 
 const createComponentWithAuth = withFirebaseAuth({
     providers,
@@ -20,14 +22,18 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
       }, [user])*/
     //A un user loggé en admin correspond un tableau de service
     const NotFound = () => <p>Sorry, nothing here</p>
+    const disconnected = {
+        "connected": false,
+    }
     return (
         <Layout user={user}>
             {user && (
                 <header>
                     <div className="user-profile">
-                        <Link className="log-out-link" to="#log-out" onClick={() => {
-                            signOut()
-                            //navigate("/admin");
+                        <Link className="log-out-link" to="#log-out" onClick={async () => {
+                            const taserId = h.slugify(user.email)
+                            const result = await api_root_info.updateConnectedAdmin(taserId,disconnected)
+                            if (result) {signOut()}
                         }}
                         >
                             Log Out
@@ -39,8 +45,7 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
             <Router>
                 <NotFound default />
                 <Home className="section" path="/"/>
-                {/*ajouter les taserId authoriser avant de continuer sur TaserUi*/}
-                <TaserUi className="section" path="/taser/:taserId"/>
+                <TaserUi className="section" path="/taser/:taserId" user={user}/>
                 <SignIn 
                     className="section"
                     path="/admin"

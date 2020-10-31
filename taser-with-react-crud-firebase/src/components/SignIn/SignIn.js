@@ -3,12 +3,21 @@
 import React from "react"
 import { navigate } from "@reach/router"
 import UserForm2 from "./UserForm2"
+import * as api_root_info from "../../api/info"
+import * as h from "../../lib/helpers"
 
-const SignIn = ({ className, user, signIns: { signInWithGoogle, signInWithEmailAndPassword } }) => {
+const SignIn = ({ className, user, signIns: { signInWithGoogle, signInWithEmailAndPassword }}) => {
+    const connected = {
+        "connected": true,
+    }
+    const handleConnectedAdmin = async (user) => {
+        const taserId = h.slugify(user.email)
+        const result = await api_root_info.updateConnectedAdmin(taserId,connected)
+        if (result) { navigate("/admin/taser") }
+    }
     if (user) {
-        navigate("/admin/taser") 
-        console.log(user.email)
-    return null
+        handleConnectedAdmin(user)
+        return null
     } else {
         return (
             <div className={`${className}`}>

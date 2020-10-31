@@ -23,10 +23,12 @@ const VacationEditor = ({ user, taserId, className }) => {
     const inputVacationShortKey = useRef(null)
     const inputVacationId = useRef(null)
     const inputVacationNature = useRef("vacation")
+    const inputVacationRequise = useRef(null)
     const inputModalVacationName = useRef(null)
     const inputModalVacationShortKey = useRef(null)
     const inputModalVacationId = useRef(null)
     const inputModalVacationNature = useRef("vacation")
+    const inputModalVacationRequise = useRef(null)
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -35,6 +37,7 @@ const VacationEditor = ({ user, taserId, className }) => {
                 "name": inputVacationName.current.value,
                 "shortKey": inputVacationShortKey.current.value,
                 "nature": inputVacationNature.current.value,
+                "isRequired": inputVacationRequise.current.checked,
                 "color":""
             }
             api_root.createVacation(taserId, newData)
@@ -42,12 +45,13 @@ const VacationEditor = ({ user, taserId, className }) => {
         }
     }
 
-    const displayUpdateVacationForm = (e, taserId, vacationId, vacationNature, vacationName, vacationShortKey) => {
+    const displayUpdateVacationForm = (e, taserId, vacationId, vacationNature, vacationName, vacationShortKey, vacationRequired) => {
         e.preventDefault()
         inputModalVacationId.current.value = vacationId
         inputModalVacationName.current.value = vacationName
         inputModalVacationShortKey.current.value = vacationShortKey
         inputModalVacationNature.current.value = vacationNature
+        inputModalVacationRequise.current.checked = vacationRequired
         setIsDisplay(false)
     }
 
@@ -58,6 +62,7 @@ const VacationEditor = ({ user, taserId, className }) => {
             "name": inputModalVacationName.current.value,
             "shortKey": inputModalVacationShortKey.current.value,
             "nature": inputModalVacationNature.current.value,
+            "isRequired": inputModalVacationRequise.current.checked,
             "color":""
         }
         api_root.updateVacation(taserId, newVacationData).then(
@@ -67,6 +72,7 @@ const VacationEditor = ({ user, taserId, className }) => {
         inputModalVacationName.current.value = ""
         inputModalVacationShortKey.current.value = ""
         inputModalVacationNature.current.value = ""
+        inputModalVacationRequise.current.checked = ""
         setIsDisplay(true)
     }
 
@@ -75,22 +81,22 @@ const VacationEditor = ({ user, taserId, className }) => {
     else {
         return (
             <div className={className}>
-                <CrudForm buttonName="Create" displayForm={isDisplay ? "displayInBlock" : "displayNone"} onSubmit={handleSubmit} inputRef1={inputVacationId} inputRef2={inputVacationNature} inputRef3={inputVacationName} inputRef4={inputVacationShortKey}/>
-                <CrudForm buttonName="Update" displayForm={isDisplay ? "displayNone" : "displayInBlock"} onSubmit={updateVacation} inputRef1={inputModalVacationId} inputRef2={inputModalVacationNature} inputRef3={inputModalVacationName} inputRef4={inputModalVacationShortKey}/>
+                <CrudForm buttonName="Create" displayForm={isDisplay ? "displayInBlock" : "displayNone"} onSubmit={handleSubmit} inputRef1={inputVacationId} inputRef2={inputVacationNature} inputRef3={inputVacationName} inputRef4={inputVacationShortKey} inputRef5={inputVacationRequise}/>
+                <CrudForm buttonName="Update" displayForm={isDisplay ? "displayNone" : "displayInBlock"} onSubmit={updateVacation} inputRef1={inputModalVacationId} inputRef2={inputModalVacationNature} inputRef3={inputModalVacationName} inputRef4={inputModalVacationShortKey} inputRef5={inputModalVacationRequise}/>
                 <table>
-                    <thead><tr><th>id</th><th>nom</th><th>shortKey</th><th></th><th></th></tr></thead>
+                    <thead><tr><th>id</th><th>nom</th><th>shortKey</th><th>obligatoire</th><th></th><th></th></tr></thead>
                     <tbody>
                         {data.map((vacation) => {
                             return (
                                 <tr key={vacation.id}>
-                                    <td> {vacation.id}</td><td>{vacation.name}</td><td>{vacation.shortKey}</td>
+                                    <td> {vacation.id}</td><td>{vacation.name}</td><td>{vacation.shortKey}</td><td>{vacation.isRequired ? "true":"false"}</td>
                                     <td>
                                         <Icon
                                             name="edit"
                                             theme="light"
                                             size="small"
                                             onClick={(e) => {
-                                                displayUpdateVacationForm(e, taserId, vacation.id, vacation.nature, vacation.name, vacation.shortKey)
+                                                displayUpdateVacationForm(e, taserId, vacation.id, vacation.nature, vacation.name, vacation.shortKey, vacation.isRequired)
                                             }}
 
                                         /></td>

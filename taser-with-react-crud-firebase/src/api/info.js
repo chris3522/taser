@@ -26,3 +26,11 @@ export const getInfoOnly = (taserId) => {
     //don't create defaut info
     return firestore_api.getInfoOnly(taserId)
 }
+
+export const getConnectedAdmin = (taserId) => {
+    return firestore_api.getConnectedAdmin(taserId)
+}
+
+export const updateConnectedAdmin = (taserId, newData) => {
+    return firestore_api.updateConnectedAdmin(taserId, newData)
+}
