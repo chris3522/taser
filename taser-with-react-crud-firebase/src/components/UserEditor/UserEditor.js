@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import useSWR, { mutate } from "swr"
-import { navigate, Link } from "@reach/router"
+import { navigate } from "@reach/router"
 import "./UserEditor.css"
 import * as api_root from "../../api/users"
 import Icon from "react-crud-icons"

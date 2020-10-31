@@ -1,10 +1,15 @@
 import React from 'react'
 import Head from './Head'
-import { Match, Link, navigate } from "@reach/router"
+import { Match, navigate } from "@reach/router"
+import { Link } from 'components'
 import * as h from "../../lib/helpers"
 import styles from "./Layout.module.css"
 import Icon from "react-crud-icons"
 import '../../../node_modules/react-crud-icons/dist/css/react-crud-icons.css'
+import { ReactComponent as Logo } from './calendar.svg'
+import basePath from "../../lib/env"
+
+const BASE = basePath.BASE
 
 const Layout = ({ children, user }) => {
     const { email } = { ...user }
@@ -33,7 +38,7 @@ const Layout = ({ children, user }) => {
                         if (child && child.type !== 'header' && child.type !== 'footer') return child
                     })
                 }
-                <Match path="/">
+                <Match path={BASE+"/"}>
                     {props =>
                         props.match ? (
                             <div></div>
@@ -56,17 +61,14 @@ const Layout = ({ children, user }) => {
                     })
                 }
                 
-                    <Link to="/admin">
-                        <img src="/calendar.svg" alt="calendar Logo" className={styles.logo} />
-                    </Link>
                     <Link to="/">
-                        <img src="/calendar.svg" alt="calendar Logo" className={styles.logo} />
+                        <Logo alt="calendar Logo" className={styles.logo} />
                     </Link>
                     <Icon
-                        name="edit"
+                        name="settings"
                         theme="light"
                         size="small"
-                        onClick={navigate("/admin")}
+                        onClick={()=>navigate(BASE+"/admin")}
                     />
             </footer>
         </div>

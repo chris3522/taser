@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import useSWR from "swr"
 import moment from 'moment'
 import TaserTable from './taserTable'
@@ -17,9 +17,10 @@ import DayPicker from 'react-day-picker'
 import 'react-day-picker/lib/style.css'
 import MomentLocaleUtils from 'react-day-picker/moment'
 import 'moment/locale/fr'
-
 import { SignInUsers } from 'components'
+import uiPass from '../../../lib/env'
 
+const secret =  uiPass.PWDTASERUI
 
 //dayDate init with daypicker
 /************************************************ */
@@ -28,14 +29,11 @@ let dayDate = moment().format('YYYY-MM-DD')
 /************************************************ */
 
 export default function Taser({ taserId, taserConnectedAdmin, user }) {
-    const [mounted, setMounted] = useState(false)
-    const [auth, setAuth] = useState(false)
+  
+    const [authTaserUi, setAuthTaserUi] = useState(false)
     const [userAuthId, setUserAuthId] = useState("")
     const [selectedDay, setSelectedDay] = useState(undefined)
-    useEffect(() => {
-        console.log("render")
-        setMounted(true)
-    }, [])
+
 
     /**************************************************** */
     // Init data fetching (initial data SSR with props)
@@ -79,13 +77,14 @@ export default function Taser({ taserId, taserConnectedAdmin, user }) {
     const handleSubmit = ({ ...args }) => {
         const {taserUsers, taserConnectedAdmin ,userName, user} = args
         if (!taserConnectedAdmin.connected || user)  {
+            //connexion agent au taser ui possible
             const userId = taserUsers.filter(user => user.name===userName)[0] && taserUsers.filter(user => user.name===userName)[0].id ? taserUsers.filter(user => user.name===userName)[0].id : false
             setUserAuthId(userId)  
-            userName === "service" && (setUserAuthId("service"))
-            userName === "service" && (setAuth(!auth))
-            userId && (setAuth(!auth))
-            if (auth) {
-                setAuth(!auth) 
+            userName === secret && (setUserAuthId("service"))
+            userName === secret && (setAuthTaserUi(!authTaserUi))
+            userId && (setAuthTaserUi(!authTaserUi))
+            if (authTaserUi) {
+                setAuthTaserUi(!authTaserUi) 
                 setUserAuthId("")
             }  
         } else {
@@ -96,7 +95,6 @@ export default function Taser({ taserId, taserConnectedAdmin, user }) {
 
     if (errorInfo) return <p>Error loading data!</p>
     else if (!taserInfo) return <p>Loading...</p>
-    //else if (!taserConnectedAdmin) return <p>Loading...</p>
     else if (!taserVacations) return <p>Loading...</p>
     else if (!taserDesideratas) return <p>Loading...</p>
     else if (!taserUsers) return <p>Loading...</p>
@@ -108,7 +106,7 @@ export default function Taser({ taserId, taserConnectedAdmin, user }) {
                 <p className={"dateCurrent"}>{`${moment(selectedDay).format('dddd DD MMMM YYYY')}`}</p>
                 <div className={"row"}>
                     <div className={'dayPi five columns'} ><DayPicker selectedDays={selectedDay} onDayClick={handleDayClick} localeUtils={MomentLocaleUtils} locale={'fr'} /></div>
-                    <SignInUsers className={'seven columns'} handleSubmit={(userName) => handleSubmit ({taserUsers, taserConnectedAdmin, userName, user})} auth={auth}/>
+                    <SignInUsers className={'seven columns'} handleSubmit={(userName) => handleSubmit ({taserUsers, taserConnectedAdmin, userName, user})} authTaserUi={authTaserUi}/>
                 </div>
                 <h5>{name}</h5>
                 {
@@ -120,7 +118,6 @@ export default function Taser({ taserId, taserConnectedAdmin, user }) {
                             taserInfo={taserInfo}
                             taserUsers={taserUsers}
                             taserId={taserId}
-                            auth={auth}
                             userAuthId={userAuthId}
                             /*handler*/
                             handleFocus={handleFocus}

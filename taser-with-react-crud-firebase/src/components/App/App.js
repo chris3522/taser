@@ -1,18 +1,21 @@
 /* src/components/app/App.js */
 
-import React, { useEffect } from "react"
-import { Router, navigate, Link } from "@reach/router"
+import React from "react"
+import { Router } from "@reach/router"
 import withFirebaseAuth from "react-with-firebase-auth"
 import { firebaseAppAuth, providers } from "../../lib/firebase"
-import { SignIn, TaserInfo, Layout, UserEditor, Home, TaserUi, VacationEditor, DesiderataEditor } from "components"
+import { SignIn, TaserInfo, Layout, UserEditor, Home, TaserUi, VacationEditor, DesiderataEditor, Link } from "components"
 import './App.css'
 import * as h from "../../lib/helpers"
 import * as api_root_info from "../../api/info"
+import basePath from "../../lib/env"
 
 const createComponentWithAuth = withFirebaseAuth({
     providers,
     firebaseAppAuth,
 })
+
+const BASE = basePath.BASE
 
 const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) => {
     /*  useEffect(() => {
@@ -25,15 +28,18 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
     const disconnected = {
         "connected": false,
     }
+    console.log(process.env.REACT_APP_BASEPATH)
     return (
         <Layout user={user}>
             {user && (
                 <header>
                     <div className="user-profile">
-                        <Link className="log-out-link" to="#log-out" onClick={async () => {
+                        <Link className="log-out-link" to="/#log-out" onClick={async () => {
                             const taserId = h.slugify(user.email)
                             const result = await api_root_info.updateConnectedAdmin(taserId,disconnected)
-                            if (result) {signOut()}
+                            if (result) {
+                                signOut()
+                            }
                         }}
                         >
                             Log Out
@@ -42,9 +48,9 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
                     </div>
                 </header>
             )}
-            <Router>
+            <Router basepath={BASE}>
                 <NotFound default />
-                <Home className="section" path="/" home/>
+                <Home className="section" path="/"/>
                 <TaserUi className="section" path="/taser/:taserId" user={user}/>
                 <SignIn 
                     className="section"

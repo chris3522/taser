@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState } from "react"
-import useSWR, { mutate } from "swr"
-import { navigate, Link } from "@reach/router"
+import React  from "react"
+import useSWR from "swr"
 import * as api_root_tasers from "../../api/tasers"
-
+import { Link } from 'components'
 
 
 const Home = ({ className }) => {

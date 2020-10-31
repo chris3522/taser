@@ -5,6 +5,9 @@ import { navigate } from "@reach/router"
 import UserForm2 from "./UserForm2"
 import * as api_root_info from "../../api/info"
 import * as h from "../../lib/helpers"
+import basePath from "../../lib/env"
+
+const BASE = basePath.BASE
 
 const SignIn = ({ className, user, signIns: { signInWithGoogle, signInWithEmailAndPassword }}) => {
     const connected = {
@@ -13,7 +16,7 @@ const SignIn = ({ className, user, signIns: { signInWithGoogle, signInWithEmailA
     const handleConnectedAdmin = async (user) => {
         const taserId = h.slugify(user.email)
         const result = await api_root_info.updateConnectedAdmin(taserId,connected)
-        if (result) { navigate("/admin/taser") }
+        if (result) { navigate(BASE+"/admin/taser") }
     }
     if (user) {
         handleConnectedAdmin(user)

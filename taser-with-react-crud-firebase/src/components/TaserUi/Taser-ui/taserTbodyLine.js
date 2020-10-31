@@ -4,12 +4,15 @@ import moment from 'moment'
 import TaserInputCell from './taserInputCell'
 //import styles from './taserTbodyLine.module.css'
 import * as api_root_days from "../../../api/days"
+import uiPass from '../../../lib/env'
+
+const secret =  uiPass.PWDTASERUI
 
 const TaserTbodyLine = (props) => {
     //selectedDate = date incluse dans la semaine du taser qui s'affiche
     const { selectedDate, numberOfDays } = props
     const dateOfFirstMondayCurrentWeek = moment(selectedDate, 'YYYY-MM-DD').startOf('isoWeek').format("YYYY-MM-DD")
-    const { taserUsers, userId, taserId, auth, userAuthId } = props
+    const { taserUsers, userId, taserId, userAuthId } = props
     const { handleKeyPress, handleKeyUp, handleFocus, handleBlur } = props
     const user = taserUsers.filter(user => userId === user.id)[0]
     const swrKey = `/days/${taserId}/${userId}`
@@ -26,7 +29,7 @@ const TaserTbodyLine = (props) => {
                     let dayVacationOrDesiderata = userDays && userDays.filter(day => day.dayNumber === dayNumber).length > 0 ? userDays.filter(day => day.dayNumber === dayNumber)[0] : {}
                     return dayVacationOrDesiderata && <td key={`${dayDate}-${userId}`}>
                         <TaserInputCell
-                            auth={userAuthId === userId || userAuthId === "service" ? true : false}
+                            auth={userAuthId === userId || userAuthId === secret ? true : false}
                             userId={userId}
                             dayNumber={dayNumber}
                             dayVacationOrDesiderata={dayVacationOrDesiderata}
