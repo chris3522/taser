@@ -5,7 +5,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 CRUD functions are here available, moreover we use Firebase and SWR to achieve this.
 All sripts are clientside.
 In firebase you have to create a cloudfirestore database named "tasers" .
-In firebase/authentification, you need to create at least one user (one user for one taser). With email/password sign-in method.
+In firebase/authentification, you need to create at least one user (one user for one taser) with email/password sign-in method.
 
 ## Available Scripts
 
