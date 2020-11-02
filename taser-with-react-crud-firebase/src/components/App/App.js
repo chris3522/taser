@@ -4,7 +4,7 @@ import React from "react"
 import { Router } from "@reach/router"
 import withFirebaseAuth from "react-with-firebase-auth"
 import { firebaseAppAuth, providers } from "../../lib/firebase"
-import { SignIn, TaserInfo, Layout, UserEditor, Home, TaserUi, VacationEditor, DesiderataEditor, Link } from "components"
+import { SignIn, TaserInfo, Layout, UserEditor, Home, TaserUi, VacationEditor, DesiderataEditor, Link, RenfortEditor } from "components"
 import './App.css'
 import * as h from "../../lib/helpers"
 import * as api_root_info from "../../api/info"
@@ -62,6 +62,7 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
                 {user && (<UserEditor className="section" path="/admin/:taserId/users" user={user} />)}
                 {user && (<VacationEditor className="section" path="/admin/:taserId/vacations" user={user} />)}
                 {user && (<DesiderataEditor className="section" path="/admin/:taserId/desideratas" user={user} />)}
+                {user && (<RenfortEditor className="section" path="/admin/:taserId/renforts" user={user} />)}
             </Router>
         </Layout>
     )

@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import useSWR from "swr"
 import moment from 'moment'
 import TaserTable from './taserTable'
+import TaserTableRenfort from './taserTableRenfort'
 import inputHandleFocus from './../Taser-ui-handler/cellFocusHandler'
 import inputHandleBlur from './../Taser-ui-handler/cellBlurHandler'
 import inputHandleKeyUp from './../Taser-ui-handler/cellKeyUpHandler'
@@ -28,13 +29,15 @@ const secret =  uiPass.PWDTASERUI
 let dayDate = moment().format('YYYY-MM-DD')
 /************************************************ */
 
-export default function Taser({ taserId, taserConnectedAdmin, user }) {
+export default function Taser({ taserId, taserConnectedAdmin, user, renforts }) {
   
     const [authTaserUi, setAuthTaserUi] = useState(false)
     const [userAuthId, setUserAuthId] = useState("")
     const [selectedDay, setSelectedDay] = useState(undefined)
 
-
+    const rangeOfDays = selectedDay ? moment(selectedDay,'YYYY-MM-DD').startOf('month').subtract(150,"days").format('YYYY-MM-DD'):
+        moment(dayDate,'YYYY-MM-DD').startOf('month').subtract(150,"days").format('YYYY-MM-DD')
+    
     /**************************************************** */
     // Init data fetching (initial data SSR with props)
     /**************************************************** */
@@ -98,6 +101,7 @@ export default function Taser({ taserId, taserConnectedAdmin, user }) {
     else if (!taserVacations) return <p>Loading...</p>
     else if (!taserDesideratas) return <p>Loading...</p>
     else if (!taserUsers) return <p>Loading...</p>
+    else if (!renforts) return <p>Loading...</p>
     else {
         const { name, desc, numberOfDays, numberOfTasers } = { ...taserInfo }
         const tabVacationsAndDesideratas = [...taserDesideratas, ...taserVacations]
@@ -119,11 +123,16 @@ export default function Taser({ taserId, taserConnectedAdmin, user }) {
                             taserUsers={taserUsers}
                             taserId={taserId}
                             userAuthId={userAuthId}
+                            rangeOfDays={rangeOfDays}
                             /*handler*/
                             handleFocus={handleFocus}
                             handleBlur={handleBlur}
                             handleKeyPress={(e) => handleKeyPress(e, tabVacationsAndDesideratas)}
-                            handleKeyUp={handleKeyUp} />)}
+                            handleKeyUp={handleKeyUp} >
+                                <TaserTableRenfort/>
+                        </TaserTable>
+                        
+                    )}
 
             </div>
         )

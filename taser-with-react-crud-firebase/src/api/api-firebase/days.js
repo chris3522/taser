@@ -8,9 +8,9 @@ export const createDay = async ({...args}) => {
 }
 
 export const getDays = async (...args) => {
-    const [taserId, userId] = args
+    const [taserId, userId, rangeOfDaysInt] = args
     const daysRef = await db.collection("tasers").doc(taserId).collection("users").doc(userId).collection("days")
-    const snapshot = await daysRef.where('dayNumber', '>', 20200601).get()
+    const snapshot = await daysRef.where('dayNumber', '>', rangeOfDaysInt).get()
     if (snapshot.empty) {
     console.log('No matching documents.');
     return

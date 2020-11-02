@@ -24,3 +24,8 @@ export const updateVacation = (taserId, newVacationData) => {
 export const deleteVacation = (taserId, vacationId) => {
     return firestore_api.deleteVacation(taserId, vacationId)
 }
+
+export const getIsrequiredVacationsNumber = (...args) => {
+    return firestore_api.getIsrequiredVacationsNumber(...args)
+}
+

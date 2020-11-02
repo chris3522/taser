@@ -26,7 +26,7 @@ export const createVacation = async (taserId, newData) => {
     return await db.collection("tasers").doc(taserId).collection("vacations").add(newData)
         .then(docRef =>
             db.collection("tasers").doc(taserId).collection("vacations").doc(docRef.id).get())
-        .then(vacation => ({ id:vacation.id, ...vacation.data() }))
+        .then(vacation => ({ id: vacation.id, ...vacation.data() }))
 }
 
 export const updateVacation = async (taserId, newVacationData) => {
@@ -44,4 +44,20 @@ export const deleteVacation = async (taserId, vacationId) => {
         .collection("vacations")
         .doc(vacationId)
         .delete()
+}
+
+export const getIsrequiredVacationsNumber = async (...args) => {
+    const [taserId] = args
+    const vacationsRequiredRef = await db.collection("tasers").doc(taserId).collection("vacations")
+        .where("isRequired", "==", true)
+    const snapshot = await vacationsRequiredRef.get()
+    if (snapshot.empty) {
+        console.log('No matching documents.');
+        return
+    }
+
+    const vacationsRequired = snapshot.docs.map((vacation) =>
+        ({ id: vacation.id, ...vacation.data() })
+    )
+    return snapshot.docs.length
 }

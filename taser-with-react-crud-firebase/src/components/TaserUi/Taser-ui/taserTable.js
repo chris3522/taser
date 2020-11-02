@@ -12,6 +12,7 @@ const TaserTable = (props) => {
         taserVacations,
         taserDesideratas,
         userAuthId,
+        rangeOfDays,
         taserId } = props
     const { handleKeyPress, handleKeyUp, handleFocus, handleBlur } = props
 
@@ -35,6 +36,7 @@ const TaserTable = (props) => {
                             taserVacations={taserVacations}
                             taserDesideratas={taserDesideratas}
                             userAuthId={userAuthId}
+                            rangeOfDays={rangeOfDays}
                             /******handlers*********** */
                             handleKeyPress = {handleKeyPress}
                             handleKeyUp={handleKeyUp}
@@ -43,6 +45,7 @@ const TaserTable = (props) => {
                         />
                     )}
                 </tbody>
+                 {props.children}
             </table>
         </div>
     )
