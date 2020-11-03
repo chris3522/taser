@@ -12,3 +12,26 @@ export function slugify(string) {
     .replace(/^-+/, '') // Trim - from start of text
     .replace(/-+$/, '') // Trim - from end of text
 }
+
+export function closeTab(user, handleDisconnect) {
+    const disconnected = {
+        "connected": false,
+    }
+
+    const taserId = slugify(user.email)
+    window.addEventListener("beforeunload", (ev) => {
+            ev.preventDefault()
+            handleDisconnect(taserId,disconnected)
+            return null
+    })
+
+
+    return null
+}
+
+export function cleanup(taserId,handleDisconnect) {
+    const disconnected = {
+        "connected": false,
+    }
+    handleDisconnect(taserId,disconnected)
+}

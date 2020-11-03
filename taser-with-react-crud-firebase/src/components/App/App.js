@@ -1,6 +1,6 @@
 /* src/components/app/App.js */
 
-import React from "react"
+import React, { useEffect } from "react"
 import { Router } from "@reach/router"
 import withFirebaseAuth from "react-with-firebase-auth"
 import { firebaseAppAuth, providers } from "../../lib/firebase"
@@ -16,18 +16,28 @@ const createComponentWithAuth = withFirebaseAuth({
 })
 
 const BASE = basePath.BASE
+const disconnected = {
+    "connected": false,
+}
 
 const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) => {
-    /*  useEffect(() => {
-          if (!user) {
-              //navigate("/")
-          }
-      }, [user])*/
+    useEffect(() => {
+        const cleanup = (ev) => {
+            if (user) {
+                ev.preventDefault()
+                const taserId = h.slugify(user.email)
+                api_root_info.updateConnectedAdmin(taserId, disconnected)
+                signOut()
+                console.log("disconnected")
+                return null
+            } else { return null }
+        }
+        window.addEventListener('beforeunload', cleanup)
+        return () => window.removeEventListener('beforeunload', cleanup)
+    }, [user])
     //A un user loggé en admin correspond un tableau de service
     const NotFound = () => <p>Sorry, nothing here</p>
-    const disconnected = {
-        "connected": false,
-    }
+
     console.log(process.env.REACT_APP_BASEPATH)
     return (
         <Layout user={user}>
@@ -36,7 +46,7 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
                     <div className="user-profile">
                         <Link className="log-out-link" to="/#log-out" onClick={async () => {
                             const taserId = h.slugify(user.email)
-                            const result = await api_root_info.updateConnectedAdmin(taserId,disconnected)
+                            const result = await api_root_info.updateConnectedAdmin(taserId, disconnected)
                             if (result) {
                                 signOut()
                             }
@@ -50,9 +60,9 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
             )}
             <Router basepath={BASE}>
                 <NotFound default />
-                <Home className="section" path="/"/>
-                <TaserUi className="section" path="/taser/:taserId" user={user}/>
-                <SignIn 
+                <Home className="section" path="/" />
+                <TaserUi className="section" path="/taser/:taserId" user={user} />
+                <SignIn
                     className="section"
                     path="/admin"
                     user={user}

@@ -17,7 +17,7 @@ const TaserTableRenfort = (props) => {
     const { handleKeyPress, handleKeyUp, handleFocus, handleBlur } = props*/
 
     return (
-        <tbody><tr>renfort lines</tr></tbody>
+        <tbody><tr><td>renfort lines</td></tr></tbody>
     )
 }
 
