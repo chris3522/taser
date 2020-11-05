@@ -3,8 +3,8 @@
 import React from "react"
 import UserForm from "./UserForm"
 
-const SignInUsers = ({ className, handleSubmit, authTaserUi}) => {
-    const buttonName = !authTaserUi ? "Connexion" : "Déconnexion"
+const SignInUsers = ({ className, handleSubmit, buttonConnectName}) => {
+    const buttonName = !buttonConnectName ? "Connexion" : "Déconnexion"
     return (
         <div className={`${className}`}>
             <UserForm onClick={handleSubmit}>{buttonName}</UserForm>

@@ -61,14 +61,14 @@ const Layout = ({ children, user }) => {
                     })
                 }
                 
-                    <Link to="/">
+                    <Link to="/login">
                         <Logo alt="calendar Logo" className={styles.logo} />
                     </Link>
                     <Icon
                         name="settings"
                         theme="light"
                         size="small"
-                        onClick={()=>navigate(BASE+"/admin")}
+                        onClick={()=>navigate(`${BASE}/admin/taser`)}
                     />
             </footer>
         </div>

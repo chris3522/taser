@@ -1,6 +1,7 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import useSWR from "swr"
 import moment from 'moment'
+import { navigate } from "@reach/router"
 import TaserTable from './taserTable'
 import TaserTableRenfort from './taserTableRenfort'
 import inputHandleFocus from './../Taser-ui-handler/cellFocusHandler'
@@ -21,7 +22,9 @@ import 'moment/locale/fr'
 import { SignInUsers } from 'components'
 import uiPass from '../../../lib/env'
 
-const secret =  uiPass.PWDTASERUI
+const accessAllLines = uiPass.PWDTASERUI
+const accessAdmin = uiPass.PWDTASERADMIN
+const BASE = uiPass.BASE
 
 //dayDate init with daypicker
 /************************************************ */
@@ -29,15 +32,20 @@ const secret =  uiPass.PWDTASERUI
 let dayDate = moment().format('YYYY-MM-DD')
 /************************************************ */
 
-export default function Taser({ taserId, taserConnectedAdmin, user, renforts }) {
-  
-    const [authTaserUi, setAuthTaserUi] = useState(false)
-    const [userAuthId, setUserAuthId] = useState("")
-    const [selectedDay, setSelectedDay] = useState(undefined)
+export default function Taser({ taserId, renforts, setAuthAdmin }) {
 
-    const rangeOfDays = selectedDay ? moment(selectedDay,'YYYY-MM-DD').startOf('month').subtract(150,"days").format('YYYY-MM-DD'):
-        moment(dayDate,'YYYY-MM-DD').startOf('month').subtract(150,"days").format('YYYY-MM-DD')
-    
+    const [buttonConnectName, setButtonConnectName] = useState(false)
+    const [userAuthId, setUserAuthId] = useState()
+    const [selectedDay, setSelectedDay] = useState(undefined)
+    console.log('id'+userAuthId)
+    /*useEffect(() => {
+ 
+     }, [buttonConnectName])
+     
+ */
+    const rangeOfDays = selectedDay ? moment(selectedDay, 'YYYY-MM-DD').startOf('month').subtract(150, "days").format('YYYY-MM-DD') :
+        moment(dayDate, 'YYYY-MM-DD').startOf('month').subtract(150, "days").format('YYYY-MM-DD')
+
     /**************************************************** */
     // Init data fetching (initial data SSR with props)
     /**************************************************** */
@@ -48,7 +56,7 @@ export default function Taser({ taserId, taserConnectedAdmin, user, renforts }) 
     const { data: taserDesideratas, error: errorDesideratas } = useSWR([taserId, "desideratas"], api_root_desideratas.getDesideratas)
 
     /************************************* */
-    //handlers
+    //handlers for taser UI input cells
     /************************************* */
     //init for ui event handlers with 4 global let variables
     //init buffer for shorkey iteration (iterate "x" to switch desiderata)
@@ -67,8 +75,8 @@ export default function Taser({ taserId, taserConnectedAdmin, user, renforts }) 
     const handleKeyUp = (e) => {
         inputHandleKeyUp(e, eraseDesiderataNameAndKeepColorInstead)
     }
-    const handleBlur = ({e, ...args}) => {
-        inputHandleBlur({e, saveVacationOrDesiderataId, taserId, ...args})
+    const handleBlur = ({ e, ...args }) => {
+        inputHandleBlur({ e, saveVacationOrDesiderataId, taserId, ...args })
     }
     const handleFocus = e => {
         inputHandleFocus(e)
@@ -77,21 +85,54 @@ export default function Taser({ taserId, taserConnectedAdmin, user, renforts }) 
         setSelectedDay(day)
         dayDate = moment(day).format('YYYY-MM-DD')
     }
-    const handleSubmit = ({ ...args }) => {
-        const {taserUsers, taserConnectedAdmin ,userName, user} = args
-        if (!taserConnectedAdmin.connected || user)  {
-            //connexion agent au taser ui possible
-            const userId = taserUsers.filter(user => user.name===userName)[0] && taserUsers.filter(user => user.name===userName)[0].id ? taserUsers.filter(user => user.name===userName)[0].id : false
-            setUserAuthId(userId)  
-            userName === secret && (setUserAuthId("service"))
-            userName === secret && (setAuthTaserUi(!authTaserUi))
-            userId && (setAuthTaserUi(!authTaserUi))
-            if (authTaserUi) {
-                setAuthTaserUi(!authTaserUi) 
-                setUserAuthId("")
-            }  
-        } else {
-            alert("Administrateur connecté : connexion impossible")
+
+    /*********************************************************** */
+    //handlers for signin Authorization inside App (not login App)
+    /*********************************************************** */
+
+    const connected = {
+        "connected": true,
+    }
+    const disconnected = {
+        "connected": false,
+    }
+    const handleConnectedAdmin = async (connect) => {
+        const result = await api_root_info.updateConnectedAdmin(taserId, connect)
+        if (result) {
+            //navigate(`${BASE}/admin/taser`)
+            return result
+        }
+    }
+    const handleSubmit = async ({ ...args }) => {
+        const { taserUsers, loginEntry } = args
+        const taserConnectedAdmin = await api_root_info.getConnectedAdmin(taserId)
+        const isConnectedAdmin = taserConnectedAdmin.connected
+        const userId = taserUsers.filter(user => user.name === loginEntry)[0] && taserUsers.filter(user => user.name === loginEntry)[0].id ? taserUsers.filter(user => user.name === loginEntry)[0].id : false
+        console.log('*1' + buttonConnectName)
+        if (taserConnectedAdmin && buttonConnectName === false) {
+            switch (loginEntry) {
+                case accessAdmin:
+                    setAuthAdmin(accessAdmin)
+                    setButtonConnectName(true)
+                    setUserAuthId(accessAllLines)
+                    handleConnectedAdmin(connected)
+                    break
+                case accessAllLines:
+                    !isConnectedAdmin && (setUserAuthId(accessAllLines))
+                    !isConnectedAdmin && (setButtonConnectName(true))
+                    isConnectedAdmin && (alert("Administrateur connecté : connexion impossible"))
+                    break;
+                default:
+                    userId && !isConnectedAdmin && (setUserAuthId(userId))
+                    userId && !isConnectedAdmin && (setButtonConnectName(true))
+                    userId && isConnectedAdmin && (alert("Administrateur connecté : connexion impossible"))
+            }
+        }
+        else {
+            setAuthAdmin(false)
+            setButtonConnectName(false)
+            setUserAuthId()
+            handleConnectedAdmin(disconnected)
         }
     }
     /************************************** */
@@ -106,11 +147,13 @@ export default function Taser({ taserId, taserConnectedAdmin, user, renforts }) 
         const { name, desc, numberOfDays, numberOfTasers } = { ...taserInfo }
         const tabVacationsAndDesideratas = [...taserDesideratas, ...taserVacations]
         return (
+
             <div>
+                {console.log('*2' + buttonConnectName)}
                 <p className={"dateCurrent"}>{`${moment(selectedDay).format('dddd DD MMMM YYYY')}`}</p>
                 <div className={"row"}>
                     <div className={'dayPi five columns'} ><DayPicker selectedDays={selectedDay} onDayClick={handleDayClick} localeUtils={MomentLocaleUtils} locale={'fr'} /></div>
-                    <SignInUsers className={'seven columns'} handleSubmit={(userName) => handleSubmit ({taserUsers, taserConnectedAdmin, userName, user})} authTaserUi={authTaserUi}/>
+                    <SignInUsers className={'seven columns'} handleSubmit={(loginEntry) => handleSubmit({ taserUsers, loginEntry })} buttonConnectName={buttonConnectName} />
                 </div>
                 <h5>{name}</h5>
                 {
@@ -129,9 +172,9 @@ export default function Taser({ taserId, taserConnectedAdmin, user, renforts }) 
                             handleBlur={handleBlur}
                             handleKeyPress={(e) => handleKeyPress(e, tabVacationsAndDesideratas)}
                             handleKeyUp={handleKeyUp} >
-                                <TaserTableRenfort/>
+                            <TaserTableRenfort />
                         </TaserTable>
-                        
+
                     )}
 
             </div>

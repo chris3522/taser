@@ -8,11 +8,11 @@ import * as api_root from "../../api/info"
 import * as h from "../../lib/helpers"
 
 const TaserInfo = ({ user, className }) => {
-    useEffect(() => {
+ /*   useEffect(() => {
         if (!user) {
             navigate("/admin")
         }
-    }, [user])
+    }, [user])*/
 
     const taserId = h.slugify(user.email)
     const uid = user.uid.toString()

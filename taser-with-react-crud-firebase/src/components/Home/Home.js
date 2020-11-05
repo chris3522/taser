@@ -2,14 +2,17 @@ import React  from "react"
 import useSWR from "swr"
 import * as api_root_tasers from "../../api/tasers"
 import { Link } from 'components'
+import { navigate } from "@reach/router"
+import basePath from "../../lib/env"
 
+const BASE = basePath.BASE
 
-const Home = ({ className }) => {
+const Home = ({ className, user }) => {
     const swrKey = `/tasers`
     const { data, error } = useSWR([swrKey], api_root_tasers.getTasers)
     if (error) return <p>Error loading data!</p>
     else if (!data) return <p>Loading...</p>
-    else {
+    else if (user) {
         return (
             <div className={`${className}`}>
                 <h4>Liste des tableaux</h4>
@@ -27,6 +30,10 @@ const Home = ({ className }) => {
                 </ul>
             </div>
         )
+    }
+    else {
+        navigate(`${BASE}/login`)
+        return null
     }
 }
 

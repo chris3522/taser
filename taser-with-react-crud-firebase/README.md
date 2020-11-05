@@ -6,7 +6,8 @@ CRUD functions are here available, moreover we use Firebase and SWR to achieve t
 All sripts are clientside.
 In firebase you have to create a cloudfirestore database named "tasers" .
 In firebase/authentification, you need to create at least one user (one user as admin for one taser) with email/password sign-in method.
-In firebase/rules, allow read and write for all
+In firebase/rules, allow read and write for user, read for all
+
 
 ## Available Scripts
 
