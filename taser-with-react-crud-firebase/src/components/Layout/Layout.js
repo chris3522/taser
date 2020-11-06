@@ -38,9 +38,9 @@ const Layout = ({ children, user }) => {
                         if (child && child.type !== 'header' && child.type !== 'footer') return child
                     })
                 }
-                <Match path={BASE+"/"}>
+                <Match path={`${BASE}/`}>
                     {props =>
-                        props.match ? (
+                        props.match || props.location.pathname === `${BASE}/login` ? (
                             <div></div>
                         ) : (
                                 <div className={styles.backToHome}>

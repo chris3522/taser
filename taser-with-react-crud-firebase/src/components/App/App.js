@@ -1,7 +1,7 @@
 /* src/components/app/App.js */
 
-import React, { useEffect, useState } from "react"
-import { Router } from "@reach/router"
+import React, { useState } from "react"
+import { Router, navigate } from "@reach/router"
 import withFirebaseAuth from "react-with-firebase-auth"
 import { firebaseAppAuth, providers } from "../../lib/firebase"
 import { SignIn, TaserInfo, Layout, UserEditor, Home, TaserUi, VacationEditor, DesiderataEditor, Link, RenfortEditor } from "components"
@@ -9,21 +9,22 @@ import './App.css'
 import * as h from "../../lib/helpers"
 import * as api_root_info from "../../api/info"
 import basePath from "../../lib/env"
-import { auth } from "firebase"
+
 
 const createComponentWithAuth = withFirebaseAuth({
     providers,
     firebaseAppAuth,
 })
-
 const BASE = basePath.BASE
 const disconnected = {
     "connected": false,
 }
 
+
 const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) => {
+    const NotFound = () => <p>Sorry, nothing here</p>
     const [authAdmin, setAuthAdmin] = useState()
-    console.log('*'+authAdmin)
+    console.log('authAdmin: '+authAdmin)
     /*useEffect(() => {
         const cleanup = async (ev) => {
             if (user) {
@@ -38,10 +39,11 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
         window.addEventListener('beforeunload', cleanup)
         return () => window.removeEventListener('beforeunload', cleanup)
     }, [user])*/
-    //A un user loggé en admin correspond un tableau de service
-    const NotFound = () => <p>Sorry, nothing here</p>
 
-    console.log(process.env.REACT_APP_BASEPATH)
+
+    //A un user loggé en admin correspond un tableau de service
+
+    //console.log('*****'+process.env.REACT_APP_BASEPATH)
     return (
         <Layout user={user}>
             {user && (
@@ -52,6 +54,7 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
                             const result = await api_root_info.updateConnectedAdmin(taserId, disconnected)
                             if (result) {
                                 signOut()
+                                navigate(`${BASE}/login`)
                             }
                         }}
                         >
@@ -64,7 +67,7 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
             <Router basepath={BASE}>
                 <NotFound default />
                 <Home className="section" path="/" />
-                <TaserUi className="section" path="/taser/:taserId" user={user} setAuthAdmin={setAuthAdmin}/>
+                {user && (<TaserUi className="section" path="/taser/:taserId" user={user} setAuthAdmin={setAuthAdmin} authAdmin={authAdmin}/>)}
                 <SignIn
                     className="section"
                     path="/login"

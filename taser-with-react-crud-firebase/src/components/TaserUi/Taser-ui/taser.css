@@ -29,3 +29,11 @@ table.taserui tbody td {
     text-align: center;
     text-transform: capitalize;
 }
+
+.displayBlock{
+    display:block;
+}
+
+.displayNone{
+    display:none;
+}

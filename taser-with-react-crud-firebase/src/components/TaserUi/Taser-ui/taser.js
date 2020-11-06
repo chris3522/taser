@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react"
 import useSWR from "swr"
 import moment from 'moment'
-import { navigate } from "@reach/router"
 import TaserTable from './taserTable'
 import TaserTableRenfort from './taserTableRenfort'
 import inputHandleFocus from './../Taser-ui-handler/cellFocusHandler'
@@ -24,7 +23,6 @@ import uiPass from '../../../lib/env'
 
 const accessAllLines = uiPass.PWDTASERUI
 const accessAdmin = uiPass.PWDTASERADMIN
-const BASE = uiPass.BASE
 
 //dayDate init with daypicker
 /************************************************ */
@@ -32,17 +30,13 @@ const BASE = uiPass.BASE
 let dayDate = moment().format('YYYY-MM-DD')
 /************************************************ */
 
-export default function Taser({ taserId, renforts, setAuthAdmin }) {
+export default function Taser({ taserId, renforts, setAuthAdmin, authAdmin, taserConnectedAdmin, mutateConnectedAdmin }) {
 
     const [buttonConnectName, setButtonConnectName] = useState(false)
     const [userAuthId, setUserAuthId] = useState()
     const [selectedDay, setSelectedDay] = useState(undefined)
-    console.log('id'+userAuthId)
-    /*useEffect(() => {
- 
-     }, [buttonConnectName])
-     
- */
+    console.log('userAuthId: '+userAuthId)
+
     const rangeOfDays = selectedDay ? moment(selectedDay, 'YYYY-MM-DD').startOf('month').subtract(150, "days").format('YYYY-MM-DD') :
         moment(dayDate, 'YYYY-MM-DD').startOf('month').subtract(150, "days").format('YYYY-MM-DD')
 
@@ -54,7 +48,7 @@ export default function Taser({ taserId, renforts, setAuthAdmin }) {
     const { data: taserUsers, error: errorUsers } = useSWR([taserId, "users"], api_root_users.getUsers)
     const { data: taserVacations, error: errorVacations } = useSWR([taserId, "vacations"], api_root_vacations.getVacations)
     const { data: taserDesideratas, error: errorDesideratas } = useSWR([taserId, "desideratas"], api_root_desideratas.getDesideratas)
-
+  
     /************************************* */
     //handlers for taser UI input cells
     /************************************* */
@@ -96,19 +90,14 @@ export default function Taser({ taserId, renforts, setAuthAdmin }) {
     const disconnected = {
         "connected": false,
     }
-    const handleConnectedAdmin = async (connect) => {
-        const result = await api_root_info.updateConnectedAdmin(taserId, connect)
-        if (result) {
-            //navigate(`${BASE}/admin/taser`)
-            return result
-        }
+    const handleConnectedAdmin = (connect) => {
+        mutateConnectedAdmin( { ...taserConnectedAdmin, ...connect })
+        api_root_info.updateConnectedAdmin(taserId, connect)
     }
     const handleSubmit = async ({ ...args }) => {
-        const { taserUsers, loginEntry } = args
-        const taserConnectedAdmin = await api_root_info.getConnectedAdmin(taserId)
+        const { taserUsers, loginEntry, taserConnectedAdmin } = args
         const isConnectedAdmin = taserConnectedAdmin.connected
         const userId = taserUsers.filter(user => user.name === loginEntry)[0] && taserUsers.filter(user => user.name === loginEntry)[0].id ? taserUsers.filter(user => user.name === loginEntry)[0].id : false
-        console.log('*1' + buttonConnectName)
         if (taserConnectedAdmin && buttonConnectName === false) {
             switch (loginEntry) {
                 case accessAdmin:
@@ -135,25 +124,26 @@ export default function Taser({ taserId, renforts, setAuthAdmin }) {
             handleConnectedAdmin(disconnected)
         }
     }
-    /************************************** */
 
+    /************************************** */
+    const displayConnectInfo = authAdmin ? 'displayBlock' : 'displayNone'
     if (errorInfo) return <p>Error loading data!</p>
     else if (!taserInfo) return <p>Loading...</p>
     else if (!taserVacations) return <p>Loading...</p>
     else if (!taserDesideratas) return <p>Loading...</p>
     else if (!taserUsers) return <p>Loading...</p>
     else if (!renforts) return <p>Loading...</p>
+    //else if (!taserConnectedAdmin) return <p>Loading...</p>
     else {
         const { name, desc, numberOfDays, numberOfTasers } = { ...taserInfo }
         const tabVacationsAndDesideratas = [...taserDesideratas, ...taserVacations]
         return (
 
             <div>
-                {console.log('*2' + buttonConnectName)}
                 <p className={"dateCurrent"}>{`${moment(selectedDay).format('dddd DD MMMM YYYY')}`}</p>
                 <div className={"row"}>
                     <div className={'dayPi five columns'} ><DayPicker selectedDays={selectedDay} onDayClick={handleDayClick} localeUtils={MomentLocaleUtils} locale={'fr'} /></div>
-                    <SignInUsers className={'seven columns'} handleSubmit={(loginEntry) => handleSubmit({ taserUsers, loginEntry })} buttonConnectName={buttonConnectName} />
+                    <SignInUsers className={'seven columns'} handleSubmit={(loginEntry) => handleSubmit({ taserUsers, loginEntry, taserConnectedAdmin })} buttonConnectName={buttonConnectName} displayConnectInfo ={displayConnectInfo}/>
                 </div>
                 <h5>{name}</h5>
                 {
