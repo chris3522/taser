@@ -1,4 +1,5 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Demo here: https://taser-4439a.web.app/
 
 ## Taser with firebase
 
@@ -6,8 +7,12 @@ CRUD functions are here available, moreover we use Firebase and SWR to achieve t
 All sripts are clientside.
 In firebase you have to create a cloudfirestore database named "tasers" .
 In firebase/authentification, you need to create at least one user (one user as admin for one taser) with email/password sign-in method.
-In firebase/rules, allow read and write for user, read for all
-
+In firebase/rules, allow read and write for user only
+In firebase tools for deploy :
+? What do you want to use as your public directory? build
+? Configure as a single-page app (rewrite all urls to /index.html)? No
+? Set up automatic builds and deploys with GitHub? No
+? File build/index.html already exists. Overwrite? No
 
 ## Available Scripts
 
