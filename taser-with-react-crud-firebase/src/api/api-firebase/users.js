@@ -6,7 +6,7 @@ export const getUsers = async (taserId) => {
         .doc(taserId)
         .collection("users")
         .get()
-    const snapshot2 = await db
+    await db
         .collection("tasers")
         .doc(taserId)
         .collection("users")

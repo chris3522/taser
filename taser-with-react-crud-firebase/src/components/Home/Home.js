@@ -10,8 +10,8 @@ const BASE = basePath.BASE
 const Home = ({ className, user }) => {
     const swrKey = `/tasers`
     const { data, error } = useSWR([swrKey], api_root_tasers.getTasers)
-    if (error) return <p>Error loading data!</p>
-    else if (!data) return <p>Loading...</p>
+    if (user&&error) return <p>Error loading data!</p>
+    else if (user&&!data) return <p>Loading...</p>
     else if (user) {
         return (
             <div className={`${className}`}>

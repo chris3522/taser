@@ -6,13 +6,16 @@ import * as api_root from "../../api/desideratas"
 import Icon from "react-crud-icons"
 import '../../../node_modules/react-crud-icons/dist/css/react-crud-icons.css'
 import CrudForm from './CrudForm'
+import basePath from "../../lib/env"
+
+const BASE = basePath.BASE
 
 const DesiderataEditor = ({ user, taserId, className }) => {
     const [isDisplay, setIsDisplay] = useState(true)
 
     useEffect(() => {
         if (!user) {
-            navigate("/admin")
+             navigate(`${BASE}/admin`)
         }
     }, [user])
 
@@ -39,6 +42,7 @@ const DesiderataEditor = ({ user, taserId, className }) => {
                 "shortKey": inputDesiderataShortKey.current.value,
                 "color": inputDesiderataColor.current.value,
                 "nature": inputDesiderataNature.current.value,
+                "isRequired": ""
             }
             api_root.createDesiderata(taserId, newData)
                 .then(() => mutate([taserId, swrKey]))
@@ -62,7 +66,8 @@ const DesiderataEditor = ({ user, taserId, className }) => {
             "nature":inputModalDesiderataNature.current.value,
             "name": inputModalDesiderataName.current.value,
             "shortKey": inputModalDesiderataShortKey.current.value,
-            "color": inputModalDesiderataColor.current.value
+            "color": inputModalDesiderataColor.current.value,
+            "isRequired": ""
         }
         api_root.updateDesiderata(taserId, newDesiderataData).then(
             mutate([taserId, swrKey])

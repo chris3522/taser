@@ -1,6 +1,6 @@
 /* src/components/SignIn/SignIn.js */
 
-import React, {useEffect} from "react"
+import React from "react"
 import UserForm from "./UserForm"
 
 const SignInUsers = ({ className, handleSubmit, buttonConnectName, displayConnectInfo }) => {

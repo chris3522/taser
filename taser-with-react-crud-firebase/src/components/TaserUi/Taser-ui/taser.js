@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import useSWR from "swr"
 import moment from 'moment'
 import TaserTable from './taserTable'
@@ -31,7 +31,7 @@ let dayDate = moment().format('YYYY-MM-DD')
 /************************************************ */
 
 export default function Taser({ taserId, renforts, setAuthAdmin, authAdmin, taserConnectedAdmin, mutateConnectedAdmin }) {
-
+   //  setAuthAdmin(accessAdmin)
     const [buttonConnectName, setButtonConnectName] = useState(false)
     const [userAuthId, setUserAuthId] = useState()
     const [selectedDay, setSelectedDay] = useState(undefined)
@@ -43,7 +43,6 @@ export default function Taser({ taserId, renforts, setAuthAdmin, authAdmin, tase
     /**************************************************** */
     // Init data fetching (initial data SSR with props)
     /**************************************************** */
-
     const { data: taserInfo, error: errorInfo } = useSWR([taserId, "taserInfo"], api_root_info.getInfoOnly)
     const { data: taserUsers, error: errorUsers } = useSWR([taserId, "users"], api_root_users.getUsers)
     const { data: taserVacations, error: errorVacations } = useSWR([taserId, "vacations"], api_root_vacations.getVacations)
@@ -128,6 +127,9 @@ export default function Taser({ taserId, renforts, setAuthAdmin, authAdmin, tase
     /************************************** */
     const displayConnectInfo = authAdmin ? 'displayBlock' : 'displayNone'
     if (errorInfo) return <p>Error loading data!</p>
+    else if (errorUsers) return <p>Error loading data!</p>
+    else if (errorVacations) return <p>Error loading data!</p>
+    else if (errorDesideratas) return <p>Error loading data!</p>
     else if (!taserInfo) return <p>Loading...</p>
     else if (!taserVacations) return <p>Loading...</p>
     else if (!taserDesideratas) return <p>Loading...</p>
@@ -136,6 +138,7 @@ export default function Taser({ taserId, renforts, setAuthAdmin, authAdmin, tase
     //else if (!taserConnectedAdmin) return <p>Loading...</p>
     else {
         const { name, desc, numberOfDays, numberOfTasers } = { ...taserInfo }
+        console.log("desc: "+desc)
         const tabVacationsAndDesideratas = [...taserDesideratas, ...taserVacations]
         return (
 
@@ -147,7 +150,8 @@ export default function Taser({ taserId, renforts, setAuthAdmin, authAdmin, tase
                 </div>
                 <h5>{name}</h5>
                 {
-                    [...Array(parseInt(numberOfTasers))].map((n, i) =>
+                    [...Array(parseInt(numberOfTasers))].map((n, i) =>{
+                    return(
                         <TaserTable key={i}
                             selectedDate={moment(dayDate, "YYYY-MM-DD").add(numberOfDays * i, "days").format("YYYY-MM-DD")}
                             numberOfDays={parseInt(numberOfDays)}
@@ -162,8 +166,19 @@ export default function Taser({ taserId, renforts, setAuthAdmin, authAdmin, tase
                             handleBlur={handleBlur}
                             handleKeyPress={(e) => handleKeyPress(e, tabVacationsAndDesideratas)}
                             handleKeyUp={handleKeyUp} >
-                            <TaserTableRenfort />
-                        </TaserTable>
+                            {renforts&&(
+                                [...Array(renforts.length)].map((n, j) =>
+                                        <TaserTableRenfort key={`renfort-${j}`}
+                                        selectedDate={moment(dayDate, "YYYY-MM-DD").add(numberOfDays * i, "days").format("YYYY-MM-DD")}
+                                        numberOfDays={parseInt(numberOfDays)}
+                                        activeSelectedDate={dayDate}
+                                        taserInfo={taserInfo}
+                                        userAuthId={false}
+                                        rangeOfDays={rangeOfDays}
+                                        renforts={renforts[j]}/>)
+                                )
+                            }
+                        </TaserTable>)}
 
                     )}
 

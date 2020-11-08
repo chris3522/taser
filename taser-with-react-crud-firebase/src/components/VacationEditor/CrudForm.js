@@ -25,7 +25,7 @@ const CrudForm = ({ buttonName, displayForm, onSubmit, inputRef1, inputRef2, inp
             </div>
         </div>
         <div className="row">
-            <div className="four columns">
+            <div className="three columns">
                 <input
                     ref={inputRef3}
                     className="u-full-width"
@@ -45,15 +45,12 @@ const CrudForm = ({ buttonName, displayForm, onSubmit, inputRef1, inputRef2, inp
                     required
                 />
             </div>
-            <div className="two columns">
-                <label>
-                    <span className="label-checkbox">Obligatoire sur 24h?</span>
-                    <input
-                        ref={inputRef5}
-                        type="checkbox"
-                    />
-
-                </label>
+            <div className="three columns">
+                <select className="u-full-width"  ref={inputRef5}>
+                    <option key={1} value={"required"}>{"Obligatoire sur 24h ?"}</option>
+                    <option key={2} value={"optional"}>{"Optionnelle sur 24h ?"}</option>
+                    <option key={3} value={"renfort"}>{"De renfort pour un autre service ?"}</option>
+                </select>
             </div>
             <div className="four columns">
                 <button type="submit"

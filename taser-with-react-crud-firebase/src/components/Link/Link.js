@@ -4,7 +4,7 @@ import basePath from "../../lib/env"
 
 const BASE = basePath.BASE
 
-const Link = ({ to = '', children, absolute, ... props }) => {
+const Link = ({ to = '', children, absolute, ...props }) => {
   if (!absolute && to[0] === '/') {
     to = BASE + to
   }

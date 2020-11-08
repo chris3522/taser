@@ -1,7 +1,6 @@
 /* src/components/TaserInfo/TaserInfo.js */
-import React, { useEffect, useRef } from "react"
+import React, { useRef } from "react"
 import useSWR, { mutate } from "swr"
-import { navigate } from "@reach/router"
 import { Link } from 'components'
 import "./TaserInfo.css"
 import * as api_root from "../../api/info"

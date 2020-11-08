@@ -4,7 +4,7 @@ export const getTasers = async () => {
     const snapshot = await db
         .collection("tasers")
         .get()
-    const snapshot2 = await db
+    await db
         .collection("tasers")
         .limit(1).get().then(query => {
             console.log(query.size === 0 ? "Tasers not found" : 'Tasers found')

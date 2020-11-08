@@ -18,7 +18,6 @@ const VacationEditor = ({ user, taserId, className }) => {
 
     const swrKey = `/admin/${taserId}/vacations`
     const { data, error } = useSWR([taserId, swrKey], api_root.getVacations)
-   
     const inputVacationName = useRef(null)
     const inputVacationShortKey = useRef(null)
     const inputVacationId = useRef(null)
@@ -37,7 +36,7 @@ const VacationEditor = ({ user, taserId, className }) => {
                 "name": inputVacationName.current.value,
                 "shortKey": inputVacationShortKey.current.value,
                 "nature": inputVacationNature.current.value,
-                "isRequired": inputVacationRequise.current.checked,
+                "isRequired": inputVacationRequise.current.value,
                 "color":""
             }
             api_root.createVacation(taserId, newData)
@@ -51,7 +50,7 @@ const VacationEditor = ({ user, taserId, className }) => {
         inputModalVacationName.current.value = vacationName
         inputModalVacationShortKey.current.value = vacationShortKey
         inputModalVacationNature.current.value = vacationNature
-        inputModalVacationRequise.current.checked = vacationRequired
+        inputModalVacationRequise.current.value = vacationRequired
         setIsDisplay(false)
     }
 
@@ -62,17 +61,23 @@ const VacationEditor = ({ user, taserId, className }) => {
             "name": inputModalVacationName.current.value,
             "shortKey": inputModalVacationShortKey.current.value,
             "nature": inputModalVacationNature.current.value,
-            "isRequired": inputModalVacationRequise.current.checked,
+            "isRequired": inputModalVacationRequise.current.value,
             "color":""
         }
         api_root.updateVacation(taserId, newVacationData).then(
             mutate([taserId, swrKey])
         )
+       /* api_root.updateVacation(taserId, newVacationData)
+        mutate([taserId, swrKey],data.map(vacation => {
+            vacation = vacation.id === newVacationData.id ?  newVacationData : vacation
+            return vacation
+            })
+        )*/
         inputModalVacationId.current.value = ""
         inputModalVacationName.current.value = ""
         inputModalVacationShortKey.current.value = ""
         inputModalVacationNature.current.value = ""
-        inputModalVacationRequise.current.checked = ""
+        inputModalVacationRequise.current.value = ""
         setIsDisplay(true)
     }
 
@@ -89,7 +94,7 @@ const VacationEditor = ({ user, taserId, className }) => {
                         {data.map((vacation) => {
                             return (
                                 <tr key={vacation.id}>
-                                    <td> {vacation.id}</td><td>{vacation.name}</td><td>{vacation.shortKey}</td><td>{vacation.isRequired ? "true":"false"}</td>
+                                    <td> {vacation.id}</td><td>{vacation.name}</td><td>{vacation.shortKey}</td><td>{vacation.isRequired}</td>
                                     <td>
                                         <Icon
                                             name="edit"

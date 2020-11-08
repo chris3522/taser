@@ -18,3 +18,7 @@ export const getDays = (...args) => {
 export const deleteDay = (...args) => {
     return firestore_api.deleteDay(...args)
 }
+
+export const getRenfortDays = (...args) => {
+    return firestore_api.getRenfortDays(...args)
+}

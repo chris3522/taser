@@ -7,11 +7,14 @@ import * as api_root_vacations from "../../api/vacations"
 import Icon from "react-crud-icons"
 import '../../../node_modules/react-crud-icons/dist/css/react-crud-icons.css'
 import CrudForm from './CrudForm'
+import basePath from "../../lib/env"
+
+const BASE = basePath.BASE
 
 const RenfortEditor = ({ user, taserId, className }) => {
     useEffect(() => {
         if (!user) {
-            navigate("/admin")
+            navigate(`${BASE}/admin`)
         }
     }, [user])
 
@@ -24,9 +27,9 @@ const RenfortEditor = ({ user, taserId, className }) => {
         if (taserId) {
             const newData = JSON.parse(inputTaserRenfort.current.value)
             const taserRenfortId = newData.id
-            const isrequiredVacationsNumber = await api_root_vacations.getIsrequiredVacationsNumber(taserRenfortId)
+            const requiredVacations = await api_root_vacations.getIsrequiredVacationsNumber(taserId)
             delete newData["id"]
-            const newData2={taserId:taserRenfortId, isrequiredVacationsNumber: isrequiredVacationsNumber,...newData}
+            const newData2={taserId:taserRenfortId, ...requiredVacations, ...newData}
             const result = data.filter(renfort => renfort.taserId === newData2.taserId)
             result.length > 0 ? alert ("Ce tableau est déjà crée!") : api_root.createTaserRenfort(taserId,newData2)
                 .then(() => mutate([taserId, swrKey]))
@@ -41,7 +44,7 @@ const RenfortEditor = ({ user, taserId, className }) => {
             <div className={className}>
                 <CrudForm buttonName="Create" onSubmit={handleSubmit} inputRef1={inputTaserRenfort} taserId={taserId}/>
                 <table>
-                    <thead><tr><th>id</th><th>nom</th><th></th><th></th></tr></thead>
+                    <thead><tr><th>id</th><th>nom</th><th></th></tr></thead>
                     <tbody>
                         {data.map((renfort) => {
                             return (

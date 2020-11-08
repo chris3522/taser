@@ -1,24 +1,39 @@
 import React from "react"
-import TaserTheadLine from './taserTheadLine'
-import TaserTbodyLine from './taserTbodyLine'
+import TaserTbodyRenfortLine from './taserTbodyRenfortLine'
+import styles from './renfort.module.css'
 
 const TaserTableRenfort = (props) => {
-   /* const { selectedDate,
+   const { selectedDate,
         numberOfDays,
         activeSelectedDate,
         taserInfo,
-        taserDays,
-        taserUsers,
         taserVacations,
         taserDesideratas,
-        userAuthId,
         rangeOfDays,
-        taserId } = props
-    const { handleKeyPress, handleKeyUp, handleFocus, handleBlur } = props*/
-
+        userAuthId,
+        renforts } = props
+    const taserRenfortId = renforts.taserId
+    const linesNumber = renforts.targetVacationsRequiredNumber
     return (
-        <tbody><tr><td>renfort lines</td></tr></tbody>
-    )
+                <tbody className={styles.bodyTab}>
+                    { linesNumber === undefined ? <tr></tr> :  [...Array(linesNumber)].map((n, i) => 
+                        <TaserTbodyRenfortLine key={i}
+                            selectedDate={selectedDate}
+                            numberOfDays={numberOfDays}
+                            activeSelectedDate={activeSelectedDate} //unused
+                            taserInfo={taserInfo}
+                            userId={i}
+                            taserRenfortId={taserRenfortId}
+                            taserVacations={taserVacations}
+                            taserDesideratas={taserDesideratas}
+                            userAuthId={userAuthId}
+                            rangeOfDays={rangeOfDays}
+                            linesNumber={linesNumber}
+                        
+                        />
+                    )}
+                </tbody>
+            )
 }
 
 export default TaserTableRenfort

@@ -7,7 +7,6 @@ const TaserTable = (props) => {
         numberOfDays,
         activeSelectedDate,
         taserInfo,
-        taserDays,
         taserUsers,
         taserVacations,
         taserDesideratas,
@@ -32,7 +31,6 @@ const TaserTable = (props) => {
                             taserUsers={taserUsers}
                             userId={user.id}
                             taserId={taserId}
-                            taserDays={taserDays}
                             taserVacations={taserVacations}
                             taserDesideratas={taserDesideratas}
                             userAuthId={userAuthId}

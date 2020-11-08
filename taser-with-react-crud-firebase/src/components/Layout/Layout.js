@@ -45,7 +45,7 @@ const Layout = ({ children, user }) => {
                         ) : (
                                 <div className={styles.backToHome}>
                                     <Link to="/">
-                                        ← Retour à l'accueil
+                                        ← Liste des tableaux
                                     </Link>
                                 </div>
                             )

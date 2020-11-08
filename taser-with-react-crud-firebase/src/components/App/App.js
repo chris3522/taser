@@ -25,24 +25,7 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
     const NotFound = () => <p>Sorry, nothing here</p>
     const [authAdmin, setAuthAdmin] = useState()
     console.log('authAdmin: '+authAdmin)
-    /*useEffect(() => {
-        const cleanup = async (ev) => {
-            if (user) {
-                ev.preventDefault()
-                const taserId = h.slugify(user.email)
-                api_root_info.updateConnectedAdmin(taserId, disconnected)
-                signOut()
-                console.log("disconnected")
-                return null
-            } else { return null }
-        }
-        window.addEventListener('beforeunload', cleanup)
-        return () => window.removeEventListener('beforeunload', cleanup)
-    }, [user])*/
-
-
     //A un user loggé en admin correspond un tableau de service
-
     //console.log('*****'+process.env.REACT_APP_BASEPATH)
     return (
         <Layout user={user}>
@@ -66,7 +49,7 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
             )}
             <Router basepath={BASE}>
                 <NotFound default />
-                <Home className="section" path="/" />
+                <Home className="section" user={user} path="/" />
                 {user && (<TaserUi className="section" path="/taser/:taserId" user={user} setAuthAdmin={setAuthAdmin} authAdmin={authAdmin}/>)}
                 <SignIn
                     className="section"
@@ -74,11 +57,11 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
                     user={user}
                     signIns={{ signInWithGoogle, signInWithEmailAndPassword }}
                 />
-                {authAdmin && (<TaserInfo className="section" path="/admin/taser" user={user} authAdmin={authAdmin}/>)}
-                {authAdmin && (<UserEditor className="section" path="/admin/:taserId/users" user={user} />)}
-                {authAdmin && (<VacationEditor className="section" path="/admin/:taserId/vacations" user={user} />)}
-                {authAdmin && (<DesiderataEditor className="section" path="/admin/:taserId/desideratas" user={user} />)}
-                {authAdmin && (<RenfortEditor className="section" path="/admin/:taserId/renforts" user={user} />)}
+                {user && authAdmin && (<TaserInfo className="section" path="/admin/taser" user={user} authAdmin={authAdmin}/>)}
+                {user && authAdmin && (<UserEditor className="section" path="/admin/:taserId/users" user={user} />)}
+                {user && authAdmin && (<VacationEditor className="section" path="/admin/:taserId/vacations" user={user} />)}
+                {user && authAdmin && (<DesiderataEditor className="section" path="/admin/:taserId/desideratas" user={user} />)}
+                {user && authAdmin && (<RenfortEditor className="section" path="/admin/:taserId/renforts" user={user} />)}
             </Router>
         </Layout>
     )

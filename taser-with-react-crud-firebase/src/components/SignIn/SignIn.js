@@ -3,7 +3,6 @@
 import React from "react"
 import { navigate } from "@reach/router"
 import UserForm2 from "./UserForm2"
-import * as api_root_info from "../../api/info"
 import * as h from "../../lib/helpers"
 import basePath from "../../lib/env"
 
