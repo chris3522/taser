@@ -75,5 +75,7 @@ export const getConnectedAdmin = async (taserId) => {
 export const updateConnectedAdmin = async (taserId,newData) => {
     await db.collection("tasers").doc(taserId).collection("connected").doc("admin").update(newData)
     const taserConnectedAdmin = await db.collection("tasers").doc(taserId).collection("connected").doc("admin").get()
+     if (taserConnectedAdmin.exists) {
     return taserConnectedAdmin.data()
+     }
 }

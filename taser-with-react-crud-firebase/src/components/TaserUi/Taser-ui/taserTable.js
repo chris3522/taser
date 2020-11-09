@@ -16,7 +16,7 @@ const TaserTable = (props) => {
     const { handleKeyPress, handleKeyUp, handleFocus, handleBlur } = props
 
     return (
-        <div>
+        <div className="taseruiscroll">
             <table className="taserui">
                 <thead>
                     <TaserTheadLine selectedDate={selectedDate} numberOfDays={numberOfDays} activeSelectedDate={activeSelectedDate} />

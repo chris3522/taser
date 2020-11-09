@@ -33,6 +33,7 @@ let dayDate = moment().format('YYYY-MM-DD')
 export default function Taser({ taserId, renforts, setAuthAdmin, authAdmin, taserConnectedAdmin, mutateConnectedAdmin }) {
    //  setAuthAdmin(accessAdmin)
     const [buttonConnectName, setButtonConnectName] = useState(false)
+    const [displayConnectInfo, setDisplayConnectInfo] = useState(taserConnectedAdmin.connected ? 'displayBlock' : 'displayNone')
     const [userAuthId, setUserAuthId] = useState()
     const [selectedDay, setSelectedDay] = useState(undefined)
     console.log('userAuthId: '+userAuthId)
@@ -89,9 +90,9 @@ export default function Taser({ taserId, renforts, setAuthAdmin, authAdmin, tase
     const disconnected = {
         "connected": false,
     }
-    const handleConnectedAdmin = (connect) => {
+    const handleConnectedAdmin = async (connect) => {
         mutateConnectedAdmin( { ...taserConnectedAdmin, ...connect })
-        api_root_info.updateConnectedAdmin(taserId, connect)
+        await api_root_info.updateConnectedAdmin(taserId, connect)
     }
     const handleSubmit = async ({ ...args }) => {
         const { taserUsers, loginEntry, taserConnectedAdmin } = args
@@ -104,6 +105,7 @@ export default function Taser({ taserId, renforts, setAuthAdmin, authAdmin, tase
                     setButtonConnectName(true)
                     setUserAuthId(accessAllLines)
                     handleConnectedAdmin(connected)
+                    setDisplayConnectInfo('displayBlock')
                     break
                 case accessAllLines:
                     !isConnectedAdmin && (setUserAuthId(accessAllLines))
@@ -119,13 +121,14 @@ export default function Taser({ taserId, renforts, setAuthAdmin, authAdmin, tase
         else {
             setAuthAdmin(false)
             setButtonConnectName(false)
+            setDisplayConnectInfo('displayNone')
             setUserAuthId()
             handleConnectedAdmin(disconnected)
         }
     }
 
     /************************************** */
-    const displayConnectInfo = authAdmin ? 'displayBlock' : 'displayNone'
+
     if (errorInfo) return <p>Error loading data!</p>
     else if (errorUsers) return <p>Error loading data!</p>
     else if (errorVacations) return <p>Error loading data!</p>

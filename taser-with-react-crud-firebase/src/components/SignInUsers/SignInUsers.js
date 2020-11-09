@@ -5,7 +5,6 @@ import UserForm from "./UserForm"
 
 const SignInUsers = ({ className, handleSubmit, buttonConnectName, displayConnectInfo }) => {
     const buttonName = !buttonConnectName ? "Connexion" : "Déconnexion"
-
     return (
         <div className={`${className}`}>
             <UserForm onClick={handleSubmit}>{buttonName}</UserForm>
