@@ -5,10 +5,16 @@ Demo here: https://taser-4439a.web.app/
 
 CRUD functions are here available, moreover we use Firebase and SWR to achieve this.
 All sripts are clientside.
-In firebase you have to create a cloudfirestore database named "tasers" .
-In firebase/authentification, you need to create at least one user (one user as admin for one taser) with email/password sign-in method.
-In firebase/rules, allow read and write for user only
-In firebase tools for deploy :
+In source code : create lib/firebaseConfig.js and lib/env.js with your settings
+In your firebase account you have to create a cloudfirestore database named "tasers" .
+In your firebase/authentification, you need to create at least one user (one user as admin for one taser) with email/password sign-in method.
+In your firebase/rules, allow read and write for user only
+In firebase tools in a terminal for deploy run 
+npm install -g firebase-tools
+firebase login
+firebase init
+firebase deploy
+Answer this questions during firebase deploy process:
 ? What do you want to use as your public directory? build
 ? Configure as a single-page app (rewrite all urls to /index.html)? No
 ? Set up automatic builds and deploys with GitHub? No
