@@ -8,7 +8,7 @@ import basePath from "../../lib/env"
 
 const BASE = basePath.BASE
 
-const SignIn = ({ className, user, signIns: { signInWithGoogle, signInWithEmailAndPassword }}) => {
+const SignIn = ({ className, user, handleFirstSignInUser, signIns: { signInWithGoogle, signInWithEmailAndPassword }}) => {
     /*const connected = {
         "connected": true,
     }
@@ -20,6 +20,7 @@ const SignIn = ({ className, user, signIns: { signInWithGoogle, signInWithEmailA
     if (user) {
         //handleConnectedAdmin(user)
         const taserId = h.slugify(user.email)
+        handleFirstSignInUser(taserId)
         navigate(`${BASE}/taser/${taserId}`)
         return null
     } else {

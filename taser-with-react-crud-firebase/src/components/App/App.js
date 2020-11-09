@@ -9,6 +9,7 @@ import './App.css'
 import * as h from "../../lib/helpers"
 import * as api_root_info from "../../api/info"
 import basePath from "../../lib/env"
+import * as api_root_tasers from "../../api/tasers"
 
 
 const createComponentWithAuth = withFirebaseAuth({
@@ -27,6 +28,14 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
     console.log('authAdmin: '+authAdmin)
     //A un user loggé en admin correspond un tableau de service
     //console.log('*****'+process.env.REACT_APP_BASEPATH)
+    const handleFirstSignInUser = async (taserId) => {
+        const data = await api_root_tasers.getTasers()
+        const dataArray = data.filter(taser => taser.id===taserId)
+        console.log(data)
+        if (dataArray === undefined || dataArray.length === 0) {
+           setAuthAdmin(true)
+        }
+    }
     return (
         <Layout user={user}>
             {user && (
@@ -56,6 +65,7 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
                     path="/login"
                     user={user}
                     signIns={{ signInWithGoogle, signInWithEmailAndPassword }}
+                    handleFirstSignInUser={handleFirstSignInUser}
                 />
                 {user && authAdmin && (<TaserInfo className="section" path="/admin/taser" user={user} authAdmin={authAdmin}/>)}
                 {user && authAdmin && (<UserEditor className="section" path="/admin/:taserId/users" user={user} />)}
