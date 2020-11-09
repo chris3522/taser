@@ -4,21 +4,23 @@ Demo here: https://taser-4439a.web.app/
 ## Taser with firebase
 
 CRUD functions are here available, moreover we use Firebase and SWR to achieve this.
-All sripts are clientside.
-In source code : create lib/firebaseConfig.js and lib/env.js with your settings
-In your firebase account you have to create a cloudfirestore database named "tasers" .
-In your firebase/authentification, you need to create at least one user (one user as admin for one taser) with email/password sign-in method.
-In your firebase/rules, allow read and write for user only
-In firebase tools in a terminal for deploy run 
+All sripts are clientside.<br />
+In source code : create lib/firebaseConfig.js and lib/env.js with your settings<br />
+In your firebase account you have to create a cloudfirestore database named "tasers" .<br />
+In your firebase/authentification, you need to create at least one user (one user as admin for one taser) with email/password sign-in method.<br />
+In your firebase/rules, allow read and write for user only<br />
+In firebase tools in a terminal for deploy run :<br />
+```
 npm install -g firebase-tools
 firebase login
 firebase init
 firebase deploy
-Answer this questions during firebase deploy process:
-? What do you want to use as your public directory? build
-? Configure as a single-page app (rewrite all urls to /index.html)? No
-? Set up automatic builds and deploys with GitHub? No
-? File build/index.html already exists. Overwrite? No
+```
+Answer this questions during firebase deploy process:<br />
+? What do you want to use as your public directory? build<br />
+? Configure as a single-page app (rewrite all urls to /index.html)? No<br />
+? Set up automatic builds and deploys with GitHub? No<br />
+? File build/index.html already exists. Overwrite? No<br />
 
 ## Available Scripts
 
