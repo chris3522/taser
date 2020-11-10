@@ -11,7 +11,6 @@ import * as api_root_info from "../../api/info"
 import basePath from "../../lib/env"
 import * as api_root_tasers from "../../api/tasers"
 
-
 const createComponentWithAuth = withFirebaseAuth({
     providers,
     firebaseAppAuth,
@@ -24,16 +23,16 @@ const disconnected = {
 
 const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) => {
     const NotFound = () => <p>Sorry, nothing here</p>
-    const [authAdmin, setAuthAdmin] = useState()
+    const [authAdmin, setAuthAdmin] = useState(null)
     console.log('authAdmin: '+authAdmin)
     //A un user loggé en admin correspond un tableau de service
     //console.log('*****'+process.env.REACT_APP_BASEPATH)
-    const handleFirstSignInUser = async (taserId) => {
+    const handleFirstSignInUser = async (taserId) => {           
         const data = await api_root_tasers.getTasers()
         const dataArray = data.filter(taser => taser.id===taserId)
-        console.log(data)
         if (dataArray === undefined || dataArray.length === 0) {
-           setAuthAdmin(true)
+            setAuthAdmin(true)
+            navigate(`${BASE}/admin/taser`)
         }
     }
     return (
@@ -45,8 +44,7 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
                             const taserId = h.slugify(user.email)
                             const result = await api_root_info.updateConnectedAdmin(taserId, disconnected)
                             if (result) {
-                                signOut()
-                                navigate(`${BASE}/login`)
+                                signOut()                     
                             }
                         }}
                         >

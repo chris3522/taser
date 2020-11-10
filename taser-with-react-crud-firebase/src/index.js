@@ -3,12 +3,23 @@ import ReactDOM from 'react-dom'
 import 'skeleton-css/css/skeleton.css'
 import { App } from "components"
 import * as serviceWorker from './serviceWorker'
-//import './index.css'
+import { SWRConfig } from 'swr'
+const options = {
+  revalidateOnFocus: false,
+  revalidateOnMount:true,
+  revalidateOnReconnect: false,
+  refreshWhenOffline: false,
+  refreshWhenHidden: false,
+  refreshInterval: 0
+}
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+    <SWRConfig value={options}>
+          <App />
+    </SWRConfig>
+  </React.StrictMode>
+,
   document.getElementById('root')
 )
 

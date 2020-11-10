@@ -9,16 +9,8 @@ import basePath from "../../lib/env"
 const BASE = basePath.BASE
 
 const SignIn = ({ className, user, handleFirstSignInUser, signIns: { signInWithGoogle, signInWithEmailAndPassword }}) => {
-    /*const connected = {
-        "connected": true,
-    }
-    const handleConnectedAdmin = async (user) => {
-        const taserId = h.slugify(user.email)
-        const result = await api_root_info.updateConnectedAdmin(taserId,connected)
-        if (result) { navigate(`${BASE}/taser/${taserId}`) }
-    }*/
+
     if (user) {
-        //handleConnectedAdmin(user)
         const taserId = h.slugify(user.email)
         handleFirstSignInUser(taserId)
         navigate(`${BASE}/taser/${taserId}`)
