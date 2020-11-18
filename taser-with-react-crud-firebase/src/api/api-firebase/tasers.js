@@ -9,6 +9,8 @@ export const getTasers = async () => {
         .limit(1).get().then(query => {
             console.log(query.size === 0 ? "Tasers not found" : 'Tasers found')
         })
+    console.log("from cache?")
+    console.log(snapshot.metadata.fromCache)
     const tasers = await Promise.all(snapshot.docs.map(taser => 
             db.collection("tasers").doc(taser.id).collection("info").doc(taser.id).get()
             //.then(doc => doc.data())

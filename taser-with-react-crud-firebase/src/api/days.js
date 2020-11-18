@@ -11,6 +11,10 @@ export const createDay = ({...args}) => {
     return firestore_api.createDay({...args})
 }
 
+export const createAllDays = ({...args}) => {
+    return firestore_api.createAllDays({...args})
+}
+
 export const getDays = (...args) => {
     return firestore_api.getDays(...args)
 }
@@ -21,4 +25,8 @@ export const deleteDay = (...args) => {
 
 export const getRenfortDays = (...args) => {
     return firestore_api.getRenfortDays(...args)
+}
+
+export const getUsersDays = (...args) => {
+    return firestore_api.getUsersDays(...args)
 }

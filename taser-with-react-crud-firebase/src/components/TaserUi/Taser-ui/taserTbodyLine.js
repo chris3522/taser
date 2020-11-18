@@ -1,9 +1,9 @@
 import React from "react"
-import useSWR from "swr"
+//import useSWR from "swr"
 import moment from 'moment'
 import TaserInputCell from './taserInputCell'
 //import styles from './taserTbodyLine.module.css'
-import * as api_root_days from "../../../api/days"
+//import * as api_root_days from "../../../api/days"
 import uiPass from '../../../lib/env'
 
 const accessAllLines =  uiPass.PWDTASERUI
@@ -12,14 +12,13 @@ const TaserTbodyLine = (props) => {
     //selectedDate = date incluse dans la semaine du taser qui s'affiche
     const { selectedDate, numberOfDays } = props
     const dateOfFirstMondayCurrentWeek = moment(selectedDate, 'YYYY-MM-DD').startOf('isoWeek').format("YYYY-MM-DD")
-    const { taserUsers, userId, taserId, userAuthId, rangeOfDays } = props
+    const { taserUsers, userId, taserId, userAuthId, rangeOfDays, usersDays, mutateDays } = props
     const { handleKeyPress, handleKeyUp, handleFocus, handleBlur } = props
     const user = taserUsers.filter(user => userId === user.id)[0]
-    const swrKey = `/days/${taserId}/${userId}`
-    const rangeOfDaysInt =  parseInt(rangeOfDays.replace(/-/gi, ''))
-    const { data: userDays, error: errorDays, mutate: mutateDays } = useSWR([taserId, userId, rangeOfDaysInt, swrKey], api_root_days.getDays)
-    if (errorDays) return <tr><td>Error loading data!</td></tr>
-    //else if (!userDays) return <tr><td>Loading...</td></tr>
+    //const swrKey = `/days/${taserId}/${userId}`
+    const userDays = usersDays.filter(userTab => userTab[0].userId === userId)[0]
+    //if (errorDays) return <tr><td>Error loading data!</td></tr>
+    if (!userDays) return <tr><td>Loading...</td></tr>
     else {
         return (
             <tr>
@@ -35,6 +34,7 @@ const TaserTbodyLine = (props) => {
                             dayNumber={dayNumber}
                             dayVacationOrDesiderata={dayVacationOrDesiderata}
                             mutation={mutateDays}
+                            
                             /******handlers********** */
                             handleKeyPress={handleKeyPress}
                             handleKeyUp={handleKeyUp}

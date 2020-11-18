@@ -7,7 +7,6 @@ const TaserInputCell = (props) => {
         dayNumber,
         dayVacationOrDesiderata,
         auth,
-        mutation,
         /******Handlers********* */
         handleFocus,
         handleKeyPress,
@@ -29,7 +28,7 @@ const TaserInputCell = (props) => {
             onKeyPress={!auth ? null : handleKeyPress}
             onKeyUp={!auth ? null : handleKeyUp}
             onFocus={!auth ? null : handleFocus}
-            onBlur={!auth ? null : (e, ...args) => handleBlur({ e, dayNumber, userId, mutation, ...args })}
+            onBlur={!auth ? null : (e, ...args) => handleBlur({ e, dayNumber, userId, ...args })}
         />
     )
 }

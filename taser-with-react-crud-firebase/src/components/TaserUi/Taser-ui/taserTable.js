@@ -10,6 +10,8 @@ const TaserTable = (props) => {
         taserUsers,
         taserVacations,
         taserDesideratas,
+        usersDays,
+        mutateDays,
         userAuthId,
         rangeOfDays,
         taserId } = props
@@ -33,9 +35,11 @@ const TaserTable = (props) => {
                             taserId={taserId}
                             taserVacations={taserVacations}
                             taserDesideratas={taserDesideratas}
+                            usersDays={usersDays}
                             userAuthId={userAuthId}
                             rangeOfDays={rangeOfDays}
-                            /******handlers*********** */
+                            mutateDays={mutateDays}
+                       
                             handleKeyPress = {handleKeyPress}
                             handleKeyUp={handleKeyUp}
                             handleBlur={handleBlur}
