@@ -14,7 +14,7 @@ export const createDay = async ({...args}) => {
 }
 
 export const createAllDays = async ({...args}) => {
-    const {taserId, userId, stateData} = args
+    const {taserId, stateData} = args
     await db.collection("tasers").doc(taserId).collection("days").doc("current").set(stateData)
     const doc2 = await db.collection("tasers").doc(taserId).collection("days").doc("current").get()
     /*** new doc days strategy **** */

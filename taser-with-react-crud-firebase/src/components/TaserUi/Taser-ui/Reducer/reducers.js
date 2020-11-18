@@ -4,18 +4,18 @@ export const usersYears = (state=[], action) => {
     const year = Math.floor(action.dayNumber/10000)
     switch (action.type) {
         case C.ADD_USER_DAY:
-            if (state.filter(u => Object.keys(u).filter(v => v !== "changed")[0] === year.toString()).length>0) {  
+            if (state.filter(u => Object.keys(u)[0] === year.toString()).length>0) {  
                 return state.map( u => userYears(u,action) )
             }
             else {
-                return state.concat([{[year]:[],changed:true}]).map(u => userYears(u,action))     
+                return state.concat([{[year]:[]}]).map(u => userYears(u,action))     
             }
         case C.REMOVE_USER_DAY:
-            if (state.filter(u => Object.keys(u).filter(v => v !== "changed")[0] === year.toString()).length>0) {      
+            if (state.filter(u => Object.keys(u)[0] === year.toString()).length>0) {      
                 return state.map( u => userYears(u,action) )
             }
             else {
-                return state.concat([{[year]:[],changed:true}]).map(u => userYears(u,action))     
+                return state.concat([{[year]:[]}]).map(u => userYears(u,action))     
             }
         default:
             return state
@@ -26,20 +26,18 @@ export const userYears = (state={}, action) => {
     const year = Math.floor(action.dayNumber/10000)
     switch (action.type){
         case C.ADD_USER_DAY:
-            return (Object.keys(state).filter(v => v !== "changed")[0] !== year.toString()) ?
+            return (Object.keys(state)[0] !== year.toString()) ?
                 state:
                 {
                 ...state,
-                [year]:usersDays(state[year],action),
-                changed:true
+                [year]:usersDays(state[year],action)
                 }
         case C.REMOVE_USER_DAY:
-            return (Object.keys(state).filter(v => v !== "changed")[0] !== year.toString()) ?
+            return (Object.keys(state)[0] !== year.toString()) ?
                 state:
                 {
                 ...state,
-                [year]:usersDays(state[year],action),
-                changed:true
+                [year]:usersDays(state[year],action)
                 }
         default:
             return state
@@ -50,18 +48,18 @@ export const userYears = (state={}, action) => {
 export const usersDays = (state=[], action) => {
     switch (action.type) {
         case C.ADD_USER_DAY:
-            if (state.filter(u => Object.keys(u).filter(v => v !== "changed")[0] === action.userId).length>0) {      
+            if (state.filter(u => Object.keys(u)[0] === action.userId).length>0) {      
                 return state.map( u => userDays(u,action) )
             }
             else {
-                return state.concat([{[action.userId]:[],changed:true}]).map(u => userDays(u,action))     
+                return state.concat([{[action.userId]:[]}]).map(u => userDays(u,action))     
             }
         case C.REMOVE_USER_DAY:
-            if (state.filter(u => Object.keys(u).filter(v => v !== "changed")[0] === action.userId).length>0) {      
+            if (state.filter(u => Object.keys(u)[0] === action.userId).length>0) {      
                 return state.map( u => userDays(u,action) )
             }
             else {
-                return state.concat([{[action.userId]:[],changed:true}]).map(u => userDays(u,action))     
+                return state.concat([{[action.userId]:[]}]).map(u => userDays(u,action))     
             }
         default:
             return state
@@ -71,20 +69,18 @@ export const usersDays = (state=[], action) => {
 export const userDays = (state={}, action) => {
     switch (action.type){
         case C.ADD_USER_DAY:
-            return (Object.keys(state).filter(v => v !== "changed")[0] !== action.userId) ?
+            return (Object.keys(state)[0] !== action.userId) ?
                 state:
                 {
                 ...state,
-                [action.userId]:userDay(state[action.userId],action),
-                changed:true
+                [action.userId]:userDay(state[action.userId],action)
                 }
         case C.REMOVE_USER_DAY:
-            return (Object.keys(state).filter(v => v !== "changed")[0] !== action.userId) ?
+            return (Object.keys(state)[0] !== action.userId) ?
                 state:
                 {
                 ...state,
-                [action.userId]:userDay(state[action.userId],action),
-                changed:true
+                [action.userId]:userDay(state[action.userId],action)
                 }
         default:
             return state
@@ -95,18 +91,18 @@ export const userDays = (state={}, action) => {
 export const userDay = (state=[], action) => {
     switch (action.type){
         case C.ADD_USER_DAY:
-            if (state.filter(u => Object.keys(u).filter(v => v !== "changed")[0] === action.dayNumber.toString()).length>0) {
+            if (state.filter(u => Object.keys(u)[0] === action.dayNumber.toString()).length>0) {
                 return state.map( u => days(u,action) )
             }
             else {
-                return state.concat([{[action.dayNumber]:[],changed:true}]).map(u => days(u,action))     
+                return state.concat([{[action.dayNumber]:[]}]).map(u => days(u,action))     
             }
         case C.REMOVE_USER_DAY:
-            if (state.filter(u => Object.keys(u).filter(v => v !== "changed")[0] === action.dayNumber.toString()).length>0) {
+            if (state.filter(u => Object.keys(u)[0] === action.dayNumber.toString()).length>0) {
                 return state.map( u => days(u,action) )
             }
             else {
-                return state.concat([{[action.dayNumber]:[],changed:true}]).map(u => days(u,action)) 
+                return state.concat([{[action.dayNumber]:[]}]).map(u => days(u,action)) 
             }
         default:
             return state
@@ -117,20 +113,18 @@ export const userDay = (state=[], action) => {
 export const days = (state={}, action) => {
     switch (action.type){
         case C.ADD_USER_DAY:
-            return (Object.keys(state).filter(v => v !== "changed")[0] !== action.dayNumber.toString()) ?
+            return (Object.keys(state)[0] !== action.dayNumber.toString()) ?
                 state:
                 {
                 ...state,
-                [action.dayNumber]:day1([],action),
-                changed:true
+                [action.dayNumber]:day1([],action)
                 }
         case C.REMOVE_USER_DAY:
-            return (Object.keys(state).filter(v => v !== "changed")[0] !== action.dayNumber.toString()) ?
+            return (Object.keys(state)[0] !== action.dayNumber.toString()) ?
                 state:
                 {
                 ...state,
-                [action.dayNumber]:day1([],action),
-                changed:true
+                [action.dayNumber]:day1([],action)
                 }
         default:
             return state

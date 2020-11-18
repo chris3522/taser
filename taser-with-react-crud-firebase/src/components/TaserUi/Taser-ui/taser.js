@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from "react"
+import React, { useState, useReducer, useEffect } from "react"
 import useSWR from "swr"
 import moment from 'moment'
 import TaserTable from './taserTable'
@@ -36,16 +36,18 @@ export default function Taser({ taserId, renforts, taserInfo, taserUsers, taserD
    //  setAuthAdmin(accessAdmin)
     const [actionDays, dispatchActionDays] = useReducer(reducers.actionDays)
     const [dataDays, dispatchDays] = useReducer(reducers.usersYears)
+    const [readyToSaveInBase, setReadyToSaveInBase] = useState(false)
     const [buttonConnectName, setButtonConnectName] = useState(false)
     const [displayConnectInfo, setDisplayConnectInfo] = useState(taserConnectedAdmin.connected ? 'displayBlock' : 'displayNone')
     const [userAuthId, setUserAuthId] = useState()
     const [selectedDay, setSelectedDay] = useState(undefined)
     console.log('userAuthId: '+userAuthId)
-console.log(actionDays)
     const rangeOfDays = selectedDay ? moment(selectedDay, 'YYYY-MM-DD').startOf('month').subtract(150, "days").format('YYYY-MM-DD') :
         moment(dayDate, 'YYYY-MM-DD').startOf('month').subtract(150, "days").format('YYYY-MM-DD')
     const rangeOfDaysInt =  parseInt(rangeOfDays.replace(/-/gi, ''))
-
+    useEffect(() => {
+        saveInBase(dataDays, readyToSaveInBase, taserId)
+    }, [readyToSaveInBase])
     /**************************************************** */
     // Init data fetching (initial data SSR with props)
     /**************************************************** */
@@ -84,11 +86,11 @@ console.log(actionDays)
         dayDate = moment(day).format('YYYY-MM-DD')
     }
 
-    const handleSave = ({ ...args }) => {
+    const handleSave = async ({ ...args }) => {
         //console.log(dataDays)
-        const { actionDays } = args
+        const { actionDays, dataDays, readyToSaveInBase } = args
         console.log(actionDays)
-        actionDays.map(d => {
+        await actionDays.map(d => {
              switch (d.actionType){
                     case C.ADD_DAY:
                         return dispatchDays( actions.addDayInTaser(d) )
@@ -98,11 +100,16 @@ console.log(actionDays)
                         return null
             }
         })
-        const stateData = {current : dataDays}
-        console.log(stateData)
-        //api_root_days.createAllDays({taserId, taserId, stateData})
+        setReadyToSaveInBase(true)
+        setReadyToSaveInBase(false)
     }
-
+    
+    const saveInBase = (data, readyToSaveInBase, taserId) => {
+        console.log(taserId)
+        readyToSaveInBase && console.log(data)
+        const stateData = {current:data}
+        readyToSaveInBase && api_root_days.createAllDays({taserId, stateData})
+    }
     /*********************************************************** */
     //handlers for signin Authorization inside App (not login App)
     /*********************************************************** */
@@ -166,7 +173,7 @@ console.log(actionDays)
                     <div className={'dayPi five columns'} ><DayPicker selectedDays={selectedDay} onDayClick={handleDayClick} localeUtils={MomentLocaleUtils} locale={'fr'} /></div>
                     <SignInUsers className={'seven columns'} 
                         handleSubmit={(loginEntry) => handleSubmit({ taserUsers, loginEntry, taserConnectedAdmin })}
-                        handleSave={()=>handleSave({actionDays})}
+                        handleSave={()=>handleSave({actionDays, dataDays, readyToSaveInBase})}
                         buttonConnectName={buttonConnectName} displayConnectInfo ={displayConnectInfo}/>
                 </div>
                 <h5>{name}</h5>
