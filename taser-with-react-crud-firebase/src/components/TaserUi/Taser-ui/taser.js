@@ -1,5 +1,4 @@
 import React, { useState, useReducer, useEffect } from "react"
-import useSWR from "swr"
 import moment from 'moment'
 import TaserTable from './taserTable'
 import TaserTableRenfort from './taserTableRenfort'
@@ -32,28 +31,55 @@ const accessAdmin = uiPass.PWDTASERADMIN
 let dayDate = moment().format('YYYY-MM-DD')
 /************************************************ */
 
-export default function Taser({ taserId, renforts, taserInfo, taserUsers, taserDesideratas,taserVacations, setAuthAdmin, authAdmin, taserConnectedAdmin, mutateConnectedAdmin }) {
-   //  setAuthAdmin(accessAdmin)
+export default function Taser({
+    taserId,
+    renforts,
+    taserInfo,
+    taserUsers,
+    taserDesideratas,
+    taserVacations,
+    setAuthAdmin,
+    authAdmin,
+    taserConnectedAdmin,
+    mutateConnectedAdmin,
+    yearDays, yearDaysNext, yearDaysPrev,
+    mutateYearDays, mutateYearDaysNext, mutateYearDaysPrev }) {
+    //  setAuthAdmin(accessAdmin)
+
+    /************************************************************ */
+    // Init data fetching (initial data SSR with props from taserUI)
+    /************************************************************ */
+    const threeYears = [...yearDays[yearDays.year], ...yearDaysNext[yearDaysNext.year], ...yearDaysPrev[yearDaysPrev.year]]
+    const threeYearsState = [yearDays, yearDaysNext, yearDaysPrev]
     const [actionDays, dispatchActionDays] = useReducer(reducers.actionDays)
-    const [dataDays, dispatchDays] = useReducer(reducers.usersYears)
+    const [dataDays, dispatchDays] = useReducer(reducers.usersYears, threeYearsState)
+
+
     const [readyToSaveInBase, setReadyToSaveInBase] = useState(false)
     const [buttonConnectName, setButtonConnectName] = useState(false)
     const [displayConnectInfo, setDisplayConnectInfo] = useState(taserConnectedAdmin.connected ? 'displayBlock' : 'displayNone')
     const [userAuthId, setUserAuthId] = useState()
     const [selectedDay, setSelectedDay] = useState(undefined)
-    console.log('userAuthId: '+userAuthId)
-    const rangeOfDays = selectedDay ? moment(selectedDay, 'YYYY-MM-DD').startOf('month').subtract(150, "days").format('YYYY-MM-DD') :
-        moment(dayDate, 'YYYY-MM-DD').startOf('month').subtract(150, "days").format('YYYY-MM-DD')
-    const rangeOfDaysInt =  parseInt(rangeOfDays.replace(/-/gi, ''))
+    console.log('userAuthId: ' + userAuthId)
+
     useEffect(() => {
-        saveInBase(dataDays, readyToSaveInBase, taserId)
-    }, [readyToSaveInBase])
-    /**************************************************** */
-    // Init data fetching (initial data SSR with props)
-    /**************************************************** */
-
-    const { data: usersDays, error: errorDays, mutate: mutateDays } = useSWR([taserId,rangeOfDaysInt, "usersdays"], api_root_days.getUsersDays)
-
+        const saveInBase = async (data, taserId) => {
+            //console.log(data)
+            //data.map( year => api_root_days.createAllDays({taserId, year}))
+            await data.map(stateData => {
+                let year = Object.keys(stateData)[0]
+                api_root_days.createAllDays({ taserId, stateData, year })
+                return console.log("...saving in base")
+            })
+            console.log(data)
+            dispatchActionDays(actions.resetActionLog())
+            mutateYearDays()
+            mutateYearDaysNext()
+            mutateYearDaysPrev()
+        }
+        readyToSaveInBase && saveInBase(dataDays, taserId)
+        console.log("effect")
+    },[readyToSaveInBase,mutateYearDays, mutateYearDaysNext,mutateYearDaysPrev,taserId, dataDays])
 
     /************************************* */
     //handlers for taser UI input cells
@@ -76,7 +102,7 @@ export default function Taser({ taserId, renforts, taserInfo, taserUsers, taserD
         inputHandleKeyUp(e, eraseDesiderataNameAndKeepColorInstead)
     }
     const handleBlur = ({ e, ...args }) => {
-        inputHandleBlur({ e, saveVacationOrDesiderataId, taserId, dispatchActionDays, mutateDays, ...args })
+        inputHandleBlur({ e, saveVacationOrDesiderataId, taserId, dispatchActionDays, ...args })
     }
     const handleFocus = e => {
         inputHandleFocus(e)
@@ -87,29 +113,24 @@ export default function Taser({ taserId, renforts, taserInfo, taserUsers, taserD
     }
 
     const handleSave = async ({ ...args }) => {
-        //console.log(dataDays)
-        const { actionDays, dataDays, readyToSaveInBase } = args
-        console.log(actionDays)
-        await actionDays.map(d => {
-             switch (d.actionType){
+        const { actionDays } = args
+        if (actionDays && actionDays.length > 0) {
+            await actionDays.map(d => {
+                switch (d.actionType) {
                     case C.ADD_DAY:
-                        return dispatchDays( actions.addDayInTaser(d) )
+                        return dispatchDays(actions.addDayInTaser(d))
                     case C.REMOVE_DAY:
-                        return dispatchDays(actions.removeDayInTaser(d.userId,d.dayNumber))
+                        return dispatchDays(actions.removeDayInTaser(d.userId, d.dayNumber))
                     default:
                         return null
-            }
-        })
-        setReadyToSaveInBase(true)
-        setReadyToSaveInBase(false)
+                }
+            })
+            setReadyToSaveInBase(true)
+            setReadyToSaveInBase(false)
+        }
     }
-    
-    const saveInBase = (data, readyToSaveInBase, taserId) => {
-        console.log(taserId)
-        readyToSaveInBase && console.log(data)
-        const stateData = {current:data}
-        readyToSaveInBase && api_root_days.createAllDays({taserId, stateData})
-    }
+
+
     /*********************************************************** */
     //handlers for signin Authorization inside App (not login App)
     /*********************************************************** */
@@ -121,7 +142,7 @@ export default function Taser({ taserId, renforts, taserInfo, taserUsers, taserD
         "connected": false,
     }
     const handleConnectedAdmin = async (connect) => {
-        mutateConnectedAdmin( { ...taserConnectedAdmin, ...connect })
+        mutateConnectedAdmin({ ...taserConnectedAdmin, ...connect })
         await api_root_info.updateConnectedAdmin(taserId, connect)
     }
     const handleSubmit = async ({ ...args }) => {
@@ -159,11 +180,10 @@ export default function Taser({ taserId, renforts, taserInfo, taserUsers, taserD
 
     /************************************** */
 
-    if (errorDays) return <p>Error loading data!</p>
-    else if (!usersDays) return  <p>..loading</p>
+    if (!threeYearsState) return <p>..loading</p>
     else {
         const { name, desc, numberOfDays, numberOfTasers } = { ...taserInfo }
-        console.log("desc: "+desc)
+        console.log("desc: " + desc)
         const tabVacationsAndDesideratas = [...taserDesideratas, ...taserVacations]
         return (
 
@@ -171,32 +191,33 @@ export default function Taser({ taserId, renforts, taserInfo, taserUsers, taserD
                 <p className={"dateCurrent"}>{`${moment(selectedDay).format('dddd DD MMMM YYYY')}`}</p>
                 <div className={"row"}>
                     <div className={'dayPi five columns'} ><DayPicker selectedDays={selectedDay} onDayClick={handleDayClick} localeUtils={MomentLocaleUtils} locale={'fr'} /></div>
-                    <SignInUsers className={'seven columns'} 
+                    <SignInUsers className={'seven columns'}
                         handleSubmit={(loginEntry) => handleSubmit({ taserUsers, loginEntry, taserConnectedAdmin })}
-                        handleSave={()=>handleSave({actionDays, dataDays, readyToSaveInBase})}
-                        buttonConnectName={buttonConnectName} displayConnectInfo ={displayConnectInfo}/>
+                        handleSave={() => handleSave({ actionDays })}
+                        buttonConnectName={buttonConnectName} displayConnectInfo={displayConnectInfo} />
                 </div>
                 <h5>{name}</h5>
                 {
-                    [...Array(parseInt(numberOfTasers))].map((n, i) =>{
-                    return(
-                        <TaserTable key={i}
-                            selectedDate={moment(dayDate, "YYYY-MM-DD").add(numberOfDays * i, "days").format("YYYY-MM-DD")}
-                            numberOfDays={parseInt(numberOfDays)}
-                            activeSelectedDate={dayDate}
-                            taserInfo={taserInfo}
-                            taserUsers={taserUsers}
-                            usersDays={usersDays}
-                            taserId={taserId}
-                            userAuthId={userAuthId}
-    
-                            /*handler*/
-                            handleFocus={handleFocus}
-                            handleBlur={handleBlur}
-                            handleKeyPress={(e) => handleKeyPress(e, tabVacationsAndDesideratas)}
-                            handleKeyUp={handleKeyUp} >
+                    [...Array(parseInt(numberOfTasers))].map((n, i) => {
+                        return (
+                            <TaserTable key={i}
+                                selectedDate={moment(dayDate, "YYYY-MM-DD").add(numberOfDays * i, "days").format("YYYY-MM-DD")}
+                                numberOfDays={parseInt(numberOfDays)}
+                                activeSelectedDate={dayDate}
+                                taserInfo={taserInfo}
+                                taserUsers={taserUsers}
+                                threeYears={threeYears}
+                                actionDays={actionDays}
+                                taserId={taserId}
+                                userAuthId={userAuthId}
 
-                            {/*renforts&&(
+                                /*handler*/
+                                handleFocus={handleFocus}
+                                handleBlur={handleBlur}
+                                handleKeyPress={(e) => handleKeyPress(e, tabVacationsAndDesideratas)}
+                                handleKeyUp={handleKeyUp} >
+
+                                {/*renforts&&(
                                 [...Array(renforts.length)].map((n, j) =>
                                         <TaserTableRenfort key={`renfort-${j}`}
                                         selectedDate={moment(dayDate, "YYYY-MM-DD").add(numberOfDays * i, "days").format("YYYY-MM-DD")}
@@ -209,7 +230,8 @@ export default function Taser({ taserId, renforts, taserInfo, taserUsers, taserD
                                 )
                             */}
 
-                        </TaserTable>)}
+                            </TaserTable>)
+                    }
 
                     )}
 

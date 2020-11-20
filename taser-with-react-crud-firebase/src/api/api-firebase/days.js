@@ -14,9 +14,9 @@ export const createDay = async ({...args}) => {
 }
 
 export const createAllDays = async ({...args}) => {
-    const {taserId, stateData} = args
-    await db.collection("tasers").doc(taserId).collection("days").doc("current").set(stateData)
-    const doc2 = await db.collection("tasers").doc(taserId).collection("days").doc("current").get()
+    const {taserId, stateData, year} = args
+    await db.collection("tasers").doc(taserId).collection("days").doc(year).set(stateData)
+    const doc2 = await db.collection("tasers").doc(taserId).collection("days").doc(year).get()
     /*** new doc days strategy **** */
     //retrieve a year
     //const daysRef = await db.collection("tasers").doc(taserId).collection("users").doc(userId).collection("years").doc("2020")
@@ -24,6 +24,21 @@ export const createAllDays = async ({...args}) => {
 
     /**** new doc days strategy**** */
     return ({id:doc2.id, ...doc2.data()})
+}
+
+export const getYear = async (...args) => {
+    const [taserId, currentYear, selectedYear] = args
+    const yearId = currentYear === selectedYear ? currentYear : selectedYear
+    const yearDoc = await db.collection("tasers").doc(taserId).collection("days").doc(yearId.toString()).get() 
+    if (yearDoc.exists) {
+        console.log("Year found in database")
+        return ({year:yearDoc.id, ...yearDoc.data()})
+    } else {
+        console.log("Year not found in database, creating default entry")
+        const yearDoc1 = await db.collection("tasers").doc(taserId).collection("days").doc(yearId.toString()).set({ [yearId] :[]})
+       return ({year:yearDoc1.id, ...yearDoc1.data()})
+    }
+    
 }
 
 export const getDays = async (...args) => {

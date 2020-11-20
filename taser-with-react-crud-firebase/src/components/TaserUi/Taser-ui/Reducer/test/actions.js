@@ -57,6 +57,7 @@ const removeDayInActionLog = (userId,dayNumber) =>
         dayNumber: dayNumber,
         userId: userId
     })
+    
 
 exports.addDayInTaser2 = addDayInTaser2
     

@@ -38,3 +38,13 @@ export const removeDayInActionLog = (userId,dayNumber) =>
         dayNumber: dayNumber,
         userId: userId
     })
+
+export const resetActionLog = () =>
+    ({
+        type: C.RESET_ACTIONDAY
+    })
+export const addYearInState = (newData) =>
+    ({
+        type: C.ADD_YEAR,
+        year:newData.year
+    })

@@ -19,6 +19,10 @@ export const getDays = (...args) => {
     return firestore_api.getDays(...args)
 }
 
+export const getYear = (...args) => {
+    return firestore_api.getYear(...args)
+}
+
 export const deleteDay = (...args) => {
     return firestore_api.deleteDay(...args)
 }
