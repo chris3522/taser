@@ -1,0 +1,7 @@
+module.exports = {
+    
+	ADD_DAY: "ADD_TASER_DAY", 
+    REMOVE_DAY: "REMOVE_TASER_DAY",
+    ADD_USER_DAY: "ADD_USER",
+    ADD_USER_DAY: "ADD_USER_DAY"
+}
