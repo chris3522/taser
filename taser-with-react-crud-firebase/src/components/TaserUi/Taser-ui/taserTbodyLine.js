@@ -29,11 +29,12 @@ const TaserTbodyLine = (props) => {
     const userDaysConcat0 = threeYears
         .filter(u => Object.keys(u)[0].toString() === userId)
         .concat(actionDaysReduce1)
-        .map(u => u[Object.keys(u)[0]]
-        .map(u => u[parseInt(Object.keys(u)[0])]))
+        .map(u => u[Object.keys(u)[0]].map(u => u[parseInt(Object.keys(u)[0])]))
 
-    const userDaysConcat =  userDaysConcat0.length > 0 ? 
-        userDaysConcat0
+    const userDaysConcat1 = userDaysConcat0[0] ? [userDaysConcat0[0].filter(u => u.length>0)] :[]
+
+    const userDaysConcat =  userDaysConcat1.length > 0 ? 
+        userDaysConcat1
             .reduce((a, b) => a.concat(b))
             .map(u => u[0]) 
         : []
