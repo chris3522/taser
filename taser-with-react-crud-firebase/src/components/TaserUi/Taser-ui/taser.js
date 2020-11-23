@@ -6,7 +6,6 @@ import inputHandleFocus from './../Taser-ui-handler/cellFocusHandler'
 import inputHandleBlur from './../Taser-ui-handler/cellBlurHandler'
 import inputHandleKeyUp from './../Taser-ui-handler/cellKeyUpHandler'
 import inputHandleKeyPress from './../Taser-ui-handler/cellKeyPressHandler'
-import './taser.css'
 
 import * as api_root_info from "../../../api/info"
 import * as api_root_days from "../../../api/days"
@@ -14,10 +13,6 @@ import * as reducers from './Reducer/reducers'
 import * as actions from './Reducer/actions'
 import C from './Reducer/constants'
 
-import DayPicker from 'react-day-picker'
-import 'react-day-picker/lib/style.css'
-import MomentLocaleUtils from 'react-day-picker/moment'
-import 'moment/locale/fr'
 import { SignInUsers } from 'components'
 import uiPass from '../../../lib/env'
 
@@ -25,14 +20,9 @@ const accessAllLines = uiPass.PWDTASERUI
 const accessAdmin = uiPass.PWDTASERADMIN
 
 
-//dayDate init with daypicker
-/************************************************ */
-//let dayDate = '2020-06-03'
-let dayDate = moment().format('YYYY-MM-DD')
-/************************************************ */
-
 export default function Taser({
     taserId,
+    dayDate,
     renforts,
     taserInfo,
     taserUsers,
@@ -42,15 +32,18 @@ export default function Taser({
     authAdmin,
     taserConnectedAdmin,
     mutateConnectedAdmin,
-    yearDays, yearDaysNext, yearDaysPrev,
-    mutateYearDays, mutateYearDaysNext, mutateYearDaysPrev }) {
+    isExtraYear,
+    yearDays, yearDaysNext, yearDaysPrev, yearDaysSelect,
+    mutateYearDays, mutateYearDaysNext, mutateYearDaysPrev,  mutateYearDaysSelect }) {
     //  setAuthAdmin(accessAdmin)
 
     /************************************************************ */
     // Init data fetching (initial data SSR with props from taserUI)
     /************************************************************ */
     const threeYears = [...yearDays[yearDays.year], ...yearDaysNext[yearDaysNext.year], ...yearDaysPrev[yearDaysPrev.year]]
+    //const threeYears = [...yearDays[yearDays.year], ...yearDaysNext[yearDaysNext.year], ...yearDaysPrev[yearDaysPrev.year]].concat(isExtraYear && yearDaysSelect.year ? yearDaysSelect[yearDaysSelect.year] : [])
     const threeYearsState = [yearDays, yearDaysNext, yearDaysPrev]
+    // const threeYearsState = [yearDays, yearDaysNext, yearDaysPrev].concat(isExtraYear ? yearDaysSelect : [])
     const [actionDays, dispatchActionDays] = useReducer(reducers.actionDays)
     const [dataDays, dispatchDays] = useReducer(reducers.usersYears, threeYearsState)
 
@@ -59,7 +52,7 @@ export default function Taser({
     const [buttonConnectName, setButtonConnectName] = useState(false)
     const [displayConnectInfo, setDisplayConnectInfo] = useState(taserConnectedAdmin.connected ? 'displayBlock' : 'displayNone')
     const [userAuthId, setUserAuthId] = useState()
-    const [selectedDay, setSelectedDay] = useState(undefined)
+
     console.log('userAuthId: ' + userAuthId)
 
     useEffect(() => {
@@ -106,10 +99,6 @@ export default function Taser({
     }
     const handleFocus = e => {
         inputHandleFocus(e)
-    }
-    const handleDayClick = (day) => {
-        setSelectedDay(day)
-        dayDate = moment(day).format('YYYY-MM-DD')
     }
 
     const handleSave = async ({ ...args }) => {
@@ -188,15 +177,13 @@ export default function Taser({
         return (
 
             <div>
-                <p className={"dateCurrent"}>{`${moment(selectedDay).format('dddd DD MMMM YYYY')}`}</p>
                 <div className={"row"}>
-                    <div className={'dayPi five columns'} ><DayPicker selectedDays={selectedDay} onDayClick={handleDayClick} localeUtils={MomentLocaleUtils} locale={'fr'} /></div>
-                    <SignInUsers className={'seven columns'}
+                         <SignInUsers className={''}
                         handleSubmit={(loginEntry) => handleSubmit({ taserUsers, loginEntry, taserConnectedAdmin })}
                         handleSave={() => handleSave({ actionDays })}
                         buttonConnectName={buttonConnectName} displayConnectInfo={displayConnectInfo} />
                 </div>
-                <h5>{name}</h5>
+                <div className={"row"}><h5>{name}</h5> </div>
                 {
                     [...Array(parseInt(numberOfTasers))].map((n, i) => {
                         return (

@@ -26,19 +26,24 @@ const TaserTbodyLine = (props) => {
                 .map(d => ({ [d.dayNumber]: Array(d) }))
         })
         : []
-    const userDaysConcat = threeYears
+    const userDaysConcat0 = threeYears
         .filter(u => Object.keys(u)[0].toString() === userId)
         .concat(actionDaysReduce1)
-        .map(u => u[Object.keys(u)[0]].map(u => u[parseInt(Object.keys(u)[0])]))
-        .reduce((a, b) => a.concat(b)).map(u => u[0])
+        .map(u => u[Object.keys(u)[0]]
+        .map(u => u[parseInt(Object.keys(u)[0])]))
+
+    const userDaysConcat =  userDaysConcat0.length > 0 ? 
+        userDaysConcat0
+            .reduce((a, b) => a.concat(b))
+            .map(u => u[0]) 
+        : []
+
     const userDays = userDaysConcat && userDaysConcat.reduceRight((acc, day) => {
         if (acc.filter(d => d.dayNumber === day.dayNumber).length === 0) {
             acc.push(day);
         }
         return acc
     }, [])
-
-    //console.log(userDays)
 
     return (
         <tr>
@@ -54,7 +59,7 @@ const TaserTbodyLine = (props) => {
                         dayNumber={dayNumber}
                         dayVacationOrDesiderata={dayVacationOrDesiderata}
 
-                        /******handlers********** */
+                        /********handlers************* */
                         handleKeyPress={handleKeyPress}
                         handleKeyUp={handleKeyUp}
                         handleFocus={handleFocus}
