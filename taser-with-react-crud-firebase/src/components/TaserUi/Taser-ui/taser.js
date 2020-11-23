@@ -40,10 +40,8 @@ export default function Taser({
     /************************************************************ */
     // Init data fetching (initial data SSR with props from taserUI)
     /************************************************************ */
-    const threeYears = [...yearDays[yearDays.year], ...yearDaysNext[yearDaysNext.year], ...yearDaysPrev[yearDaysPrev.year]]
-    //const threeYears = [...yearDays[yearDays.year], ...yearDaysNext[yearDaysNext.year], ...yearDaysPrev[yearDaysPrev.year]].concat(isExtraYear && yearDaysSelect.year ? yearDaysSelect[yearDaysSelect.year] : [])
-    const threeYearsState = [yearDays, yearDaysNext, yearDaysPrev]
-    // const threeYearsState = [yearDays, yearDaysNext, yearDaysPrev].concat(isExtraYear ? yearDaysSelect : [])
+    const threeYears = [...yearDays[yearDays.year], ...yearDaysNext[yearDaysNext.year], ...yearDaysPrev[yearDaysPrev.year]].concat(isExtraYear && yearDaysSelect.year ? yearDaysSelect[yearDaysSelect.year] : [])
+    const threeYearsState = [yearDays, yearDaysNext, yearDaysPrev].concat(isExtraYear ? yearDaysSelect : [])
     const [actionDays, dispatchActionDays] = useReducer(reducers.actionDays)
     const [dataDays, dispatchDays] = useReducer(reducers.usersYears, threeYearsState)
 
