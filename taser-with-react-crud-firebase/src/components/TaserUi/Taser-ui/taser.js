@@ -1,5 +1,6 @@
 import React, { useState, useReducer, useEffect } from "react"
 import moment from 'moment'
+import useSWR from "swr"
 import TaserTable from './taserTable'
 import TaserTableRenfort from './taserTableRenfort'
 import inputHandleFocus from './../Taser-ui-handler/cellFocusHandler'
@@ -11,6 +12,7 @@ import * as api_root_info from "../../../api/info"
 import * as api_root_days from "../../../api/days"
 import * as reducers from './Reducer/reducers'
 import * as actions from './Reducer/actions'
+import { renfortCreateList } from '../../../lib/helpers'
 import C from './Reducer/constants'
 
 import { SignInUsers } from 'components'
@@ -34,18 +36,41 @@ export default function Taser({
     mutateConnectedAdmin,
     isExtraYear,
     yearDays, yearDaysNext, yearDaysPrev, yearDaysSelect,
-    mutateYearDays, mutateYearDaysNext, mutateYearDaysPrev,  mutateYearDaysSelect }) {
+    mutateYearDays, mutateYearDaysNext, mutateYearDaysPrev, mutateYearDaysSelect,
+    yearDaysRenfort, yearDaysRenfortNext, yearDaysRenfortPrev, yearDaysRenfortSelect, }) {
     //  setAuthAdmin(accessAdmin)
 
     /************************************************************ */
     // Init data fetching (initial data SSR with props from taserUI)
     /************************************************************ */
+  // const [renfortYears, setRenfortYears] = useState()
+
     const threeYears = [...yearDays[yearDays.year], ...yearDaysNext[yearDaysNext.year], ...yearDaysPrev[yearDaysPrev.year]].concat(isExtraYear && yearDaysSelect.year ? yearDaysSelect[yearDaysSelect.year] : [])
     const threeYearsState = [yearDays, yearDaysNext, yearDaysPrev].concat(isExtraYear ? yearDaysSelect : [])
     const [actionDays, dispatchActionDays] = useReducer(reducers.actionDays)
     const [dataDays, dispatchDays] = useReducer(reducers.usersYears, threeYearsState)
-
-
+    //console.log(yearDaysRenfort[0])
+  
+    const renfortYears = yearDaysRenfort && yearDaysRenfort.length ? yearDaysRenfort.map(
+        renfort => renfortCreateList( [...renfort[renfort.year]] )
+    ) : []
+    const renfortYearsNext = yearDaysRenfortNext && yearDaysRenfortNext.length ? yearDaysRenfortNext.map(
+        renfort => renfortCreateList( [...renfort[renfort.year]] )
+    ) : []
+    const renfortYearsPrev = yearDaysRenfortPrev && yearDaysRenfortPrev.length ? yearDaysRenfortPrev.map(
+        renfort => renfortCreateList( [...renfort[renfort.year]] )
+    ) : []
+    const renfortYearsSelect = yearDaysRenfortSelect && yearDaysRenfortSelect.length ? yearDaysRenfortSelect.map(
+        renfort => renfortCreateList( [...renfort[renfort.year]] )
+    ) : []
+ 
+    const renfortFourYears0 = renforts.map(
+        (n, i ) => renfortYears[i].concat(renfortYearsNext[i]).concat(renfortYearsPrev[i]).concat(renfortYearsSelect[i])
+    )
+    const renfortFourYears =  renfortFourYears0.map(
+        taser => taser.filter(d=>d!==undefined)
+    )
+     
     const [readyToSaveInBase, setReadyToSaveInBase] = useState(false)
     const [buttonConnectName, setButtonConnectName] = useState(false)
     const [displayConnectInfo, setDisplayConnectInfo] = useState(taserConnectedAdmin.connected ? 'displayBlock' : 'displayNone')
@@ -55,8 +80,6 @@ export default function Taser({
 
     useEffect(() => {
         const saveInBase = async (data, taserId) => {
-            //console.log(data)
-            //data.map( year => api_root_days.createAllDays({taserId, year}))
             await data.map(stateData => {
                 let year = Object.keys(stateData)[0]
                 api_root_days.createAllDays({ taserId, stateData, year })
@@ -67,10 +90,11 @@ export default function Taser({
             mutateYearDays()
             mutateYearDaysNext()
             mutateYearDaysPrev()
+            mutateYearDaysSelect()
         }
         readyToSaveInBase && saveInBase(dataDays, taserId)
         console.log("effect")
-    },[readyToSaveInBase,mutateYearDays, mutateYearDaysNext,mutateYearDaysPrev,taserId, dataDays])
+    }, [readyToSaveInBase, mutateYearDays, mutateYearDaysNext, mutateYearDaysPrev, taserId, dataDays])
 
     /************************************* */
     //handlers for taser UI input cells
@@ -165,8 +189,8 @@ export default function Taser({
         }
     }
 
-    /************************************** */
 
+    /************************************** */
     if (!threeYearsState) return <p>..loading</p>
     else {
         const { name, desc, numberOfDays, numberOfTasers } = { ...taserInfo }
@@ -176,7 +200,7 @@ export default function Taser({
 
             <div>
                 <div className={"row"}>
-                         <SignInUsers className={''}
+                    <SignInUsers className={''}
                         handleSubmit={(loginEntry) => handleSubmit({ taserUsers, loginEntry, taserConnectedAdmin })}
                         handleSave={() => handleSave({ actionDays })}
                         buttonConnectName={buttonConnectName} displayConnectInfo={displayConnectInfo} />
@@ -202,18 +226,17 @@ export default function Taser({
                                 handleKeyPress={(e) => handleKeyPress(e, tabVacationsAndDesideratas)}
                                 handleKeyUp={handleKeyUp} >
 
-                                {/*renforts&&(
-                                [...Array(renforts.length)].map((n, j) =>
+                                {renforts && (
+                                    [...Array(renforts.length)].map((n, j) =>
                                         <TaserTableRenfort key={`renfort-${j}`}
-                                        selectedDate={moment(dayDate, "YYYY-MM-DD").add(numberOfDays * i, "days").format("YYYY-MM-DD")}
-                                        numberOfDays={parseInt(numberOfDays)}
-                                        activeSelectedDate={dayDate}
-                                        taserInfo={taserInfo}
-                                        userAuthId={false}
-                                        rangeOfDays={rangeOfDays}
-                                        renforts={renforts[j]}/>)
+                                            selectedDate={moment(dayDate, "YYYY-MM-DD").add(numberOfDays * i, "days").format("YYYY-MM-DD")}
+                                            numberOfDays={parseInt(numberOfDays)}
+                                            activeSelectedDate={dayDate}
+                                            userAuthId={false}
+                                            renfortYears = {renfortFourYears[j]}
+                                            renforts={renforts[j]} />)
                                 )
-                            */}
+                                }
 
                             </TaserTable>)
                     }

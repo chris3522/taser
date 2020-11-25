@@ -6,14 +6,12 @@ const TaserTableRenfort = (props) => {
    const { selectedDate,
         numberOfDays,
         activeSelectedDate,
-        taserInfo,
-        taserVacations,
-        taserDesideratas,
-        rangeOfDays,
         userAuthId,
-        renforts } = props
-    const taserRenfortId = renforts.taserId
+        renforts,
+        renfortYears,
+        threeYearsRenfort } = props
     const linesNumber = renforts.targetVacationsRequiredNumber
+  
     return (
                 <tbody className={styles.bodyTab}>
                     { linesNumber === undefined ? <tr></tr> :  [...Array(linesNumber)].map((n, i) => 
@@ -21,15 +19,10 @@ const TaserTableRenfort = (props) => {
                             selectedDate={selectedDate}
                             numberOfDays={numberOfDays}
                             activeSelectedDate={activeSelectedDate} //unused
-                            taserInfo={taserInfo}
                             userId={i}
-                            taserRenfortId={taserRenfortId}
-                            taserVacations={taserVacations}
-                            taserDesideratas={taserDesideratas}
+                            taserRenfortId={renforts.taserId}
                             userAuthId={userAuthId}
-                            rangeOfDays={rangeOfDays}
-                            linesNumber={linesNumber}
-                        
+                            renfortYears = {renfortYears}
                         />
                     )}
                 </tbody>

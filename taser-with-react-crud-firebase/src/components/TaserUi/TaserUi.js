@@ -38,7 +38,13 @@ const TaserUi = ({ className, taserId, user, setAuthAdmin, authAdmin }) => {
         setSelectedDay(day)
         dayDate = moment(day).format('YYYY-MM-DD')
     }
-   
+
+    const { data: renforts, error: errorRenforts } = useSWR([taserId, "renforts"], api_root_renfort.getRenforts)
+    const { data: yearDaysRenfort, error: errorYearDaysRenfort } = useSWR(renforts && renforts.length>0 ? [renforts,currentYear,currentYear, "currentyearrenfort"] : null, api_root_days.getYearRenfort)
+    const { data: yearDaysRenfortNext, error: errorYearDaysRenfortNext } = useSWR(renforts && renforts.length>0 ? [renforts,currentYear,nextYear, "currentyearrenfortnext"] : null, api_root_days.getYearRenfort)
+    const { data: yearDaysRenfortPrev, error: errorYearDaysRenfortPrev } = useSWR(renforts && renforts.length>0 ? [renforts,currentYear,prevYear, "currentyearrenfortprev"] : null, api_root_days.getYearRenfort)
+    const { data: yearDaysRenfortSelect, error: errorYearDaysRenfortSelect } = useSWR(!years.includes(selectedYear) && renforts && renforts.length>0 ? [renforts,currentYear,selectedYear, "currentyearrenfortselected"] : null, api_root_days.getYearRenfort)
+    
     /**************************************************** */
     // Init data fetching (initial data SSR with props)
     /**************************************************** */
@@ -46,7 +52,6 @@ const TaserUi = ({ className, taserId, user, setAuthAdmin, authAdmin }) => {
     const { data: taserUsers, error: errorUsers } = useSWR([taserId, "users"], api_root_users.getUsers)
     const { data: taserVacations, error: errorVacations } = useSWR([taserId, "vacations"], api_root_vacations.getVacations)
     const { data: taserDesideratas, error: errorDesideratas } = useSWR([taserId, "desideratas"], api_root_desideratas.getDesideratas)
-    const { data: renforts, error: errorRenforts } = useSWR([taserId, "renforts"], api_root_renfort.getRenforts)
     const { data: taserConnectedAdmin, mutate: mutateConnectedAdmin } = useSWR([taserId, "authAdmin"], api_root_info.getConnectedAdmin)
     if (errorInfo) return <p>Error loading data!</p>
     else if (errorUsers) return <p>Error loading data!</p>
@@ -66,6 +71,9 @@ const TaserUi = ({ className, taserId, user, setAuthAdmin, authAdmin }) => {
     else if (!yearDays) return <p>Loading...</p>
     else if (!yearDaysNext) return <p>Loading...</p>
     else if (!yearDaysPrev) return <p>Loading...</p>
+    else if (!yearDaysRenfort && renforts.length>0) return <p>Loading...</p>
+    else if (!yearDaysRenfortNext && renforts.length>0) return <p>Loading...</p>
+    else if (!yearDaysRenfortPrev && renforts.length>0) return <p>Loading...</p>
     else if (!years.includes(selectedYear) && !yearDaysSelect) return <p>Loading...</p>
     else if (user) {
         return (
@@ -99,6 +107,10 @@ const TaserUi = ({ className, taserId, user, setAuthAdmin, authAdmin }) => {
                     mutateYearDaysPrev={mutateYearDaysPrev}
                     mutateYearDaysSelect={mutateYearDaysSelect}
                     isExtraYear={!years.includes(selectedYear)}
+                    yearDaysRenfort={yearDaysRenfort}
+                    yearDaysRenfortPrev={yearDaysRenfortPrev}
+                    yearDaysRenfortNext={yearDaysRenfortNext}
+                    yearDaysRenfortSelect={yearDaysRenfortSelect}
                     />
             </div>
         )

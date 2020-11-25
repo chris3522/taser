@@ -23,6 +23,10 @@ export const getYear = (...args) => {
     return firestore_api.getYear(...args)
 }
 
+export const getYearRenfort = (...args) => {
+    return firestore_api.getYearRenfort(...args)
+}
+
 export const deleteDay = (...args) => {
     return firestore_api.deleteDay(...args)
 }

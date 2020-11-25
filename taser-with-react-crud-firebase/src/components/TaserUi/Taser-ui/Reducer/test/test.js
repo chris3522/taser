@@ -1,92 +1,247 @@
-const newData =   
-[
-  {
-    Jq8mTXKlXwoxqO7SDvG: [
-      {
-        20201118: [
-          {
-            isRequired: "required",
-            nature: "vacation",
-            dayNumber: 20201118,
-            userId: "1Jq8mTXKlXwoxqO7SDvG",
-            vacOrDesId: "hyoe7tIhROXnNg6O9o8o",
-            name: "jPar",
-            color: ""
-          }
-        ]
-      },
-      {
-        20201119: [
-          {
-            isRequired: "required",
-            name: "nPar",
-            nature: "vacation",
-            vacOrDesId: "Kz79yIebmrs2t7D7UuJ6",
-            userId: "1Jq8mTXKlXwoxqO7SDvG",
-            dayNumber: 20201119,
-            color: ""
-          }
-        ]
-      },
-      {
-        20201121: [
-          {
-            color: "#32d2aa",
-            name: "jour libre",
-            dayNumber: 20201121,
-            vacOrDesId: "m3HKjh3ocbK4cB6LeYUd",
-            isRequired: "",
-            userId: "1Jq8mTXKlXwoxqO7SDvG",
-            nature: "desiderata"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    Jq8mTXKlXwoxqO7SDvG: [
-      {
-        20210113: [
-          {
-            userId: "1Jq8mTXKlXwoxqO7SDvG",
-            name: "jPar",
-            nature: "vacation",
-            vacOrDesId: "hyoe7tIhROXnNg6O9o8o",
-            color: "",
-            isRequired: "required",
-            dayNumber: 20210113
-          }
-        ]
-      },
-      {
-        20210114: [
-          {
-            dayNumber: 20210114,
-            vacOrDesId: "Kz79yIebmrs2t7D7UuJ6",
-            color: "",
-            isRequired: "required",
-            userId: "1Jq8mTXKlXwoxqO7SDvG",
-            nature: "vacation",
-            name: "nPar"
-          }
-        ]
-      }
-    ]
-  }
-]
+const usersData =
+{
+    2020: [
+        {
+            "TYQj3Ir8DecOG2eyhyzY": [
+                {
+                    20201124: [
+                        {
+                            isRequired: "required",
+                            name: "nCpr",
+                            dayNumber: 20201124,
+                            color: "",
+                            vacOrDesId: "ZfvY5D6eC1I4vkL8DupT",
+                            nature: "vacation",
+                            userId: "TYQj3Ir8DecOG2eyhyzY"
+                        }
+                    ]
+                },
+                {
+                    20201125: [
+                        {
+                            isRequired: "renfort",
+                            dayNumber: 20201125,
+                            name: "jPar",
+                            vacOrDesId: "73J4F3YmPsA2D5Cjg85U",
+                            color: "",
+                            nature: "vacation",
+                            userId: "TYQj3Ir8DecOG2eyhyzY"
+                        }
+                    ]
+                },
+                {
+                    20201126: [
+                        {
+                            vacOrDesId: "rCfVqocRkqvGbcPEM1Oy",
+                            name: "nPar",
+                            dayNumber: 20201126,
+                            isRequired: "renfort",
+                            nature: "vacation",
+                            color: "",
+                            userId: "TYQj3Ir8DecOG2eyhyzY"
+                        }
+                    ]
+                },
+                {
+                    20201202: [
+                        {
+                            userId: "TYQj3Ir8DecOG2eyhyzY",
+                            dayNumber: 20201202,
+                            name: "jPar",
+                            vacOrDesId: "73J4F3YmPsA2D5Cjg85U",
+                            nature: "vacation",
+                            color: "",
+                            isRequired: "renfort"
+                        }
+                    ]
+                },
+                {
+                    2020120: [
+                        {
+                            nature: "vacation",
+                            vacOrDesId: "rCfVqocRkqvGbcPEM1Oy",
+                            name: "nPar",
+                            dayNumber: 20201203,
+                            isRequired: "renfort",
+                            color: "",
+                            userId: "TYQj3Ir8DecOG2eyhyzY"
+                        }
+                    ]
+                },
+                {
+                    20201201: [
+                        {
+                            userId: "TYQj3Ir8DecOG2eyhyzY",
+                            vacOrDesId: "YGHmb9fpCMYCwsUiUFmA",
+                            dayNumber: 20201201,
+                            nature: "vacation",
+                            name: "jCpr",
+                            color: "",
+                            isRequired: "required"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Uuuuuuu": [
+                {
+                    20201124: [
+                        {
+                            isRequired: "required",
+                            name: "nCpr",
+                            dayNumber: 20201124,
+                            color: "",
+                            vacOrDesId: "ZfvY5D6eC1I4vkL8DupT",
+                            nature: "vacation",
+                            userId: "Uuuuuuu"
+                        }
+                    ]
+                },
+                {
+                    20201125: [
+                        {
+                            isRequired: "renfort",
+                            dayNumber: 20201125,
+                            name: "jPar",
+                            vacOrDesId: "73J4F3YmPsA2D5Cjg85U",
+                            color: "",
+                            nature: "vacation",
+                            userId: "Uuuuuuu"
+                        }
+                    ]
+                },
+                {
+                    20201126: [
+                        {
+                            vacOrDesId: "rCfVqocRkqvGbcPEM1Oy",
+                            name: "nPar",
+                            dayNumber: 20201126,
+                            isRequired: "renfort",
+                            nature: "vacation",
+                            color: "",
+                            userId: "Uuuuuuu"
+                        }
+                    ]
+                },
+                {
+                    20201202: [
+                        {
+                            userId: "Uuuuuuu",
+                            dayNumber: 20201202,
+                            name: "jPar",
+                            vacOrDesId: "73J4F3YmPsA2D5Cjg85U",
+                            nature: "vacation",
+                            color: "",
+                            isRequired: "renfort"
+                        }
+                    ]
+                },
+                {
+                    2020120: [
+                        {
+                            nature: "vacation",
+                            vacOrDesId: "rCfVqocRkqvGbcPEM1Oy",
+                            name: "nPar",
+                            dayNumber: 20201203,
+                            isRequired: "renfort",
+                            color: "",
+                            userId: "Uuuuuuu"
+                        }
+                    ]
+                },
+                {
+                    20201201: [
+                        {
+                            userId: "Uuuuuuu",
+                            vacOrDesId: "YGHmb9fpCMYCwsUiUFmA",
+                            dayNumber: 20201201,
+                            nature: "vacation",
+                            name: "jCpr",
+                            color: "",
+                            isRequired: "required"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    year: "2020"
+}
 
-console.log(
-    //newData.map(u => u[Object.keys(u)[0].toString()].map(u => u[parseInt(Object.keys(u)[0])]))
-     //.map(u => u[parseInt(Object.keys(u)[0])])
-   // .reduce((a, b) => a.concat(b))
-    )
 
-console.log(
-    newData.filter(u => Object.keys(u)[0].toString()==="Jq8mTXKlXwoxqO7SDvG")
-    .map(u => u[Object.keys(u)[0]].map(u => u[parseInt(Object.keys(u)[0])]))
-     .reduce((a, b) => a.concat(b)).map(u=>u[0])
-    //.map(u => u[parseInt(Object.keys(u)[0])]))
-   // .map(u => u[parseInt(Object.keys(u)[0])])
-    //.reduce((p,c)=> console.log(Object.keys(c)[0].toString()))
-    //.reduce((prev, curr) => [...prev, ...curr[Object.keys(curr)[0].toString()]])    
-    )
+
+const reducer = (acc, user) => {
+    let days = Object.values(user)[0]
+    let days2 = days.map(d => Object.values(d)[0][0])
+    return acc.concat(days2)
+}
+
+const reducer2 = (acc, obj) => {
+    let dayNumber = obj["dayNumber"]
+    let vacName = obj["name"]
+    if (!acc[dayNumber]) {
+        acc[dayNumber] = []
+    }
+    acc[dayNumber].push(vacName)
+    return (acc)
+}
+
+const reducer3 = (acc, day) => {
+    let days = Object.values(day)[0]
+    //let days2 = days.map( d => Object.values(d)[0][0])
+    return acc.concat(days)
+}
+
+const renfort2 = [...usersData[usersData.year]]
+const renfort3 = renfort2.reduce(reducer, [])
+const renfort4 = renfort3.filter(d => d.isRequired === "renfort")
+const renfort5 = renfort4.reduce(reducer2, {})
+const renfort6 = Object.entries(renfort5).map(entry => {
+    return ({
+        [entry[0]]: entry[1].map(
+            (vac, i) => ({ dayNumber: entry[0], userId: i, name: vac, isRequired: "renfort", nature: "vacation", color: "" })
+        )
+    })
+})
+const renfort7 = renfort6.reduce(reducer3, [])
+
+const renfortCreateList = (data) => {
+    const reducer = (acc, user) => {
+        let days = Object.values(user)[0]
+        let days2 = days.map(d => Object.values(d)[0][0])
+        return acc.concat(days2)
+    }
+
+    const reducer2 = (acc, obj) => {
+        let dayNumber = obj["dayNumber"]
+        let vacName = obj["name"]
+        if (!acc[dayNumber]) {
+            acc[dayNumber] = []
+        }
+        acc[dayNumber].push(vacName)
+        return (acc)
+    }
+
+    const reducer3 = (acc, day) => {
+        let days = Object.values(day)[0]
+        return acc.concat(days)
+    }
+
+    //const renfort2 = [...data[data.year]]
+    const renfort3 = renfort2.reduce(reducer, [])
+    const renfort4 = renfort3.filter(d => d.isRequired === "renfort")
+    const renfort5 = renfort4.reduce(reducer2, {})
+    const renfort6 = Object.entries(renfort5).map(entry => {
+        return ({
+            [entry[0]]: entry[1].map(
+                (vac, i) => ({ dayNumber: entry[0], userId: i, name: vac, isRequired: "renfort", nature: "vacation", color: "" })
+            )
+        })
+    })
+    const renfort7 = renfort6.reduce(reducer3, [])
+    return renfort7
+}
+
+
+console.log(JSON.stringify(renfortCreateList(renfort2), null, 2))
