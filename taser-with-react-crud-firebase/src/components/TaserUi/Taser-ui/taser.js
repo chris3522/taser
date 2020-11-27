@@ -45,11 +45,19 @@ export default function Taser({
     /************************************************************ */
   // const [renfortYears, setRenfortYears] = useState()
 
-    const threeYears = [...yearDays[yearDays.year], ...yearDaysNext[yearDaysNext.year], ...yearDaysPrev[yearDaysPrev.year]].concat(isExtraYear && yearDaysSelect.year ? yearDaysSelect[yearDaysSelect.year] : [])
-    const threeYearsState = [yearDays, yearDaysNext, yearDaysPrev].concat(isExtraYear ? yearDaysSelect : [])
+    const fourYears = [...yearDays[yearDays.year], ...yearDaysNext[yearDaysNext.year], ...yearDaysPrev[yearDaysPrev.year]].concat(isExtraYear && yearDaysSelect.year ? yearDaysSelect[yearDaysSelect.year] : [])
+    const fourYearsRecuder = (acc,user) => {
+        let days = user[Object.keys(user)[0]]   
+        return acc.concat(days)
+    }
+    const fourYearsRecuder2 = (acc,day) => {
+        let day2 = day[Object.keys(day)[0]][0]    
+        return acc.concat(day2)
+    }
+    const fourYearsReduce = fourYears.reduce(fourYearsRecuder,[]).reduce(fourYearsRecuder2,[])
+    const fourYearsState = [yearDays, yearDaysNext, yearDaysPrev].concat(isExtraYear ? yearDaysSelect : [])
     const [actionDays, dispatchActionDays] = useReducer(reducers.actionDays)
-    const [dataDays, dispatchDays] = useReducer(reducers.usersYears, threeYearsState)
-    //console.log(yearDaysRenfort[0])
+    const [dataDays, dispatchDays] = useReducer(reducers.usersYears, fourYearsState)
   
     const renfortYears = yearDaysRenfort && yearDaysRenfort.length ? yearDaysRenfort.map(
         renfort => renfortCreateList( [...renfort[renfort.year]] )
@@ -70,7 +78,6 @@ export default function Taser({
     const renfortFourYears =  renfortFourYears0.map(
         taser => taser.filter(d=>d!==undefined)
     )
-     
     const [readyToSaveInBase, setReadyToSaveInBase] = useState(false)
     const [buttonConnectName, setButtonConnectName] = useState(false)
     const [displayConnectInfo, setDisplayConnectInfo] = useState(taserConnectedAdmin.connected ? 'displayBlock' : 'displayNone')
@@ -191,7 +198,7 @@ export default function Taser({
 
 
     /************************************** */
-    if (!threeYearsState) return <p>..loading</p>
+    if (!fourYearsState) return <p>..loading</p>
     else {
         const { name, desc, numberOfDays, numberOfTasers } = { ...taserInfo }
         console.log("desc: " + desc)
@@ -215,7 +222,7 @@ export default function Taser({
                                 activeSelectedDate={dayDate}
                                 taserInfo={taserInfo}
                                 taserUsers={taserUsers}
-                                threeYears={threeYears}
+                                fourYears={fourYearsReduce}
                                 actionDays={actionDays}
                                 taserId={taserId}
                                 userAuthId={userAuthId}

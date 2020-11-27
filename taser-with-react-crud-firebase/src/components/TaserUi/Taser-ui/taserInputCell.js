@@ -19,6 +19,7 @@ const TaserInputCell = (props) => {
         backgroundColor: color
     }
     const inputValue = nature === "vacation" ? name : ""
+    
     return (
         <input type="texte"
             className={!auth ? (`${styles.inputCell} ${styles.dismissBorderCell}`) : (`${styles.inputCell} ${styles.borderCell}`)}

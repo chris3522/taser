@@ -9,43 +9,19 @@ const TaserTbodyLine = (props) => {
     //selectedDate = date incluse dans la semaine du taser qui s'affiche
     const { selectedDate, numberOfDays } = props
     const dateOfFirstMondayCurrentWeek = moment(selectedDate, 'YYYY-MM-DD').startOf('isoWeek').format("YYYY-MM-DD")
-    const { taserUsers, userId, userAuthId, threeYears, actionDays } = props
+    const { taserUsers, userId, userAuthId, actionDays, fourYears } = props
     const { handleKeyPress, handleKeyUp, handleFocus, handleBlur } = props
 
     const user = taserUsers.filter(user => userId === user.id)[0]
     const actionDaysReduce = actionDays && actionDays.reduceRight((acc, day) => {
-        if (acc.filter(d => d.dayNumber === day.dayNumber).length === 0) {
-            acc.push(day);
+        if (acc.filter(d => d.dayNumber === day.dayNumber).length === 0 && day.userId === userId) {
+            acc.push(day)
         }
         return acc
     }, [])
-    const actionDaysReduce1 = actionDaysReduce && actionDaysReduce.length > 0 ?
-        Array({
-            [userId]: actionDaysReduce
-                .filter(d => d.userId === userId)
-                .map(d => ({ [d.dayNumber]: Array(d) }))
-        })
-        : []
-    const userDaysConcat0 = threeYears
-        .filter(u => Object.keys(u)[0].toString() === userId)
-        .concat(actionDaysReduce1)
-        .map(u => u[Object.keys(u)[0]].map(u => u[parseInt(Object.keys(u)[0])]))
-
-    const userDaysConcat1 = userDaysConcat0[0] ? [userDaysConcat0[0].filter(u => u.length>0)] :[]
-
-    const userDaysConcat =  userDaysConcat1.length > 0 ? 
-        userDaysConcat1
-            .reduce((a, b) => a.concat(b))
-            .map(u => u[0]) 
-        : []
-
-    const userDays = userDaysConcat && userDaysConcat.reduceRight((acc, day) => {
-        if (acc.filter(d => d.dayNumber === day.dayNumber).length === 0) {
-            acc.push(day);
-        }
-        return acc
-    }, [])
-
+    const actionDaysReduce1 = actionDaysReduce && actionDaysReduce.length > 0 ? actionDaysReduce : []
+    const userDays = fourYears.filter(day => day.userId === userId).concat(actionDaysReduce1)
+   
     return (
         <tr>
             <td>{user.name}</td>
