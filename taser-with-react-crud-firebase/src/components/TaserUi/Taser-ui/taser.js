@@ -46,15 +46,15 @@ export default function Taser({
   // const [renfortYears, setRenfortYears] = useState()
 
     const fourYears = [...yearDays[yearDays.year], ...yearDaysNext[yearDaysNext.year], ...yearDaysPrev[yearDaysPrev.year]].concat(isExtraYear && yearDaysSelect.year ? yearDaysSelect[yearDaysSelect.year] : [])
-    const fourYearsRecuder = (acc,user) => {
+    const fourYearsReducer = (acc,user) => {
         let days = user[Object.keys(user)[0]]   
         return acc.concat(days)
     }
-    const fourYearsRecuder2 = (acc,day) => {
+    const fourYearsReducer2 = (acc,day) => {
         let day2 = day[Object.keys(day)[0]][0]    
         return acc.concat(day2)
     }
-    const fourYearsReduce = fourYears.reduce(fourYearsRecuder,[]).reduce(fourYearsRecuder2,[])
+    const fourYearsReduce = fourYears.reduce(fourYearsReducer,[]).reduce(fourYearsReducer2,[]).filter(day => day!==undefined)
     const fourYearsState = [yearDays, yearDaysNext, yearDaysPrev].concat(isExtraYear ? yearDaysSelect : [])
     const [actionDays, dispatchActionDays] = useReducer(reducers.actionDays)
     const [dataDays, dispatchDays] = useReducer(reducers.usersYears, fourYearsState)
@@ -195,6 +195,12 @@ export default function Taser({
             handleConnectedAdmin(disconnected)
         }
     }
+
+    /************************************************************** */
+    //handlers for checking required vacation on fly and set a flag
+    /************************************************************** */
+    const [daysRequired, setDaysRequired] = useState()
+
 
 
     /************************************** */

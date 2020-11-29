@@ -7,19 +7,21 @@ const TaserInputCell = (props) => {
         dayNumber,
         dayVacationOrDesiderata,
         auth,
+        usersOneDay,
         /******Handlers********* */
         handleFocus,
         handleKeyPress,
         handleKeyUp,
         handleBlur
     } = props
+
     //TODO : faire un match avec l'id des bases desideratas et vacations avant de proposer la couleur enregistrée pour ce jour
     const { name, color, nature } = dayVacationOrDesiderata
     const inputStyle = {
         backgroundColor: color
     }
     const inputValue = nature === "vacation" ? name : ""
-    
+   
     return (
         <input type="texte"
             className={!auth ? (`${styles.inputCell} ${styles.dismissBorderCell}`) : (`${styles.inputCell} ${styles.borderCell}`)}

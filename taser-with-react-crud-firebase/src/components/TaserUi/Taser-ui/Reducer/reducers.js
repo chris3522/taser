@@ -1,110 +1,110 @@
 import C from './constants'
 
-export const usersYears = (state=[], action) => {
-    const year = Math.floor(action.dayNumber/10000)
+export const usersYears = (state = [], action) => {
+    const year = Math.floor(action.dayNumber / 10000)
     switch (action.type) {
         case C.ADD_USER_DAY:
             //if (state.filter(u => Object.keys(u)[0] === year.toString()).length>0) { 
-            if (state.filter(u => u.year === year.toString()).length>0) { 
-                return state.map( u => userYears(u,action) )
+            if (state.filter(u => u.year === year.toString()).length > 0) {
+                return state.map(u => userYears(u, action))
             }
             else {
-                return state.concat([{[year]:[]}]).map(u => userYears(u,action))     
+                return state.concat([{ [year]: [] }]).map(u => userYears(u, action))
             }
         case C.REMOVE_USER_DAY:
-           // if (state.filter(u => Object.keys(u)[0] === year.toString()).length>0) { 
-            if (state.filter(u => u.year === year.toString()).length>0) {     
-                return state.map( u => userYears(u,action) )
+            // if (state.filter(u => Object.keys(u)[0] === year.toString()).length>0) { 
+            if (state.filter(u => u.year === year.toString()).length > 0) {
+                return state.map(u => userYears(u, action))
             }
             else {
-                return state.concat([{[year]:[]}]).map(u => userYears(u,action))     
+                return state.concat([{ [year]: [] }]).map(u => userYears(u, action))
             }
         default:
             return state
     }
 }
 
-export const userYears = (state={}, action) => {
-    const year = Math.floor(action.dayNumber/10000)
-    switch (action.type){
-        case C.ADD_USER_DAY:
-            return (Object.keys(state)[0] !== year.toString()) ?
-                state:
-                {
-                ...state,
-                [year]:usersDays(state[year],action)
-                }
-        case C.REMOVE_USER_DAY:
-            return (Object.keys(state)[0] !== year.toString()) ?
-                state:
-                {
-                ...state,
-                [year]:usersDays(state[year],action)
-                }
-        default:
-            return state
-    } 
-}
-
-
-export const usersDays = (state=[], action) => {
+export const userYears = (state = {}, action) => {
+    const year = Math.floor(action.dayNumber / 10000)
     switch (action.type) {
         case C.ADD_USER_DAY:
-            if (state.filter(u => Object.keys(u)[0] === action.userId).length>0) {      
-                return state.map( u => userDays(u,action) )
+            return (Object.keys(state)[0] !== year.toString()) ?
+                state :
+                {
+                    ...state,
+                    [year]: usersDays(state[year], action)
+                }
+        case C.REMOVE_USER_DAY:
+            return (Object.keys(state)[0] !== year.toString()) ?
+                state :
+                {
+                    ...state,
+                    [year]: usersDays(state[year], action)
+                }
+        default:
+            return state
+    }
+}
+
+
+export const usersDays = (state = [], action) => {
+    switch (action.type) {
+        case C.ADD_USER_DAY:
+            if (state.filter(u => Object.keys(u)[0] === action.userId).length > 0) {
+                return state.map(u => userDays(u, action))
             }
             else {
-                return state.concat([{[action.userId]:[]}]).map(u => userDays(u,action))     
+                return state.concat([{ [action.userId]: [] }]).map(u => userDays(u, action))
             }
         case C.REMOVE_USER_DAY:
-            if (state.filter(u => Object.keys(u)[0] === action.userId).length>0) {      
-                return state.map( u => userDays(u,action) )
+            if (state.filter(u => Object.keys(u)[0] === action.userId).length > 0) {
+                return state.map(u => userDays(u, action))
             }
             else {
-                return state.concat([{[action.userId]:[]}]).map(u => userDays(u,action))     
+                return state.concat([{ [action.userId]: [] }]).map(u => userDays(u, action))
             }
         default:
             return state
     }
 }
 
-export const userDays = (state={}, action) => {
-    switch (action.type){
+export const userDays = (state = {}, action) => {
+    switch (action.type) {
         case C.ADD_USER_DAY:
             return (Object.keys(state)[0] !== action.userId) ?
-                state:
+                state :
                 {
-                ...state,
-                [action.userId]:userDay(state[action.userId],action)
+                    ...state,
+                    [action.userId]: userDay(state[action.userId], action)
                 }
         case C.REMOVE_USER_DAY:
             return (Object.keys(state)[0] !== action.userId) ?
-                state:
+                state :
                 {
-                ...state,
-                [action.userId]:userDay(state[action.userId],action)
+                    ...state,
+                    [action.userId]: userDay(state[action.userId], action)
                 }
         default:
             return state
-    } 
+    }
 }
 
 
-export const userDay = (state=[], action) => {
-    switch (action.type){
+export const userDay = (state = [], action) => {
+    switch (action.type) {
         case C.ADD_USER_DAY:
-            if (state.filter(u => Object.keys(u)[0] === action.dayNumber.toString()).length>0) {
-                return state.map( u => days(u,action) )
+            if (state.filter(u => Object.keys(u)[0] === action.dayNumber.toString()).length > 0) {
+                return state.map(u => days(u, action))
             }
             else {
-                return state.concat([{[action.dayNumber]:[]}]).map(u => days(u,action))     
+                return state.concat([{ [action.dayNumber]: [] }]).map(u => days(u, action))
             }
         case C.REMOVE_USER_DAY:
-            if (state.filter(u => Object.keys(u)[0] === action.dayNumber.toString()).length>0) {
-                return state.map( u => days(u,action) )
+            if (state.filter(u => Object.keys(u)[0] === action.dayNumber.toString()).length > 0) {
+                return state.map(u => days(u, action))
             }
             else {
-                return state.concat([{[action.dayNumber]:[]}]).map(u => days(u,action)) 
+                return state.concat([{ [action.dayNumber]: [] }]).map(u => days(u, action))
             }
         default:
             return state
@@ -112,29 +112,29 @@ export const userDay = (state=[], action) => {
 }
 
 
-export const days = (state={}, action) => {
-    switch (action.type){
+export const days = (state = {}, action) => {
+    switch (action.type) {
         case C.ADD_USER_DAY:
             return (Object.keys(state)[0] !== action.dayNumber.toString()) ?
-                state:
+                state :
                 {
-                ...state,
-                [action.dayNumber]:day1([],action)
+                    ...state,
+                    [action.dayNumber]: day1([], action)
                 }
         case C.REMOVE_USER_DAY:
             return (Object.keys(state)[0] !== action.dayNumber.toString()) ?
-                state:
+                state :
                 {
-                ...state,
-                [action.dayNumber]:day1([],action)
+                    ...state,
+                    [action.dayNumber]: day1([], action)
                 }
         default:
             return state
     }
 }
 
-export const day1 = (state=[], action) => {
-    switch (action.type){
+export const day1 = (state = [], action) => {
+    switch (action.type) {
         case C.ADD_USER_DAY:
             return Array(day({}, action))
         case C.REMOVE_USER_DAY:
@@ -145,8 +145,8 @@ export const day1 = (state=[], action) => {
 }
 
 
-export const day = (state={}, action) => {
-    switch (action.type){
+export const day = (state = {}, action) => {
+    switch (action.type) {
         case C.ADD_USER_DAY:
             return {
                 dayNumber: action.dayNumber,
@@ -164,12 +164,12 @@ export const day = (state={}, action) => {
 
 /*****************For Action day log******************************** */
 
-export const actionDays = (state=[], action) => {
+export const actionDays = (state = [], action) => {
     switch (action.type) {
-        case C.ADD_DAY:    
-            return state.concat(actionDay({},action))
+        case C.ADD_DAY:
+            return state.concat(actionDay({}, action))
         case C.REMOVE_DAY:
-            return state.concat(actionDay({},action))
+            return state.concat(actionDay({}, action))
         case C.RESET_ACTIONDAY:
             return []
         default:
@@ -177,8 +177,8 @@ export const actionDays = (state=[], action) => {
     }
 }
 
-export const actionDay = (state={}, action) => {
-    switch (action.type){
+export const actionDay = (state = {}, action) => {
+    switch (action.type) {
         case C.ADD_DAY:
             return {
                 dayNumber: action.dayNumber,
@@ -187,7 +187,7 @@ export const actionDay = (state={}, action) => {
                 isRequired: action.isRequired,
                 name: action.name,
                 vacOrDesId: action.vacOrDesId,
-                color: action.color, 
+                color: action.color,
                 actionType: action.type
             }
         case C.REMOVE_DAY:
@@ -203,25 +203,37 @@ export const actionDay = (state={}, action) => {
 
 /*****************For dataYears after fetching yearDays***************************** */
 
-export const dataYears = (state=[], action) => {
+export const dataYears = (state = [], action) => {
     switch (action.type) {
         case C.ADD_YEAR:
-            if (state.filter(u => Object.keys(u)[0] === action.year.toString()).length>0) {  
-                return state.map( u => dataYear(u,action) )
+            if (state.filter(u => Object.keys(u)[0] === action.year.toString()).length > 0) {
+                return state.map(u => dataYear(u, action))
             }
             else {
-                return state.concat([{[action.year]:[]}]).map(u => dataYear(u,action))     
+                return state.concat([{ [action.year]: [] }]).map(u => dataYear(u, action))
             }
         default:
             return state
     }
 }
 
-export const dataYear = (state={}, action) => {
-    switch (action.type){
+export const dataYear = (state = {}, action) => {
+    switch (action.type) {
         case C.ADD_YEAR:
             return state
         default:
             return state
     }
 }
+
+/****************For action check isRequired Days******************* */
+/*export const requiredDays = (state = [], action) => {
+    switch (action.type) {
+        case C.ADD_COUNT:
+            return state.map(d => requiredDay(d, action))
+        case C.REMOVE_COUNT:
+            return state.map(d => requiredDay(d, action))
+        default:
+            return state
+    }
+}*/
