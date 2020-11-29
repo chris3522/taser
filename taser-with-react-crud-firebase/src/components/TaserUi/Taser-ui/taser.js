@@ -1,6 +1,5 @@
 import React, { useState, useReducer, useEffect } from "react"
 import moment from 'moment'
-import useSWR from "swr"
 import TaserTable from './taserTable'
 import TaserTableRenfort from './taserTableRenfort'
 import inputHandleFocus from './../Taser-ui-handler/cellFocusHandler'
@@ -43,41 +42,50 @@ export default function Taser({
     /************************************************************ */
     // Init data fetching (initial data SSR with props from taserUI)
     /************************************************************ */
-  // const [renfortYears, setRenfortYears] = useState()
-
+    // const [renfortYears, setRenfortYears] = useState()
+    /*********fetch data years************************************************ */
     const fourYears = [...yearDays[yearDays.year], ...yearDaysNext[yearDaysNext.year], ...yearDaysPrev[yearDaysPrev.year]].concat(isExtraYear && yearDaysSelect.year ? yearDaysSelect[yearDaysSelect.year] : [])
-    const fourYearsReducer = (acc,user) => {
-        let days = user[Object.keys(user)[0]]   
+    const fourYearsReducer = (acc, user) => {
+        let days = user[Object.keys(user)[0]]
         return acc.concat(days)
     }
-    const fourYearsReducer2 = (acc,day) => {
-        let day2 = day[Object.keys(day)[0]][0]    
+    const fourYearsReducer2 = (acc, day) => {
+        let day2 = day[Object.keys(day)[0]][0]
         return acc.concat(day2)
     }
-    const fourYearsReduce = fourYears.reduce(fourYearsReducer,[]).reduce(fourYearsReducer2,[]).filter(day => day!==undefined)
+    const fourYearsReduce = fourYears.reduce(fourYearsReducer, []).reduce(fourYearsReducer2, []).filter(day => day !== undefined)
     const fourYearsState = [yearDays, yearDaysNext, yearDaysPrev].concat(isExtraYear ? yearDaysSelect : [])
+
+    /*********Set reducer to button save*************************************** */
     const [actionDays, dispatchActionDays] = useReducer(reducers.actionDays)
     const [dataDays, dispatchDays] = useReducer(reducers.usersYears, fourYearsState)
-  
+    /*********Set reducer to persist data with all inputs********************** */
+    const [dataDaysPersistence, dispatchDataDaysPersistence] = useReducer(reducers.persistDays, fourYearsReduce)
+
+    /*********fetch data  renfiorts years************************************** */
     const renfortYears = yearDaysRenfort && yearDaysRenfort.length ? yearDaysRenfort.map(
-        renfort => renfortCreateList( [...renfort[renfort.year]] )
+        renfort => renfortCreateList([...renfort[renfort.year]])
     ) : []
     const renfortYearsNext = yearDaysRenfortNext && yearDaysRenfortNext.length ? yearDaysRenfortNext.map(
-        renfort => renfortCreateList( [...renfort[renfort.year]] )
+        renfort => renfortCreateList([...renfort[renfort.year]])
     ) : []
     const renfortYearsPrev = yearDaysRenfortPrev && yearDaysRenfortPrev.length ? yearDaysRenfortPrev.map(
-        renfort => renfortCreateList( [...renfort[renfort.year]] )
+        renfort => renfortCreateList([...renfort[renfort.year]])
     ) : []
     const renfortYearsSelect = yearDaysRenfortSelect && yearDaysRenfortSelect.length ? yearDaysRenfortSelect.map(
-        renfort => renfortCreateList( [...renfort[renfort.year]] )
+        renfort => renfortCreateList([...renfort[renfort.year]])
     ) : []
- 
+
     const renfortFourYears0 = renforts.map(
-        (n, i ) => renfortYears[i].concat(renfortYearsNext[i]).concat(renfortYearsPrev[i]).concat(renfortYearsSelect[i])
+        (n, i) => renfortYears[i].concat(renfortYearsNext[i]).concat(renfortYearsPrev[i]).concat(renfortYearsSelect[i])
     )
-    const renfortFourYears =  renfortFourYears0.map(
-        taser => taser.filter(d=>d!==undefined)
+    const renfortFourYears = renfortFourYears0.map(
+        taser => taser.filter(d => d !== undefined)
     )
+    /************concat all days and all years  (renfort and taser in one)****************** */
+    const allDaysFromAllPersistTasers =  dataDaysPersistence.concat (renfortFourYears && renfortFourYears.length>0 ? renfortFourYears.reduce((a, b) => a.concat(b)):[])
+
+    /***********handlers for saving data *************************************************** */
     const [readyToSaveInBase, setReadyToSaveInBase] = useState(false)
     const [buttonConnectName, setButtonConnectName] = useState(false)
     const [displayConnectInfo, setDisplayConnectInfo] = useState(taserConnectedAdmin.connected ? 'displayBlock' : 'displayNone')
@@ -101,7 +109,7 @@ export default function Taser({
         }
         readyToSaveInBase && saveInBase(dataDays, taserId)
         console.log("effect")
-    }, [readyToSaveInBase, mutateYearDays, mutateYearDaysNext, mutateYearDaysPrev, taserId, dataDays])
+    }, [readyToSaveInBase, mutateYearDays, mutateYearDaysNext, mutateYearDaysPrev, mutateYearDaysSelect, taserId, dataDays])
 
     /************************************* */
     //handlers for taser UI input cells
@@ -124,7 +132,7 @@ export default function Taser({
         inputHandleKeyUp(e, eraseDesiderataNameAndKeepColorInstead)
     }
     const handleBlur = ({ e, ...args }) => {
-        inputHandleBlur({ e, saveVacationOrDesiderataId, taserId, dispatchActionDays, ...args })
+        inputHandleBlur({ e, saveVacationOrDesiderataId, taserId, dispatchActionDays, dispatchDataDaysPersistence, ...args })
     }
     const handleFocus = e => {
         inputHandleFocus(e)
@@ -196,12 +204,12 @@ export default function Taser({
         }
     }
 
-    /************************************************************** */
-    //handlers for checking required vacation on fly and set a flag
-    /************************************************************** */
-    const [daysRequired, setDaysRequired] = useState()
-
-
+    const isRequiredVacationsNumber = taserVacations.reduce((acc, vacation) => {
+        if (vacation && vacation.isRequired === "required") {
+            acc++
+        }
+        return acc
+    }, 0)
 
     /************************************** */
     if (!fourYearsState) return <p>..loading</p>
@@ -228,8 +236,9 @@ export default function Taser({
                                 activeSelectedDate={dayDate}
                                 taserInfo={taserInfo}
                                 taserUsers={taserUsers}
-                                fourYears={fourYearsReduce}
-                                actionDays={actionDays}
+                                dataDaysPersistence={dataDaysPersistence}
+                                allDaysFromAllPersistTasers={allDaysFromAllPersistTasers}
+                                isRequiredVacationsNumber={isRequiredVacationsNumber}
                                 taserId={taserId}
                                 userAuthId={userAuthId}
 
@@ -246,7 +255,7 @@ export default function Taser({
                                             numberOfDays={parseInt(numberOfDays)}
                                             activeSelectedDate={dayDate}
                                             userAuthId={false}
-                                            renfortYears = {renfortFourYears[j]}
+                                            renfortYears={renfortFourYears[j]}
                                             renforts={renforts[j]} />)
                                 )
                                 }

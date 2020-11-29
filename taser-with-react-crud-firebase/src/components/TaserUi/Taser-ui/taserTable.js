@@ -7,17 +7,21 @@ const TaserTable = (props) => {
         numberOfDays,
         activeSelectedDate,
         taserUsers,
-        fourYears,
-        actionDays,
+        dataDaysPersistence,
+        allDaysFromAllPersistTasers,
+        isRequiredVacationsNumber,
         userAuthId,
     } = props
     const { handleKeyPress, handleKeyUp, handleFocus, handleBlur } = props
-
     return (
         <div className="taseruiscroll">
             <table className="taserui">
                 <thead>
-                    <TaserTheadLine selectedDate={selectedDate} numberOfDays={numberOfDays} activeSelectedDate={activeSelectedDate} />
+                    <TaserTheadLine selectedDate={selectedDate}
+                        numberOfDays={numberOfDays}
+                        activeSelectedDate={activeSelectedDate}
+                        isRequiredVacationsNumber={isRequiredVacationsNumber}
+                        allDaysFromAllPersistTasers={allDaysFromAllPersistTasers} />
                 </thead>
                 <tbody>
                     {taserUsers === undefined ? <tr></tr> : taserUsers.map(user =>
@@ -27,8 +31,7 @@ const TaserTable = (props) => {
                             activeSelectedDate={activeSelectedDate} //unused
                             taserUsers={taserUsers}
                             userId={user.id}
-                            fourYears={fourYears}
-                            actionDays={actionDays}
+                            dataDaysPersistence={dataDaysPersistence}
                             userAuthId={userAuthId}
 
                             handleKeyPress={handleKeyPress}

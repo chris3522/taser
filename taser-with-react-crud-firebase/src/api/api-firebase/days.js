@@ -1,17 +1,6 @@
 import { db } from "lib/firebase"
 
-export const createDay = async ({ ...args }) => {
-    const { taserId, userId, newData } = args
-    await db.collection("tasers").doc(taserId).collection("users").doc(userId).collection("days").doc(newData.dayNumber.toString()).set(newData)
-    const doc2 = await db.collection("tasers").doc(taserId).collection("users").doc(userId).collection("days").doc(newData.dayNumber.toString()).get()
-    /*** new doc days strategy **** */
-    //retrieve a year
-    //const daysRef = await db.collection("tasers").doc(taserId).collection("users").doc(userId).collection("years").doc("2020")
-    //await db.collection("tasers").doc(taserId).collection("users").doc(userId).collection("years").doc(newData.dayNumber.toString()).set(newData)
 
-    /**** new doc days strategy**** */
-    return ({ id: doc2.id, ...doc2.data() })
-}
 /****************************************************************************** */
 
 export const createAllDays = async ({ ...args }) => {
@@ -49,7 +38,7 @@ export const getYearRenfort = async (...args) => {
     const promises = []
     taserRenforts.map(taser => {
             const p = db.collection("tasers").doc(taser.taserId).collection("days").doc(yearId.toString()).get()
-            promises.push(p)
+            return promises.push(p)
         }
     )
     const snapshots = await Promise.all(promises)
@@ -60,13 +49,14 @@ export const getYearRenfort = async (...args) => {
             results.push(data)
            
     })
+    //return results.filter(data=> data.year === "2020")
     if (results.length>0) {
         console.log("Renforts year found in database")
         return results.filter(data=> data.year === "2020")
         } 
     else {
         console.log("Renfort year not found in database")
-        //return [{data:"null"}]
+        //return []
     }
 }
 

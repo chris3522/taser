@@ -44,7 +44,12 @@ const TaserUi = ({ className, taserId, user, setAuthAdmin, authAdmin }) => {
     const { data: yearDaysRenfortNext, error: errorYearDaysRenfortNext } = useSWR(renforts && renforts.length>0 ? [renforts,currentYear,nextYear, "currentyearrenfortnext"] : null, api_root_days.getYearRenfort)
     const { data: yearDaysRenfortPrev, error: errorYearDaysRenfortPrev } = useSWR(renforts && renforts.length>0 ? [renforts,currentYear,prevYear, "currentyearrenfortprev"] : null, api_root_days.getYearRenfort)
     const { data: yearDaysRenfortSelect, error: errorYearDaysRenfortSelect } = useSWR(!years.includes(selectedYear) && renforts && renforts.length>0 ? [renforts,currentYear,selectedYear, "currentyearrenfortselected"] : null, api_root_days.getYearRenfort)
-    
+    if (errorYearDaysRenfort!==undefined) {
+    console.log(errorYearDaysRenfort!==undefined ? errorYearDaysRenfort : null)
+    console.log(errorYearDaysRenfortNext!==undefined ? errorYearDaysRenfortNext : null)
+    console.log(errorYearDaysRenfortPrev!==undefined ? errorYearDaysRenfortPrev : null)
+    console.log(errorYearDaysRenfortSelect!==undefined ?  errorYearDaysRenfortSelect : null)
+    }
     /**************************************************** */
     // Init data fetching (initial data SSR with props)
     /**************************************************** */
@@ -53,6 +58,8 @@ const TaserUi = ({ className, taserId, user, setAuthAdmin, authAdmin }) => {
     const { data: taserVacations, error: errorVacations } = useSWR([taserId, "vacations"], api_root_vacations.getVacations)
     const { data: taserDesideratas, error: errorDesideratas } = useSWR([taserId, "desideratas"], api_root_desideratas.getDesideratas)
     const { data: taserConnectedAdmin, mutate: mutateConnectedAdmin } = useSWR([taserId, "authAdmin"], api_root_info.getConnectedAdmin)
+
+
     if (errorInfo) return <p>Error loading data!</p>
     else if (errorUsers) return <p>Error loading data!</p>
     else if (errorVacations) return <p>Error loading data!</p>

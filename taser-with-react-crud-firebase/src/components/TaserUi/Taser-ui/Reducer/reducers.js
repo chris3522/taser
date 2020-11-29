@@ -237,3 +237,35 @@ export const dataYear = (state = {}, action) => {
             return state
     }
 }*/
+
+/*****************For dataDays persistence******************************** */
+
+export const persistDays = (state = [], action) => {
+    switch (action.type) {
+        case C.ADD_USER_DAY:
+            return state.concat(persistDay({}, action))
+        case C.REMOVE_USER_DAY:
+            return state.filter(
+                d => !(d.dayNumber === action.dayNumber && d.userId === action.userId)
+            )
+        default:
+            return state
+    }
+}
+
+export const persistDay = (state = {}, action) => {
+    switch (action.type) {
+        case C.ADD_USER_DAY:
+            return {
+                dayNumber: action.dayNumber,
+                userId: action.userId,
+                nature: action.nature,
+                isRequired: action.isRequired,
+                name: action.name,
+                vacOrDesId: action.vacOrDesId,
+                color: action.color
+            }
+        default:
+            return state
+    }
+}

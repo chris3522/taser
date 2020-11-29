@@ -11,3 +11,29 @@
 .capitalize {
   text-transform: capitalize!important;
 }
+
+.dotRed {
+  height: 4px;
+  width: 4px;
+  background-color: #ce2828;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 2px;
+}
+.dotGreen {
+  height: 4px;
+  width: 4px;
+  background-color: #16c571;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 2px;
+}
+.dotOrange {
+  height: 4px;
+  width: 4px;
+  background-color: #ffa43c;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 2px;
+  z-index: 1;
+}

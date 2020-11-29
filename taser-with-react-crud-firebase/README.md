@@ -12,7 +12,7 @@ In your firebase/rules, allow read and write for user only<br />
 In firebase tools in a terminal for deploy run :<br />
 ```
 npm install -g firebase-tools
-firebase login
+firebase login --no-localhost
 firebase init
 firebase deploy
 ```

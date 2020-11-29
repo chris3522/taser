@@ -7,7 +7,6 @@ const TaserInputCell = (props) => {
         dayNumber,
         dayVacationOrDesiderata,
         auth,
-        usersOneDay,
         /******Handlers********* */
         handleFocus,
         handleKeyPress,

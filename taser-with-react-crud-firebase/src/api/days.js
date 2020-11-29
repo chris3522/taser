@@ -7,10 +7,6 @@
 
 import * as firestore_api from './api-firebase/days'
 
-export const createDay = ({...args}) => {
-    return firestore_api.createDay({...args})
-}
-
 export const createAllDays = ({...args}) => {
     return firestore_api.createAllDays({...args})
 }

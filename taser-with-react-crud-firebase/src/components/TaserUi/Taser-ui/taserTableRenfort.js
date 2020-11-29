@@ -8,8 +8,7 @@ const TaserTableRenfort = (props) => {
         activeSelectedDate,
         userAuthId,
         renforts,
-        renfortYears,
-        threeYearsRenfort } = props
+        renfortYears } = props
     const linesNumber = renforts.targetVacationsRequiredNumber
   
     return (
