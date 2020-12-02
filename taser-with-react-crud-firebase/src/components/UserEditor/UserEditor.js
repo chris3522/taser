@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState, useReducer } from "react"
 import useSWR, { mutate } from "swr"
 import { navigate } from "@reach/router"
 import "./UserEditor.css"
@@ -7,17 +7,40 @@ import Icon from "react-crud-icons"
 import '../../../node_modules/react-crud-icons/dist/css/react-crud-icons.css'
 import CrudForm from './CrudForm'
 
-const UserEditor = ({ user, taserId, className }) => {
-    const [isDisplay, setIsDisplay] = useState(true)
+import * as reducers from './Reducer/reducers'
+import * as actions from './Reducer/actions'
 
+
+const UserEditor = ({ user, taserId, className }) => {
     useEffect(() => {
         if (!user) {
             navigate("/admin")
         }
     }, [user])
 
-    const swrKey = `/admin/${taserId}/users`
-    const { data, error } = useSWR([taserId, swrKey], api_root.getUsers)
+    /*********************define users state  *********************** */
+    const [isDisplay, setIsDisplay] = useState(true)
+    const [users, dispatchUsers] = useReducer(reducers.users,[])
+
+    /***********************init users state************************* */
+    const swrKey2 = `/admin/${taserId}/users2` 
+    const { data: dataUsers, error: errorUsers, mutate: mutateUsers } = useSWR([taserId, swrKey2], api_root.getUsers2)
+    const [firstInit, setFirstInit] = useState(false)
+    useEffect(() => {
+        console.log(dataUsers)
+        !firstInit && dataUsers && dispatchUsers(actions.initState(dataUsers.users))
+    }, [dataUsers])
+
+    /******************update state with new users******************** */
+    useEffect(() => {
+        let stateData = {users : users}
+        if(users.length>0 && firstInit){
+            api_root.createUsers({taserId,stateData})
+            mutateUsers(stateData, false)
+        }
+        return () => {stateData = {}}
+    }, [users, firstInit])
+
     const inputUserName = useRef(null)
     const inputUserId = useRef(null)
     const inputModalUserName = useRef(null)
@@ -29,8 +52,8 @@ const UserEditor = ({ user, taserId, className }) => {
             const newData = {
                 "name": inputUserName.current.value,
             }
-            api_root.createUser(taserId, newData)
-                .then(() => mutate([taserId, swrKey]))
+            if (!firstInit) {setFirstInit(true)}
+            dispatchUsers(actions.addUser(newData))     
         }
     }
 
@@ -47,16 +70,16 @@ const UserEditor = ({ user, taserId, className }) => {
             "id":inputModalUserId.current.value,
             "name": inputModalUserName.current.value
         }
-        api_root.updateUser(taserId, newUserData).then(
-            mutate([taserId, swrKey])
-        )
+        if (!firstInit) {setFirstInit(true)}
+        dispatchUsers(actions.updateUser(newUserData)) 
+
         inputModalUserId.current.value = ""
         inputModalUserName.current.value = ""
         setIsDisplay(true)
     }
 
-    if (error) return <p>Error loading data!</p>
-    else if (!data) return <p>Loading...</p>
+    if (errorUsers) return <p>Error loading data!</p>
+    else if (!dataUsers) return <p>Loading...</p>
     else {
         return (
             <div className={className}>
@@ -65,7 +88,7 @@ const UserEditor = ({ user, taserId, className }) => {
                 <table>
                     <thead><tr><th>id</th><th>nom</th><th></th><th></th></tr></thead>
                     <tbody>
-                        {data.map((user) => {
+                        {dataUsers.users.map((user) => {
                             return (
                                 <tr key={user.id}>
                                     <td> {user.id}</td><td>{user.name}</td>
@@ -84,7 +107,8 @@ const UserEditor = ({ user, taserId, className }) => {
                                         theme="light"
                                         size="small"
                                         onClick={() => {
-                                            api_root.deleteUser(taserId, user.id).then(() => mutate([taserId, swrKey]))
+                                            if (!firstInit) {setFirstInit(true)}
+                                            dispatchUsers(actions.removeUser(user)) 
                                         }}
                                     /></td>
                                 </tr>

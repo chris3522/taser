@@ -7,12 +7,7 @@ export const createAllDays = async ({ ...args }) => {
     const { taserId, stateData, year } = args
     await db.collection("tasers").doc(taserId).collection("days").doc(year).set(stateData)
     const doc2 = await db.collection("tasers").doc(taserId).collection("days").doc(year).get()
-    /*** new doc days strategy **** */
-    //retrieve a year
-    //const daysRef = await db.collection("tasers").doc(taserId).collection("users").doc(userId).collection("years").doc("2020")
-    //await db.collection("tasers").doc(taserId).collection("users").doc(userId).collection("years").doc(newData.dayNumber.toString()).set(newData)
 
-    /**** new doc days strategy**** */
     return ({ id: doc2.id, ...doc2.data() })
 }
 

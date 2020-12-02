@@ -20,28 +20,27 @@ export const getUsers = async (taserId) => {
 
 }
 
-export const createUser = async (taserId, newData) => {
-    //add user and retrieve random id by firestore
-    return await db.collection("tasers").doc(taserId).collection("users").add(newData)
-        .then(docRef =>
-            db.collection("tasers").doc(taserId).collection("users").doc(docRef.id).get())
-        .then(user => ({ id: user.id, ...user.data() }))
+
+/**************************New request strategy********************************* */
+export const getUsers2 = async (...args) => {
+    try {
+        const [taserId] = args
+        const usersDoc = await db.collection("tasers").doc(taserId).collection("users2").doc("users").get()
+        if (usersDoc.exists) {
+            console.log("Users found in database")
+            return ({ ...usersDoc.data() })
+        } else {
+            console.log("Users not found in database, creating default entry")
+            await db.collection("tasers").doc(taserId).collection("users2").doc("users").set({ users: [] })
+            return ({ users: [] })
+        }
+    }
+    catch (error) {
+        console.error(error)
+    }
 }
 
-export const updateUser = async (taserId, newUserData) => {
-    return await db.collection("tasers")
-        .doc(taserId)
-        .collection("users")
-        .doc(newUserData.id)
-        .update(newUserData)
+export const createUsers = async ({ ...args }) => {
+    const { taserId, stateData } = args
+    return await db.collection("tasers").doc(taserId).collection("users2").doc("users").set(stateData)
 }
-
-export const deleteUser = async (taserId, userId) => {
-    return await db
-        .collection("tasers")
-        .doc(taserId)
-        .collection("users")
-        .doc(userId)
-        .delete()
-}
-

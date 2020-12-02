@@ -37,7 +37,7 @@ export default function Taser({
     yearDays, yearDaysNext, yearDaysPrev, yearDaysSelect,
     mutateYearDays, mutateYearDaysNext, mutateYearDaysPrev, mutateYearDaysSelect,
     yearDaysRenfort, yearDaysRenfortNext, yearDaysRenfortPrev, yearDaysRenfortSelect, }) {
-    //  setAuthAdmin(accessAdmin)
+     // setAuthAdmin(accessAdmin)
 
     /************************************************************ */
     // Init data fetching (initial data SSR with props from taserUI)

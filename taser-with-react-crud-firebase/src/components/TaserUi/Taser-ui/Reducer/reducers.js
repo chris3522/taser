@@ -226,17 +226,7 @@ export const dataYear = (state = {}, action) => {
     }
 }
 
-/****************For action check isRequired Days******************* */
-/*export const requiredDays = (state = [], action) => {
-    switch (action.type) {
-        case C.ADD_COUNT:
-            return state.map(d => requiredDay(d, action))
-        case C.REMOVE_COUNT:
-            return state.map(d => requiredDay(d, action))
-        default:
-            return state
-    }
-}*/
+
 
 /*****************For dataDays persistence******************************** */
 

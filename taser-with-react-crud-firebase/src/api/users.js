@@ -13,15 +13,12 @@ export const getUsers = (taserId,keys) => {
     return firestore_api.getUsers(taserId)
 }
 
-export const createUser = (taserId, newData) => {
-    return firestore_api.createUser(taserId, newData)
+/*********************************** */
+
+export const getUsers2 = (...args) => {
+    return firestore_api.getUsers2(...args)
 }
 
-export const updateUser = (taserId, newUserData) => {
-    return firestore_api.updateUser(taserId, newUserData)
+export const createUsers = ({...args}) => {
+    return firestore_api.createUsers({...args})
 }
-
-export const deleteUser = (taserId, userId) => {
-    return firestore_api.deleteUser(taserId, userId)
-}
-
