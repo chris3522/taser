@@ -1,10 +1,12 @@
 /* src/components/TaserInfo/TaserInfo.js */
-import React, { useRef } from "react"
-import useSWR, { mutate } from "swr"
+import React, { useEffect, useRef, useState, useReducer } from "react"
+import useSWR from "swr"
 import { Link } from 'components'
 import "./TaserInfo.css"
 import * as api_root from "../../api/info"
 import * as h from "../../lib/helpers"
+import * as reducers from './Reducer/reducers'
+import * as actions from './Reducer/actions'
 
 const TaserInfo = ({ user, className }) => {
  /*   useEffect(() => {
@@ -12,11 +14,31 @@ const TaserInfo = ({ user, className }) => {
             navigate("/admin")
         }
     }, [user])*/
-
     const taserId = h.slugify(user.email)
     const uid = user.uid.toString()
+
+    /*********************define info state  *********************** */
+    const [info, dispatchInfo] = useReducer(reducers.info,{})
+
+    /***********************init info state************************* */
     const swrKey = "/admin/taser"
-    const { data, error } = useSWR([taserId, uid, swrKey], api_root.getInfo)
+    const { data: dataInfo, error: errorInfo, mutate: mutateInfo } = useSWR([taserId, uid, swrKey], api_root.getInfo)
+    const [firstInit, setFirstInit] = useState(false)
+    useEffect(() => {
+        !firstInit && dataInfo && dispatchInfo(actions.initState(dataInfo.info))
+    }, [dataInfo, firstInit])
+
+    /******************update state with new info******************** */
+    useEffect(() => {
+        let stateData = {info : info}
+        if(firstInit){
+            api_root.createInfo({taserId,stateData})
+            mutateInfo(stateData, false)
+        }
+        return () => {stateData = {}}
+    }, [info, firstInit, taserId, mutateInfo])
+
+
     const inputTaserName = useRef(null)
     const inputTaserDesc = useRef(null)
     const inputTaserNumberOfDays = useRef(null)
@@ -26,21 +48,22 @@ const TaserInfo = ({ user, className }) => {
         e.preventDefault()
         if (taserId) {
             const newData = {
+                "id":taserId,
+                "uid":uid,
                 "name":inputTaserName.current.value,
                 "desc":inputTaserDesc.current.value,
                 "numberOfDays":inputTaserNumberOfDays.current.value,
                 "numberOfTasers":inputTaserNumberOfTasers.current.value
             }
-            mutate([taserId, uid, swrKey],{...data,...newData })
-            api_root.updateInfo(taserId,newData)
-            .then((newData) => console.log(newData))
+            if (!firstInit) {setFirstInit(true)}
+            dispatchInfo(actions.setInfo(newData))   
         }
     }
 
-    if (error) return <p>Error loading data!</p>
-    else if (!data) return <p>Loading...</p>
+    if (errorInfo) return <p>Error loading data!</p>
+    else if (!dataInfo) return <p>Loading...</p>
     else {
-        const  { name, desc, numberOfDays, numberOfTasers }  = {...data}
+        const  { name, desc, numberOfDays, numberOfTasers }  = {...dataInfo.info}
         return (
             <div className={`${className}`}>
                 <form onSubmit={handleSubmit}>

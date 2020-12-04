@@ -1,4 +1,4 @@
-import React,  { useState } from "react"
+import React,  { useState, useEffect } from "react"
 import Taser from './Taser-ui/taser'
 import useSWR from "swr"
 import moment from 'moment'
@@ -8,11 +8,14 @@ import MomentLocaleUtils from 'react-day-picker/moment'
 import 'moment/locale/fr'
 import './Taser-ui/taser.css'
 import * as api_root_info from "../../api/info"
+import * as api_root_connect from "../../api/connected"
 import * as api_root_renfort from "../../api/renforts"
 import * as api_root_users from "../../api/users"
 import * as api_root_vacations from "../../api/vacations"
 import * as api_root_desideratas from "../../api/desideratas"
 import * as api_root_days from "../../api/days"
+import * as actions from '../TaserInfo/Reducer/actions'
+
 
 //dayDate init with daypicker
 /************************************************ */
@@ -21,7 +24,7 @@ let dayDate = moment().format('YYYY-MM-DD')
 /************************************************ */
 
 
-const TaserUi = ({ className, taserId, user, setAuthAdmin, authAdmin }) => {
+const TaserUi = ({ className, taserId, user, authAdmin, dispatchAuthAdmin }) => {
     const [selectedDay, setSelectedDay] = useState(undefined)
     const currentYear = moment().year()
     const nextYear = moment().add(1, 'year').year()
@@ -54,27 +57,37 @@ const TaserUi = ({ className, taserId, user, setAuthAdmin, authAdmin }) => {
     // Init data fetching (initial data SSR with props)
     /**************************************************** */
     const { data: taserInfo, error: errorInfo } = useSWR([taserId, "taserInfo"], api_root_info.getInfoOnly)
-    const { data: taserUsers, error: errorUsers } = useSWR([taserId, "users"], api_root_users.getUsers)
+    const { data: taserUsers, error: errorUsers } = useSWR([taserId, "users2"], api_root_users.getUsers)
+
     const { data: taserVacations, error: errorVacations } = useSWR([taserId, "vacations"], api_root_vacations.getVacations)
     const { data: taserDesideratas, error: errorDesideratas } = useSWR([taserId, "desideratas"], api_root_desideratas.getDesideratas)
-    const { data: taserConnectedAdmin, mutate: mutateConnectedAdmin } = useSWR([taserId, "authAdmin"], api_root_info.getConnectedAdmin)
 
+    /********Connected Admin fecth init********** */
 
-    if (errorInfo) return <p>Error loading data!</p>
-    else if (errorUsers) return <p>Error loading data!</p>
-    else if (errorVacations) return <p>Error loading data!</p>
-    else if (errorDesideratas) return <p>Error loading data!</p>
-    else if (errorRenforts) return <p>Error loading data!</p>
+    const { data: taserAuthAdmin, mutate: mutateTaserAuthAdmin } = useSWR([taserId, "authAdmin"], api_root_connect.getConnected)
+    const [firstInit, setFirstInit] = useState(false)
+    useEffect(() => {
+        if (!firstInit && taserAuthAdmin) {
+            dispatchAuthAdmin(actions.updateConnected(taserAuthAdmin.connected.connected))
+            setFirstInit(true)
+        }     
+    }, [taserAuthAdmin, firstInit, setFirstInit, dispatchAuthAdmin])
+    if (errorInfo) return <p>Error loading data! 1</p>
+    else if (errorUsers) return <p>Error loading data! 2</p>
+    else if (errorVacations) return <p>Error loading data! 3</p>
+    else if (errorDesideratas) return <p>Error loading data! 4</p>
+    else if (errorRenforts) return <p>Error loading data! 5</p>
     else if (errorYearDaysNext) return <p>Error loading data or wait a minute!</p>
     else if (errorYearDaysPrev) return <p>Error loading data or wait a minute!</p>
     else if (errorYearDaysSelect) return <p>Error loading data or wait a minute!</p>
-    else if (errorYearDays) return <p>Error loading data!</p>
+    else if (errorYearDays) return <p>Error loading data! 6</p>
     else if (!taserInfo) return <p>Loading...</p>
     else if (!taserVacations) return <p>Loading...</p>
     else if (!taserDesideratas) return <p>Loading...</p>
     else if (!taserUsers) return <p>Loading...</p>
     else if (!renforts) return <p>Loading...</p>
-    else if (!taserConnectedAdmin) return <p>Loading...</p>
+    else if (!firstInit ) return <p>Loading auth...</p>
+    else if (!taserAuthAdmin) return <p>Loading...</p>
     else if (!yearDays) return <p>Loading...</p>
     else if (!yearDaysNext) return <p>Loading...</p>
     else if (!yearDaysPrev) return <p>Loading...</p>
@@ -96,15 +109,13 @@ const TaserUi = ({ className, taserId, user, setAuthAdmin, authAdmin }) => {
                 </div>
                 <Taser taserId={taserId}
                     dayDate={dayDate}
-                    taserInfo={taserInfo}
-                    taserUsers={taserUsers}
-                    taserDesideratas={taserDesideratas}
-                    taserVacations={taserVacations}
+                    taserInfo={taserInfo.info}
+                    taserUsers={taserUsers.users}
+                    taserDesideratas={taserDesideratas.desideratas}
+                    taserVacations={taserVacations.vacations}
                     renforts={renforts}
-                    setAuthAdmin={setAuthAdmin}
-                    authAdmin={authAdmin}
-                    taserConnectedAdmin={taserConnectedAdmin}
-                    mutateConnectedAdmin={mutateConnectedAdmin}
+                    authAdmin={authAdmin} 
+                    mutateTaserAuthAdmin={mutateTaserAuthAdmin} 
                     yearDays={yearDays}
                     yearDaysPrev={yearDaysPrev}
                     yearDaysNext={yearDaysNext}

@@ -7,8 +7,8 @@ import inputHandleBlur from './../Taser-ui-handler/cellBlurHandler'
 import inputHandleKeyUp from './../Taser-ui-handler/cellKeyUpHandler'
 import inputHandleKeyPress from './../Taser-ui-handler/cellKeyPressHandler'
 
-import * as api_root_info from "../../../api/info"
 import * as api_root_days from "../../../api/days"
+import * as api_root_connect from "../../../api/connected"
 import * as reducers from './Reducer/reducers'
 import * as actions from './Reducer/actions'
 import { renfortCreateList } from '../../../lib/helpers'
@@ -29,15 +29,13 @@ export default function Taser({
     taserUsers,
     taserDesideratas,
     taserVacations,
-    setAuthAdmin,
     authAdmin,
-    taserConnectedAdmin,
-    mutateConnectedAdmin,
+    mutateTaserAuthAdmin,
     isExtraYear,
     yearDays, yearDaysNext, yearDaysPrev, yearDaysSelect,
     mutateYearDays, mutateYearDaysNext, mutateYearDaysPrev, mutateYearDaysSelect,
     yearDaysRenfort, yearDaysRenfortNext, yearDaysRenfortPrev, yearDaysRenfortSelect, }) {
-     // setAuthAdmin(accessAdmin)
+      
 
     /************************************************************ */
     // Init data fetching (initial data SSR with props from taserUI)
@@ -87,11 +85,6 @@ export default function Taser({
 
     /***********handlers for saving data *************************************************** */
     const [readyToSaveInBase, setReadyToSaveInBase] = useState(false)
-    const [buttonConnectName, setButtonConnectName] = useState(false)
-    const [displayConnectInfo, setDisplayConnectInfo] = useState(taserConnectedAdmin.connected ? 'displayBlock' : 'displayNone')
-    const [userAuthId, setUserAuthId] = useState()
-
-    console.log('userAuthId: ' + userAuthId)
 
     useEffect(() => {
         const saveInBase = async (data, taserId) => {
@@ -108,8 +101,25 @@ export default function Taser({
             mutateYearDaysSelect()
         }
         readyToSaveInBase && saveInBase(dataDays, taserId)
-        console.log("effect")
     }, [readyToSaveInBase, mutateYearDays, mutateYearDaysNext, mutateYearDaysPrev, mutateYearDaysSelect, taserId, dataDays])
+
+    const handleSave = async ({ ...args }) => {
+        const { actionDays } = args
+        if (actionDays && actionDays.length > 0) {
+            await actionDays.map(d => {
+                switch (d.actionType) {
+                    case C.ADD_DAY:
+                        return dispatchDays(actions.addDayInTaser(d))
+                    case C.REMOVE_DAY:
+                        return dispatchDays(actions.removeDayInTaser(d.userId, d.dayNumber))
+                    default:
+                        return null
+                }
+            })
+            setReadyToSaveInBase(true)
+            setReadyToSaveInBase(false)
+        }
+    }
 
     /************************************* */
     //handlers for taser UI input cells
@@ -138,65 +148,54 @@ export default function Taser({
         inputHandleFocus(e)
     }
 
-    const handleSave = async ({ ...args }) => {
-        const { actionDays } = args
-        if (actionDays && actionDays.length > 0) {
-            await actionDays.map(d => {
-                switch (d.actionType) {
-                    case C.ADD_DAY:
-                        return dispatchDays(actions.addDayInTaser(d))
-                    case C.REMOVE_DAY:
-                        return dispatchDays(actions.removeDayInTaser(d.userId, d.dayNumber))
-                    default:
-                        return null
-                }
-            })
-            setReadyToSaveInBase(true)
-            setReadyToSaveInBase(false)
-        }
-    }
+
 
 
     /*********************************************************** */
     //handlers for signin Authorization inside App (not login App)
     /*********************************************************** */
-
+    let isAuthAdmin = authAdmin.connected.connected
+    const [buttonConnectName, setButtonConnectName] = useState(false)
+    const [displayConnectInfo, setDisplayConnectInfo] = useState( isAuthAdmin ? 'displayBlock' : 'displayNone')
+    const [userAuthId, setUserAuthId] = useState()
+    console.log('userAuthId: ' + userAuthId)
     const connected = {
         "connected": true,
     }
     const disconnected = {
         "connected": false,
     }
+  
     const handleConnectedAdmin = async (connect) => {
-        mutateConnectedAdmin({ ...taserConnectedAdmin, ...connect })
-        await api_root_info.updateConnectedAdmin(taserId, connect)
+        const stateData = {connected: { ...authAdmin.connected, ...connect}}
+        mutateTaserAuthAdmin(stateData, false)
+        isAuthAdmin = connect.connected
+        await api_root_connect.createConnected({taserId, stateData})
+
     }
     const handleSubmit = async ({ ...args }) => {
-        const { taserUsers, loginEntry, taserConnectedAdmin } = args
-        const isConnectedAdmin = taserConnectedAdmin.connected
+        const { taserUsers, loginEntry, isAuthAdmin } = args
         const userId = taserUsers.filter(user => user.name === loginEntry)[0] && taserUsers.filter(user => user.name === loginEntry)[0].id ? taserUsers.filter(user => user.name === loginEntry)[0].id : false
-        if (taserConnectedAdmin && buttonConnectName === false) {
+        if (buttonConnectName === false) {
             switch (loginEntry) {
                 case accessAdmin:
-                    setAuthAdmin(accessAdmin)
                     setButtonConnectName(true)
                     setUserAuthId(accessAllLines)
                     handleConnectedAdmin(connected)
                     setDisplayConnectInfo('displayBlock')
                     break
                 case accessAllLines:
-                    !isConnectedAdmin && (setUserAuthId(accessAllLines))
-                    !isConnectedAdmin && (setButtonConnectName(true))
-                    isConnectedAdmin && (alert("Administrateur connecté : connexion impossible"))
+                    !isAuthAdmin && (setUserAuthId(accessAllLines))
+                    !isAuthAdmin && (setButtonConnectName(true))
+                    isAuthAdmin && (alert("Administrateur connecté : connexion impossible"))
                     break;
                 default:
-                    userId && !isConnectedAdmin && (setUserAuthId(userId))
-                    userId && !isConnectedAdmin && (setButtonConnectName(true))
-                    userId && isConnectedAdmin && (alert("Administrateur connecté : connexion impossible"))
+                    userId && !isAuthAdmin && (setUserAuthId(userId))
+                    userId && !isAuthAdmin && (setButtonConnectName(true))
+                    userId && isAuthAdmin && (alert("Administrateur connecté : connexion impossible"))
             }
         }
         else {
-            setAuthAdmin(false)
             setButtonConnectName(false)
             setDisplayConnectInfo('displayNone')
             setUserAuthId()
@@ -210,7 +209,7 @@ export default function Taser({
         }
         return acc
     }, 0)
-
+    
     /************************************** */
     if (!fourYearsState) return <p>..loading</p>
     else {
@@ -222,7 +221,7 @@ export default function Taser({
             <div>
                 <div className={"row"}>
                     <SignInUsers className={''}
-                        handleSubmit={(loginEntry) => handleSubmit({ taserUsers, loginEntry, taserConnectedAdmin })}
+                        handleSubmit={(loginEntry) => handleSubmit({ taserUsers, loginEntry, isAuthAdmin })}
                         handleSave={() => handleSave({ actionDays })}
                         buttonConnectName={buttonConnectName} displayConnectInfo={displayConnectInfo} />
                 </div>

@@ -7,25 +7,14 @@
 
 import * as firestore_api from './api-firebase/vacations'
 
-export const getVacations = (taserId,keys) => {
-    //console.log(keys)
-    //firestore_api.getUsers(taserId).then(result => console.log(result))
-    return firestore_api.getVacations(taserId)
+export const getVacations = (...args) => {
+    return firestore_api.getVacations(...args)
 }
 
-export const createVacation = (taserId, newData) => {
-    return firestore_api.createVacation(taserId, newData)
-}
-
-export const updateVacation = (taserId, newVacationData) => {
-    return firestore_api.updateVacation(taserId, newVacationData)
-}
-
-export const deleteVacation = (taserId, vacationId) => {
-    return firestore_api.deleteVacation(taserId, vacationId)
+export const createVacations = ({...args}) => {
+    return firestore_api.createVacations({...args})
 }
 
 export const getIsrequiredVacationsNumber = (...args) => {
     return firestore_api.getIsrequiredVacationsNumber(...args)
 }
-

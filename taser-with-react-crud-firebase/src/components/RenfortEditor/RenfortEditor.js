@@ -8,6 +8,8 @@ import Icon from "react-crud-icons"
 import '../../../node_modules/react-crud-icons/dist/css/react-crud-icons.css'
 import CrudForm from './CrudForm'
 import basePath from "../../lib/env"
+import * as reducers from './Reducer/reducers'
+import * as actions from './Reducer/actions'
 
 const BASE = basePath.BASE
 
@@ -18,8 +20,33 @@ const RenfortEditor = ({ user, taserId, className }) => {
         }
     }, [user])
 
-    const swrKey = `/admin/${taserId}/renforts`
-    const { data, error } = useSWR([taserId, swrKey], api_root.getRenforts)
+    /********************* define renforts state  *********************** */
+   // const [renforts, dispatchRenforts] = useReducer(reducers.renforts,[])
+
+    /***********************init renforts state************************* */
+  /*  const swrKey = `/admin/${taserId}/renforts` 
+    const { data: dataRenforts, error: errorRenforts, mutate: mutateRenforts } = useSWR([taserId, swrKey], api_root.getRenforts)
+    const [firstInit, setFirstInit] = useState(false)
+    useEffect(() => {
+        console.log(dataRenforts)
+        !firstInit && dataRenforts && dispatchRenforts(actions.initState(dataRenforts.renforts))
+    }, [dataRenforts])
+*/
+    /******************update state with new renforts******************** */
+  /*  useEffect(() => {
+        let stateData = {renforts : renforts}
+        if(renforts.length>0 && firstInit){
+            api_root.createRenforts({taserId,stateData})
+            mutateRenforts(stateData, false)
+        }
+        return () => {stateData = {}}
+    }, [renforts, firstInit])
+    */
+/**à suppp */
+    const swrKey2 = `/admin/${taserId}/renforts2`
+    const { data, error } = useSWR([taserId, swrKey2], api_root.getRenforts)
+/***** */
+
     const inputTaserRenfort = useRef(null)
 
     const handleSubmit = async (e) => {
@@ -32,7 +59,7 @@ const RenfortEditor = ({ user, taserId, className }) => {
             const newData2={taserId:taserRenfortId, ...requiredVacations, ...newData}
             const result = data.filter(renfort => renfort.taserId === newData2.taserId)
             result.length > 0 ? alert ("Ce tableau est déjà crée!") : api_root.createTaserRenfort(taserId,newData2)
-                .then(() => mutate([taserId, swrKey]))
+                .then(() => mutate([taserId, swrKey2]))
         }
     }
 
@@ -55,7 +82,7 @@ const RenfortEditor = ({ user, taserId, className }) => {
                                         theme="light"
                                         size="small"
                                         onClick={() => {
-                                            api_root.deleteTaserRenfort(taserId, renfort.id).then(() => mutate([taserId, swrKey]))
+                                            api_root.deleteTaserRenfort(taserId, renfort.id).then(() => mutate([taserId, swrKey2]))
                                         }}
                                     /></td>
                                 </tr>

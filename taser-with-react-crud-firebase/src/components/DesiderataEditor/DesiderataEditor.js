@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react"
-import useSWR, { mutate } from "swr"
+import React, { useEffect, useRef, useState, useReducer } from "react"
+import useSWR from "swr"
 import { navigate } from "@reach/router"
 import "./DesiderataEditor.css"
 import * as api_root from "../../api/desideratas"
@@ -7,20 +7,40 @@ import Icon from "react-crud-icons"
 import '../../../node_modules/react-crud-icons/dist/css/react-crud-icons.css'
 import CrudForm from './CrudForm'
 import basePath from "../../lib/env"
+import * as reducers from './Reducer/reducers'
+import * as actions from './Reducer/actions'
 
 const BASE = basePath.BASE
 
 const DesiderataEditor = ({ user, taserId, className }) => {
-    const [isDisplay, setIsDisplay] = useState(true)
-
     useEffect(() => {
         if (!user) {
              navigate(`${BASE}/admin`)
         }
     }, [user])
 
-    const swrKey = `/admin/${taserId}/desideratas`
-    const { data, error } = useSWR([taserId, swrKey], api_root.getDesideratas)
+    /*********************define users state  *********************** */
+    const [isDisplay, setIsDisplay] = useState(true)
+    const [desideratas, dispatchDesideratas] = useReducer(reducers.desideratas,[])
+ 
+    /***********************init users state************************* */
+    const swrKey = `/admin/${taserId}/desideratas` 
+    const { data: dataDesideratas, error: errorDesideratas, mutate: mutateDesideratas } = useSWR([taserId, swrKey], api_root.getDesideratas)
+    const [firstInit, setFirstInit] = useState(false)
+    useEffect(() => {
+        console.log(dataDesideratas)
+        !firstInit && dataDesideratas && dispatchDesideratas(actions.initState(dataDesideratas.desideratas))
+    }, [dataDesideratas, firstInit])
+
+    /******************update state with new users******************** */
+    useEffect(() => {
+        let stateData = {desideratas : desideratas}
+        if(desideratas.length>0 && firstInit){
+            api_root.createDesideratas({taserId,stateData})
+            mutateDesideratas(stateData, false)
+        }
+        return () => {stateData = {}}
+    }, [desideratas, firstInit, taserId, mutateDesideratas])
    
     const inputDesiderataName = useRef(null)
     const inputDesiderataShortKey = useRef("x")
@@ -44,8 +64,8 @@ const DesiderataEditor = ({ user, taserId, className }) => {
                 "nature": inputDesiderataNature.current.value,
                 "isRequired": ""
             }
-            api_root.createDesiderata(taserId, newData)
-                .then(() => mutate([taserId, swrKey]))
+            if (!firstInit) {setFirstInit(true)}
+            dispatchDesideratas(actions.addDesiderata(newData))   
         }
     }
 
@@ -69,9 +89,9 @@ const DesiderataEditor = ({ user, taserId, className }) => {
             "color": inputModalDesiderataColor.current.value,
             "isRequired": ""
         }
-        api_root.updateDesiderata(taserId, newDesiderataData).then(
-            mutate([taserId, swrKey])
-        )
+        if (!firstInit) {setFirstInit(true)}
+        dispatchDesideratas(actions.updateDesiderata(newDesiderataData)) 
+
         inputModalDesiderataId.current.value = ""
         inputModalDesiderataNature.current.value = ""
         inputModalDesiderataName.current.value = ""
@@ -79,9 +99,9 @@ const DesiderataEditor = ({ user, taserId, className }) => {
         inputModalDesiderataColor.current.value = ""
         setIsDisplay(true)
     }
-console.log(taserId)
-    if (error) return <p>Error loading data!</p>
-    else if (!data) return <p>Loading...</p>
+
+    if (errorDesideratas) return <p>Error loading data!</p>
+    else if (!dataDesideratas) return <p>Loading...</p>
     else {
         return (
             <div className={className}>
@@ -90,7 +110,7 @@ console.log(taserId)
                 <table>
                     <thead><tr><th>id</th><th>nom</th><th>shortKey</th><th>couleur</th><th></th><th></th></tr></thead>
                     <tbody>
-                        {data.map((desiderata) => {
+                        {dataDesideratas.desideratas.map((desiderata) => {
                             return (
                                 <tr key={desiderata.id}>
                                     <td> {desiderata.id}</td><td>{desiderata.name}</td><td>{desiderata.shortKey}</td><td style={{backgroundColor: desiderata.color}}>{desiderata.color}</td>
@@ -109,7 +129,8 @@ console.log(taserId)
                                         theme="light"
                                         size="small"
                                         onClick={() => {
-                                            api_root.deleteDesiderata(taserId, desiderata.id).then(() => mutate([taserId, swrKey]))
+                                            if (!firstInit) {setFirstInit(true)}
+                                            dispatchDesideratas(actions.removeDesiderata(desiderata)) 
                                         }}
                                     /></td>
                                 </tr>

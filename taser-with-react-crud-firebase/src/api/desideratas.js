@@ -7,20 +7,10 @@
 
 import * as firestore_api from './api-firebase/desideratas'
 
-export const getDesideratas = (taserId,keys) => {
-    //console.log(keys)
-    //firestore_api.getDesideratas(taserId).then(result => console.log(result))
-    return firestore_api.getDesideratas(taserId)
+export const getDesideratas = (...args) => {
+    return firestore_api.getDesideratas(...args)
 }
 
-export const createDesiderata = (taserId, newData) => {
-    return firestore_api.createDesiderata(taserId, newData)
-}
-
-export const updateDesiderata = (taserId, newDesiderataData) => {
-    return firestore_api.updateDesiderata(taserId, newDesiderataData)
-}
-
-export const deleteDesiderata = (taserId, desiderataId) => {
-    return firestore_api.deleteDesiderata(taserId, desiderataId)
+export const createDesideratas = ({...args}) => {
+    return firestore_api.createDesideratas({...args})
 }

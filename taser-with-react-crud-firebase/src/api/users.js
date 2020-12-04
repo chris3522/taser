@@ -7,16 +7,8 @@
 
 import * as firestore_api from './api-firebase/users'
 
-export const getUsers = (taserId,keys) => {
-    //console.log(keys)
-    //firestore_api.getUsers(taserId).then(result => console.log(result))
-    return firestore_api.getUsers(taserId)
-}
-
-/*********************************** */
-
-export const getUsers2 = (...args) => {
-    return firestore_api.getUsers2(...args)
+export const getUsers = (...args) => {
+    return firestore_api.getUsers(...args)
 }
 
 export const createUsers = ({...args}) => {

@@ -1,49 +1,27 @@
 import { db } from "lib/firebase"
 
-export const getVacations = async (taserId) => {
-    const snapshot = await db
-        .collection("tasers")
-        .doc(taserId)
-        .collection("vacations")
-        .get()
-    await db
-        .collection("tasers")
-        .doc(taserId)
-        .collection("vacations")
-        .limit(1).get().then(query => {
-            console.log(query.size === 0 ? "Vacations not found" : 'Vacations found')
-        })
-    const taserVacations = snapshot.docs.map((vacations) =>
-        ({ id: vacations.id, ...vacations.data() })
-    )
 
-    return taserVacations
-
+export const getVacations = async (...args) => {
+    try {
+        const [taserId] = args
+        const vacationsDoc = await db.collection("tasers").doc(taserId).collection("vacations").doc("vacations").get()
+        if (vacationsDoc.exists) {
+            console.log("Vacations found in database")
+            return ({ ...vacationsDoc.data() })
+        } else {
+            console.log("Vacations not found in database, creating default entry")
+            await db.collection("tasers").doc(taserId).collection("vacations").doc("vacations").set({ vacations: [] })
+            return ({ vacations: [] })
+        }
+    }
+    catch (error) {
+        console.error(error)
+    }
 }
 
-export const createVacation = async (taserId, newData) => {
-    //add user and retrieve random id by firestore
-    return await db.collection("tasers").doc(taserId).collection("vacations").add(newData)
-        .then(docRef =>
-            db.collection("tasers").doc(taserId).collection("vacations").doc(docRef.id).get())
-        .then(vacation => ({ id: vacation.id, ...vacation.data() }))
-}
-
-export const updateVacation = async (taserId, newVacationData) => {
-    return await db.collection("tasers")
-        .doc(taserId)
-        .collection("vacations")
-        .doc(newVacationData.id)
-        .update(newVacationData)
-}
-
-export const deleteVacation = async (taserId, vacationId) => {
-    return await db
-        .collection("tasers")
-        .doc(taserId)
-        .collection("vacations")
-        .doc(vacationId)
-        .delete()
+export const createVacations = async ({ ...args }) => {
+    const { taserId, stateData } = args
+    return await db.collection("tasers").doc(taserId).collection("vacations").doc("vacations").set(stateData)
 }
 
 export const getIsrequiredVacationsNumber = async (...args) => {

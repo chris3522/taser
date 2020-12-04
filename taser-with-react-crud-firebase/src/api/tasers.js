@@ -11,3 +11,7 @@ export const getTasers = (keys) => {
     return firestore_api.getTasers()
 }
 
+export const getTasers2 = (keys) => {
+    return firestore_api.getTasers2()
+}
+

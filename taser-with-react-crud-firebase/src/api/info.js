@@ -14,6 +14,10 @@ export const getInfo = (...args) => {
     return firestore_api.getInfo(...args)
 }
 
+export const createInfo = ({...args}) => {
+    return firestore_api.createInfo({...args})
+}
+
 export const updateInfo = (taserId, newData) => {
     return firestore_api.updateInfo(taserId, newData)
 }

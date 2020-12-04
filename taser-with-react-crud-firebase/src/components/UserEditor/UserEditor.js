@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useReducer } from "react"
-import useSWR, { mutate } from "swr"
+import useSWR from "swr"
 import { navigate } from "@reach/router"
 import "./UserEditor.css"
 import * as api_root from "../../api/users"
@@ -23,13 +23,13 @@ const UserEditor = ({ user, taserId, className }) => {
     const [users, dispatchUsers] = useReducer(reducers.users,[])
 
     /***********************init users state************************* */
-    const swrKey2 = `/admin/${taserId}/users2` 
-    const { data: dataUsers, error: errorUsers, mutate: mutateUsers } = useSWR([taserId, swrKey2], api_root.getUsers2)
+    const swrKey = `/admin/${taserId}/users` 
+    const { data: dataUsers, error: errorUsers, mutate: mutateUsers } = useSWR([taserId, swrKey], api_root.getUsers)
     const [firstInit, setFirstInit] = useState(false)
     useEffect(() => {
         console.log(dataUsers)
         !firstInit && dataUsers && dispatchUsers(actions.initState(dataUsers.users))
-    }, [dataUsers])
+    }, [dataUsers, firstInit])
 
     /******************update state with new users******************** */
     useEffect(() => {
@@ -39,7 +39,7 @@ const UserEditor = ({ user, taserId, className }) => {
             mutateUsers(stateData, false)
         }
         return () => {stateData = {}}
-    }, [users, firstInit])
+    }, [users, firstInit, taserId, mutateUsers])
 
     const inputUserName = useRef(null)
     const inputUserId = useRef(null)

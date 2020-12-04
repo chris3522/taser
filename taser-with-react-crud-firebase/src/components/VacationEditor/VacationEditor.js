@@ -1,23 +1,44 @@
-import React, { useEffect, useRef, useState } from "react"
-import useSWR, { mutate } from "swr"
+import React, { useEffect, useRef, useState, useReducer } from "react"
+import useSWR from "swr"
 import { navigate } from "@reach/router"
 import "./VacationEditor.css"
 import * as api_root from "../../api/vacations"
 import Icon from "react-crud-icons"
 import '../../../node_modules/react-crud-icons/dist/css/react-crud-icons.css'
 import CrudForm from './CrudForm'
+import * as reducers from './Reducer/reducers'
+import * as actions from './Reducer/actions'
 
 const VacationEditor = ({ user, taserId, className }) => {
-    const [isDisplay, setIsDisplay] = useState(true)
-
     useEffect(() => {
         if (!user) {
             navigate("/admin")
         }
     }, [user])
 
-    const swrKey = `/admin/${taserId}/vacations`
-    const { data, error } = useSWR([taserId, swrKey], api_root.getVacations)
+    /*********************define users state  *********************** */
+    const [isDisplay, setIsDisplay] = useState(true)
+    const [vacations, dispatchVacations] = useReducer(reducers.vacations,[])
+
+    /***********************init users state************************* */
+    const swrKey = `/admin/${taserId}/vacations` 
+    const { data: dataVacations, error: errorVacations, mutate: mutateVacations } = useSWR([taserId, swrKey], api_root.getVacations)
+    const [firstInit, setFirstInit] = useState(false)
+    useEffect(() => {
+        console.log(dataVacations)
+        !firstInit && dataVacations && dispatchVacations(actions.initState(dataVacations.vacations))
+    }, [dataVacations, firstInit])
+
+    /******************update state with new users******************** */
+    useEffect(() => {
+        let stateData = {vacations : vacations}
+        if(vacations.length>0 && firstInit){
+            api_root.createVacations({taserId,stateData})
+            mutateVacations(stateData, false)
+        }
+        return () => {stateData = {}}
+    }, [vacations, firstInit, taserId, mutateVacations])
+
     const inputVacationName = useRef(null)
     const inputVacationShortKey = useRef(null)
     const inputVacationId = useRef(null)
@@ -39,8 +60,8 @@ const VacationEditor = ({ user, taserId, className }) => {
                 "isRequired": inputVacationRequise.current.value,
                 "color":""
             }
-            api_root.createVacation(taserId, newData)
-                .then(() => mutate([taserId, swrKey]))
+            if (!firstInit) {setFirstInit(true)}
+            dispatchVacations(actions.addVacation(newData))   
         }
     }
 
@@ -64,15 +85,9 @@ const VacationEditor = ({ user, taserId, className }) => {
             "isRequired": inputModalVacationRequise.current.value,
             "color":""
         }
-        api_root.updateVacation(taserId, newVacationData).then(
-            mutate([taserId, swrKey])
-        )
-       /* api_root.updateVacation(taserId, newVacationData)
-        mutate([taserId, swrKey],data.map(vacation => {
-            vacation = vacation.id === newVacationData.id ?  newVacationData : vacation
-            return vacation
-            })
-        )*/
+        if (!firstInit) {setFirstInit(true)}
+        dispatchVacations(actions.updateVacation(newVacationData)) 
+
         inputModalVacationId.current.value = ""
         inputModalVacationName.current.value = ""
         inputModalVacationShortKey.current.value = ""
@@ -81,8 +96,8 @@ const VacationEditor = ({ user, taserId, className }) => {
         setIsDisplay(true)
     }
 
-    if (error) return <p>Error loading data!</p>
-    else if (!data) return <p>Loading...</p>
+    if (errorVacations) return <p>Error loading data!</p>
+    else if (!dataVacations) return <p>Loading...</p>
     else {
         return (
             <div className={className}>
@@ -91,7 +106,7 @@ const VacationEditor = ({ user, taserId, className }) => {
                 <table>
                     <thead><tr><th>id</th><th>nom</th><th>shortKey</th><th>obligatoire</th><th></th><th></th></tr></thead>
                     <tbody>
-                        {data.map((vacation) => {
+                        {dataVacations.vacations.map((vacation) => {
                             return (
                                 <tr key={vacation.id}>
                                     <td> {vacation.id}</td><td>{vacation.name}</td><td>{vacation.shortKey}</td><td>{vacation.isRequired}</td>
@@ -110,7 +125,8 @@ const VacationEditor = ({ user, taserId, className }) => {
                                         theme="light"
                                         size="small"
                                         onClick={() => {
-                                            api_root.deleteVacation(taserId, vacation.id).then(() => mutate([taserId, swrKey]))
+                                            if (!firstInit) {setFirstInit(true)}
+                                            dispatchVacations(actions.removeVacation(vacation)) 
                                         }}
                                     /></td>
                                 </tr>

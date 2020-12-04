@@ -1,0 +1,8 @@
+const constants = {
+   	ADD_VACATION: "ADD_VACATION", 
+    REMOVE_VACATION: "REMOVE_VACATION",
+    UPDATE_VACATION:"UPDATE_VACATION",
+    INIT_VACATIONS:"INIT_VACATIONS"
+}
+
+export default constants
