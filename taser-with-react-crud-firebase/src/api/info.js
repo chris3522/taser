@@ -18,9 +18,6 @@ export const createInfo = ({...args}) => {
     return firestore_api.createInfo({...args})
 }
 
-export const updateInfo = (taserId, newData) => {
-    return firestore_api.updateInfo(taserId, newData)
-}
 
 export const deleteTaser = (taserId) => {
     return firestore_api.deleteTaser(taserId)
@@ -29,12 +26,4 @@ export const deleteTaser = (taserId) => {
 export const getInfoOnly = (taserId) => {
     //don't create defaut info
     return firestore_api.getInfoOnly(taserId)
-}
-
-export const getConnectedAdmin = (taserId) => {
-    return firestore_api.getConnectedAdmin(taserId)
-}
-
-export const updateConnectedAdmin = (taserId, newData) => {
-    return firestore_api.updateConnectedAdmin(taserId, newData)
 }

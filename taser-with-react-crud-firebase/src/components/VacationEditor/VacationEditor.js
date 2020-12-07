@@ -32,7 +32,7 @@ const VacationEditor = ({ user, taserId, className }) => {
     /******************update state with new users******************** */
     useEffect(() => {
         let stateData = {vacations : vacations}
-        if(vacations.length>0 && firstInit){
+        if(firstInit){
             api_root.createVacations({taserId,stateData})
             mutateVacations(stateData, false)
         }

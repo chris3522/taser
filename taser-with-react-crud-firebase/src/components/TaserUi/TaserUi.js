@@ -1,4 +1,4 @@
-import React,  { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import Taser from './Taser-ui/taser'
 import useSWR from "swr"
 import moment from 'moment'
@@ -24,18 +24,18 @@ let dayDate = moment().format('YYYY-MM-DD')
 /************************************************ */
 
 
-const TaserUi = ({ className, taserId, user, authAdmin, dispatchAuthAdmin }) => {
+const TaserUi = ({ className, taserId, user, authAdmin, dispatchAuthAdmin, userAuthId, setUserAuthId }) => {
     const [selectedDay, setSelectedDay] = useState(undefined)
     const currentYear = moment().year()
     const nextYear = moment().add(1, 'year').year()
     const prevYear = moment().subtract(1, 'year').year()
-    const years=[currentYear,nextYear,prevYear]
-    const selectedYear = moment(dayDate,'YYYY-MM-DD').year()
+    const years = [currentYear, nextYear, prevYear]
+    const selectedYear = moment(dayDate, 'YYYY-MM-DD').year()
 
-    const { data: yearDays, error: errorYearDays, mutate: mutateYearDays } = useSWR([taserId,currentYear,currentYear, "currentyear"], api_root_days.getYear)
-    const { data: yearDaysNext, error: errorYearDaysNext, mutate: mutateYearDaysNext } = useSWR([taserId,currentYear,nextYear, "currentyearnext"], api_root_days.getYear)
-    const { data: yearDaysPrev, error: errorYearDaysPrev, mutate: mutateYearDaysPrev } = useSWR([taserId,currentYear,prevYear, "currentyearprev"], api_root_days.getYear)
-    const { data: yearDaysSelect, error: errorYearDaysSelect, mutate: mutateYearDaysSelect } = useSWR(!years.includes(selectedYear) ? [taserId,currentYear,selectedYear, "currentyearselected"] : null,  api_root_days.getYear)
+    const { data: yearDays, error: errorYearDays, mutate: mutateYearDays } = useSWR([taserId, currentYear, currentYear, "currentyear"], api_root_days.getYear)
+    const { data: yearDaysNext, error: errorYearDaysNext, mutate: mutateYearDaysNext } = useSWR([taserId, currentYear, nextYear, "currentyearnext"], api_root_days.getYear)
+    const { data: yearDaysPrev, error: errorYearDaysPrev, mutate: mutateYearDaysPrev } = useSWR([taserId, currentYear, prevYear, "currentyearprev"], api_root_days.getYear)
+    const { data: yearDaysSelect, error: errorYearDaysSelect, mutate: mutateYearDaysSelect } = useSWR(!years.includes(selectedYear) ? [taserId, currentYear, selectedYear, "currentyearselected"] : null, api_root_days.getYear)
 
     const handleDayClick = (day) => {
         setSelectedDay(day)
@@ -43,16 +43,17 @@ const TaserUi = ({ className, taserId, user, authAdmin, dispatchAuthAdmin }) => 
     }
 
     const { data: renforts, error: errorRenforts } = useSWR([taserId, "renforts"], api_root_renfort.getRenforts)
-    const { data: yearDaysRenfort, error: errorYearDaysRenfort } = useSWR(renforts && renforts.length>0 ? [renforts,currentYear,currentYear, "currentyearrenfort"] : null, api_root_days.getYearRenfort)
-    const { data: yearDaysRenfortNext, error: errorYearDaysRenfortNext } = useSWR(renforts && renforts.length>0 ? [renforts,currentYear,nextYear, "currentyearrenfortnext"] : null, api_root_days.getYearRenfort)
-    const { data: yearDaysRenfortPrev, error: errorYearDaysRenfortPrev } = useSWR(renforts && renforts.length>0 ? [renforts,currentYear,prevYear, "currentyearrenfortprev"] : null, api_root_days.getYearRenfort)
-    const { data: yearDaysRenfortSelect, error: errorYearDaysRenfortSelect } = useSWR(!years.includes(selectedYear) && renforts && renforts.length>0 ? [renforts,currentYear,selectedYear, "currentyearrenfortselected"] : null, api_root_days.getYearRenfort)
-    if (errorYearDaysRenfort!==undefined) {
-    console.log(errorYearDaysRenfort!==undefined ? errorYearDaysRenfort : null)
-    console.log(errorYearDaysRenfortNext!==undefined ? errorYearDaysRenfortNext : null)
-    console.log(errorYearDaysRenfortPrev!==undefined ? errorYearDaysRenfortPrev : null)
-    console.log(errorYearDaysRenfortSelect!==undefined ?  errorYearDaysRenfortSelect : null)
+    const { data: yearDaysRenfort, error: errorYearDaysRenfort } = useSWR(renforts && renforts.renforts && renforts.renforts.length > 0 ? [renforts.renforts, currentYear, currentYear, "currentyearrenfort"] : null, api_root_days.getYearRenfort)
+    const { data: yearDaysRenfortNext, error: errorYearDaysRenfortNext } = useSWR(renforts && renforts.renforts && renforts.renforts.length > 0 ? [renforts.renforts, currentYear, nextYear, "currentyearrenfortnext"] : null, api_root_days.getYearRenfort)
+    const { data: yearDaysRenfortPrev, error: errorYearDaysRenfortPrev } = useSWR(renforts && renforts.renforts && renforts.renforts.length > 0 ? [renforts.renforts, currentYear, prevYear, "currentyearrenfortprev"] : null, api_root_days.getYearRenfort)
+    const { data: yearDaysRenfortSelect, error: errorYearDaysRenfortSelect } = useSWR(!years.includes(selectedYear) && renforts && renforts.renforts && renforts.renforts.length > 0 ? [renforts.renforts, currentYear, selectedYear, "currentyearrenfortselected"] : null, api_root_days.getYearRenfort)
+    if (errorYearDaysRenfort !== undefined) {
+        console.log(errorYearDaysRenfort !== undefined ? errorYearDaysRenfort : null)
+        console.log(errorYearDaysRenfortNext !== undefined ? errorYearDaysRenfortNext : null)
+        console.log(errorYearDaysRenfortPrev !== undefined ? errorYearDaysRenfortPrev : null)
+        console.log(errorYearDaysRenfortSelect !== undefined ? errorYearDaysRenfortSelect : null)
     }
+
     /**************************************************** */
     // Init data fetching (initial data SSR with props)
     /**************************************************** */
@@ -70,7 +71,7 @@ const TaserUi = ({ className, taserId, user, authAdmin, dispatchAuthAdmin }) => 
         if (!firstInit && taserAuthAdmin) {
             dispatchAuthAdmin(actions.updateConnected(taserAuthAdmin.connected.connected))
             setFirstInit(true)
-        }     
+        }
     }, [taserAuthAdmin, firstInit, setFirstInit, dispatchAuthAdmin])
     if (errorInfo) return <p>Error loading data! 1</p>
     else if (errorUsers) return <p>Error loading data! 2</p>
@@ -86,25 +87,25 @@ const TaserUi = ({ className, taserId, user, authAdmin, dispatchAuthAdmin }) => 
     else if (!taserDesideratas) return <p>Loading...</p>
     else if (!taserUsers) return <p>Loading...</p>
     else if (!renforts) return <p>Loading...</p>
-    else if (!firstInit ) return <p>Loading auth...</p>
+    else if (!firstInit) return <p>Loading auth...</p>
     else if (!taserAuthAdmin) return <p>Loading...</p>
     else if (!yearDays) return <p>Loading...</p>
     else if (!yearDaysNext) return <p>Loading...</p>
     else if (!yearDaysPrev) return <p>Loading...</p>
-    else if (!yearDaysRenfort && renforts.length>0) return <p>Loading...</p>
-    else if (!yearDaysRenfortNext && renforts.length>0) return <p>Loading...</p>
-    else if (!yearDaysRenfortPrev && renforts.length>0) return <p>Loading...</p>
+    else if (!yearDaysRenfort && renforts.renforts.length > 0) return <p>Loading...</p>
+    else if (!yearDaysRenfortNext && renforts.renforts.length > 0) return <p>Loading...</p>
+    else if (!yearDaysRenfortPrev && renforts.renforts.length > 0) return <p>Loading...</p>
     else if (!years.includes(selectedYear) && !yearDaysSelect) return <p>Loading...</p>
     else if (user) {
         return (
             <div className={`${className}`}>
                 <p className={"dateCurrent"}>{`${moment(selectedDay).format('dddd DD MMMM YYYY')}`}</p>
                 <div className={'dayPi row'} >
-                    <DayPicker 
+                    <DayPicker
                         month={selectedDay}
-                        selectedDays={selectedDay} 
-                        onDayClick={handleDayClick} 
-                        localeUtils={MomentLocaleUtils} 
+                        selectedDays={selectedDay}
+                        onDayClick={handleDayClick}
+                        localeUtils={MomentLocaleUtils}
                         locale={'fr'} />
                 </div>
                 <Taser taserId={taserId}
@@ -113,9 +114,11 @@ const TaserUi = ({ className, taserId, user, authAdmin, dispatchAuthAdmin }) => 
                     taserUsers={taserUsers.users}
                     taserDesideratas={taserDesideratas.desideratas}
                     taserVacations={taserVacations.vacations}
-                    renforts={renforts}
-                    authAdmin={authAdmin} 
-                    mutateTaserAuthAdmin={mutateTaserAuthAdmin} 
+                    renforts={renforts.renforts}
+                    authAdmin={authAdmin}
+                    userAuthId={userAuthId}
+                    setUserAuthId={setUserAuthId}
+                    mutateTaserAuthAdmin={mutateTaserAuthAdmin}
                     yearDays={yearDays}
                     yearDaysPrev={yearDaysPrev}
                     yearDaysNext={yearDaysNext}
@@ -129,7 +132,7 @@ const TaserUi = ({ className, taserId, user, authAdmin, dispatchAuthAdmin }) => 
                     yearDaysRenfortPrev={yearDaysRenfortPrev}
                     yearDaysRenfortNext={yearDaysRenfortNext}
                     yearDaysRenfortSelect={yearDaysRenfortSelect}
-                    />
+                />
             </div>
         )
     }

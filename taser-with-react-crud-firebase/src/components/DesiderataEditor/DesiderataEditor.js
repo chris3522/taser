@@ -35,7 +35,7 @@ const DesiderataEditor = ({ user, taserId, className }) => {
     /******************update state with new users******************** */
     useEffect(() => {
         let stateData = {desideratas : desideratas}
-        if(desideratas.length>0 && firstInit){
+        if(firstInit){
             api_root.createDesideratas({taserId,stateData})
             mutateDesideratas(stateData, false)
         }

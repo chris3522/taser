@@ -20,5 +20,6 @@ export const getConnected = async (...args) => {
 
 export const createConnected = async ({ ...args }) => {
     const { taserId, stateData } = args
-    return await db.collection("tasers").doc(taserId).collection("connected").doc("admin").set(stateData)
+    await db.collection("tasers").doc(taserId).collection("connected").doc("admin").set(stateData)
+    return stateData
 }

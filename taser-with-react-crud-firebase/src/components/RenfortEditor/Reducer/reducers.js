@@ -23,10 +23,8 @@ export const renfort = (state = {}, action) => {
                 adminUid: action.adminUid,
                 name: action.name,
                 desc: action.desc,
-                numberOfDays: action.numberOfDays,
-                numberOfTasers: action.numberOfTasers,
-                targetVacationsName: action.targetVacationsName,
-                taserId: action.taserId
+                taserId: action.taserId,
+                targetRequiredVacationsArray: action.targetRequiredVacationsArray
             }
         case C.UPDATE_RATSER:
             return {

@@ -1,45 +1,24 @@
 import { db } from "lib/firebase"
 
 export const getTasers = async () => {
-    const snapshot = await db
-        .collection("tasers")
-        .get()
-    await db
-        .collection("tasers")
-        .limit(1).get().then(query => {
-            console.log(query.size === 0 ? "Tasers not found" : 'Tasers found')
-        })
-    console.log("from cache?")
-    console.log(snapshot.metadata.fromCache)
-    const tasers = await Promise.all(snapshot.docs.map(taser => 
-            db.collection("tasers").doc(taser.id).collection("info").doc(taser.id).get()
-            //.then(doc => doc.data())
-            )   
-    )
-    const tasers2 = await Promise.all(tasers.map (doc => ({...doc.data()})))
-    return tasers2
+    try {
+        const snapshot = await db
+            .collection("tasers")
+            .get()
+
+        const tasers = await Promise.all(snapshot.docs.map(taser => 
+                db.collection("tasers").doc(taser.id).collection("info").doc("info").get()
+                )   
+        )
+        const tasers2 = await Promise.all(tasers.map (doc => ({...doc.data().info})))
+        return tasers2
+    }
+    catch (error) {
+        console.error(error)
+    }
 
 }
 
-export const getTasers2 = async () => {
-    const snapshot = await db
-        .collection("tasers")
-        .get()
-    await db
-        .collection("tasers")
-        .limit(1).get().then(query => {
-            console.log(query.size === 0 ? "Tasers not found" : 'Tasers found')
-        })
-
-    const tasers = await Promise.all(snapshot.docs.map(taser => 
-            db.collection("tasers").doc(taser.id).collection("info").doc("info").get()
-            //.then(doc => doc.data())
-            )   
-    )
-    const tasers2 = await Promise.all(tasers.map (doc => ({...doc.data()})))
-    return tasers2
-
-}
 
 
 

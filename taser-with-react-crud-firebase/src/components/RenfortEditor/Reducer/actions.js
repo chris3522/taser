@@ -6,6 +6,10 @@ export const addRTaser = (newData) =>
         type: C.ADD_RTASER,
         id: short().new(),
         name: newData.name,
+        taserId: newData.taserId,
+        desc: newData.desc,
+        adminUid: newData.adminUid,
+        targetRequiredVacationsArray: newData.targetRequiredVacationsArray
     })
 
 export const removeRTaser = (rTaser) =>

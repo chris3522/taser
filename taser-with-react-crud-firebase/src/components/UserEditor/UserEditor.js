@@ -34,7 +34,7 @@ const UserEditor = ({ user, taserId, className }) => {
     /******************update state with new users******************** */
     useEffect(() => {
         let stateData = {users : users}
-        if(users.length>0 && firstInit){
+        if(firstInit){
             api_root.createUsers({taserId,stateData})
             mutateUsers(stateData, false)
         }

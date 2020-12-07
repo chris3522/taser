@@ -30,12 +30,14 @@ export default function Taser({
     taserDesideratas,
     taserVacations,
     authAdmin,
+    userAuthId,
+    setUserAuthId,
     mutateTaserAuthAdmin,
     isExtraYear,
     yearDays, yearDaysNext, yearDaysPrev, yearDaysSelect,
     mutateYearDays, mutateYearDaysNext, mutateYearDaysPrev, mutateYearDaysSelect,
     yearDaysRenfort, yearDaysRenfortNext, yearDaysRenfortPrev, yearDaysRenfortSelect, }) {
-      
+
 
     /************************************************************ */
     // Init data fetching (initial data SSR with props from taserUI)
@@ -60,7 +62,7 @@ export default function Taser({
     /*********Set reducer to persist data with all inputs********************** */
     const [dataDaysPersistence, dispatchDataDaysPersistence] = useReducer(reducers.persistDays, fourYearsReduce)
 
-    /*********fetch data  renfiorts years************************************** */
+    /*********fetch data  renforts years************************************** */
     const renfortYears = yearDaysRenfort && yearDaysRenfort.length ? yearDaysRenfort.map(
         renfort => renfortCreateList([...renfort[renfort.year]])
     ) : []
@@ -81,7 +83,7 @@ export default function Taser({
         taser => taser.filter(d => d !== undefined)
     )
     /************concat all days and all years  (renfort and taser in one)****************** */
-    const allDaysFromAllPersistTasers =  dataDaysPersistence.concat (renfortFourYears && renfortFourYears.length>0 ? renfortFourYears.reduce((a, b) => a.concat(b)):[])
+    const allDaysFromAllPersistTasers = dataDaysPersistence.concat(renfortFourYears && renfortFourYears.length > 0 ? renfortFourYears.reduce((a, b) => a.concat(b)) : [])
 
     /***********handlers for saving data *************************************************** */
     const [readyToSaveInBase, setReadyToSaveInBase] = useState(false)
@@ -116,6 +118,10 @@ export default function Taser({
                         return null
                 }
             })
+            await mutateYearDays()
+            await mutateYearDaysNext()
+            await mutateYearDaysPrev()
+            await mutateYearDaysSelect()
             setReadyToSaveInBase(true)
             setReadyToSaveInBase(false)
         }
@@ -156,8 +162,8 @@ export default function Taser({
     /*********************************************************** */
     let isAuthAdmin = authAdmin.connected.connected
     const [buttonConnectName, setButtonConnectName] = useState(false)
-    const [displayConnectInfo, setDisplayConnectInfo] = useState( isAuthAdmin ? 'displayBlock' : 'displayNone')
-    const [userAuthId, setUserAuthId] = useState()
+    const [displayConnectInfo, setDisplayConnectInfo] = useState(isAuthAdmin ? 'displayBlock' : 'displayNone')
+    //const [userAuthId, setUserAuthId] = useState()
     console.log('userAuthId: ' + userAuthId)
     const connected = {
         "connected": true,
@@ -165,12 +171,12 @@ export default function Taser({
     const disconnected = {
         "connected": false,
     }
-  
+
     const handleConnectedAdmin = async (connect) => {
-        const stateData = {connected: { ...authAdmin.connected, ...connect}}
+        const stateData = { connected: { ...authAdmin.connected, ...connect } }
         mutateTaserAuthAdmin(stateData, false)
         isAuthAdmin = connect.connected
-        await api_root_connect.createConnected({taserId, stateData})
+        await api_root_connect.createConnected({ taserId, stateData })
 
     }
     const handleSubmit = async ({ ...args }) => {
@@ -209,7 +215,13 @@ export default function Taser({
         }
         return acc
     }, 0)
-    
+    const requiredVacationsArray = taserVacations.reduce((acc, vacation) => {
+        if (vacation && vacation.isRequired === "required") {
+            acc.push(vacation.name)
+        }
+        return acc
+    }, [])
+
     /************************************** */
     if (!fourYearsState) return <p>..loading</p>
     else {
@@ -238,6 +250,7 @@ export default function Taser({
                                 dataDaysPersistence={dataDaysPersistence}
                                 allDaysFromAllPersistTasers={allDaysFromAllPersistTasers}
                                 isRequiredVacationsNumber={isRequiredVacationsNumber}
+                                requiredVacationsArray={requiredVacationsArray}
                                 taserId={taserId}
                                 userAuthId={userAuthId}
 
@@ -254,6 +267,7 @@ export default function Taser({
                                             numberOfDays={parseInt(numberOfDays)}
                                             activeSelectedDate={dayDate}
                                             userAuthId={false}
+                                            isRequiredVacationsNumber={isRequiredVacationsNumber}
                                             renfortYears={renfortFourYears[j]}
                                             renforts={renforts[j]} />)
                                 )

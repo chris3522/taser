@@ -1,39 +1,24 @@
 import { db } from "lib/firebase"
 
-export const getRenforts = async (taserId) => {
-    const snapshot = await db
-        .collection("tasers")
-        .doc(taserId)
-        .collection("renforts")
-        .get()
-    await db
-        .collection("tasers")
-        .doc(taserId)
-        .collection("renforts")
-        .limit(1).get().then(query => {
-            console.log(query.size === 0 ? "Renforts not found" : 'Renforts found')
-        })
-    const taserRenforts = snapshot.docs.map((renfort) =>
-        ({ id: renfort.id, ...renfort.data() })
-    )
-    return taserRenforts
-
+export const getRenforts = async (...args) => {
+    try {
+        const [taserId] = args
+        const renfortsDoc = await db.collection("tasers").doc(taserId).collection("renforts").doc("renforts").get()
+        if (renfortsDoc.exists) {
+            console.log("Renforts found in database")
+            return ({ ...renfortsDoc.data() })
+        } else {
+            console.log("Renforts not found in database, creating default entry")
+            await db.collection("tasers").doc(taserId).collection("renforts").doc("renforts").set({ renforts: [] })
+            return ({ renforts: [] })
+        }
+    }
+    catch (error) {
+        console.error(error)
+    }
 }
 
-export const createTaserRenfort = async (taserId, newData) => {
-    //add user and retrieve random id by firestore
-    return await db.collection("tasers").doc(taserId).collection("renforts").add(newData)
-        .then(docRef =>
-            db.collection("tasers").doc(taserId).collection("renforts").doc(docRef.id).get())
-        .then(renfort => ({ id: renfort.id, ...renfort.data() }))
+export const createRenforts = async ({ ...args }) => {
+    const { taserId, stateData } = args
+    return await db.collection("tasers").doc(taserId).collection("renforts").doc("renforts").set(stateData)
 }
-
-export const deleteTaserRenfort = async (taserId, taserRenfortId) => {
-    return await db
-        .collection("tasers")
-        .doc(taserId)
-        .collection("renforts")
-        .doc(taserRenfortId)
-        .delete()
-}
-

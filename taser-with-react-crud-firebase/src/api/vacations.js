@@ -18,3 +18,4 @@ export const createVacations = ({...args}) => {
 export const getIsrequiredVacationsNumber = (...args) => {
     return firestore_api.getIsrequiredVacationsNumber(...args)
 }
+

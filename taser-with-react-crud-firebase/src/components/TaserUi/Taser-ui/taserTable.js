@@ -10,6 +10,7 @@ const TaserTable = (props) => {
         dataDaysPersistence,
         allDaysFromAllPersistTasers,
         isRequiredVacationsNumber,
+        requiredVacationsArray,
         userAuthId,
     } = props
     const { handleKeyPress, handleKeyUp, handleFocus, handleBlur } = props
@@ -21,6 +22,7 @@ const TaserTable = (props) => {
                         numberOfDays={numberOfDays}
                         activeSelectedDate={activeSelectedDate}
                         isRequiredVacationsNumber={isRequiredVacationsNumber}
+                        requiredVacationsArray={requiredVacationsArray}
                         allDaysFromAllPersistTasers={allDaysFromAllPersistTasers} />
                 </thead>
                 <tbody>

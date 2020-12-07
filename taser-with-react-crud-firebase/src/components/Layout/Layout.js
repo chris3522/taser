@@ -60,16 +60,16 @@ const Layout = ({ children, user }) => {
                         //console.log(child)
                     })
                 }
-                
-                    <Link to="/login">
-                        <Logo alt="calendar Logo" className={styles.logo} />
-                    </Link>
-                    <Icon
-                        name="settings"
-                        theme="light"
-                        size="small"
-                        onClick={()=>navigate(`${BASE}/admin/taser`)}
-                    />
+
+                <Link to="/login">
+                    <Logo alt="calendar Logo" className={styles.logo} />
+                </Link>
+                <Icon
+                    name="settings"
+                    theme="light"
+                    size="small"
+                    onClick={() => navigate(`${BASE}/admin/taser`)}
+                />
             </footer>
         </div>
     )

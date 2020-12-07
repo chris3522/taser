@@ -20,14 +20,15 @@ const createComponentWithAuth = withFirebaseAuth({
 })
 const BASE = basePath.BASE
 const disconnected = false
-const connectedDefaultState = {connected: { connected:false, adminUid: undefined, id: undefined}}
+const connectedDefaultState = { connected: { connected: false, adminUid: undefined, id: undefined } }
 
 const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) => {
     const NotFound = () => <p>Sorry, nothing here</p>
-    
-    /*********************define admin connected state  *********************** */
-    const [authAdmin, dispatchAuthAdmin] = useReducer(reducers.connect,connectedDefaultState)
 
+    /*********************define admin connected state  *********************** */
+    const [userAuthId, setUserAuthId] = useState(false)
+    const [authAdmin, dispatchAuthAdmin] = useReducer(reducers.connect, connectedDefaultState)
+    let authAdminBool = authAdmin && authAdmin.connected && authAdmin.connected.connected && (userAuthId ? true : false)
     /***********************init admin connected state state************************* */
     const [firstInit, setFirstInit] = useState(false)
     useEffect(() => {
@@ -38,12 +39,12 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
             setFirstInit(true)
         }
     }, [firstInit, user, dispatchAuthAdmin, setFirstInit])
-   // console.log('authAdmin: '+authAdmin)
+    // console.log('authAdmin: '+authAdmin)
     //A un user loggé en admin correspond un tableau de service
     //console.log('*****'+process.env.REACT_APP_BASEPATH)
-    const handleFirstSignInUser = async (taserId) => {           
-        const data = await api_root_tasers.getTasers2()
-        const dataArray = data.filter(taser => taser.info.id===taserId)
+    const handleFirstSignInUser = async (taserId) => {
+        const data = await api_root_tasers.getTasers()
+        const dataArray = data.filter(taser => taser.id === taserId)
         if (dataArray === undefined || dataArray.length === 0) {
             dispatchAuthAdmin(actions.updateConnected(true))
             navigate(`${BASE}/admin/taser`)
@@ -57,9 +58,9 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
                         <Link className="log-out-link" to="/#log-out" onClick={async () => {
                             const taserId = h.slugify(user.email)
                             setFirstInit(false)
-                            const stateData = {connected : {connected :disconnected}}
-                            await api_root_connect.createConnected({taserId, stateData})
-                            signOut()                     
+                            const stateData = { connected: { connected: false, adminUid: user.uid, id: taserId } }
+                            const result = await api_root_connect.createConnected({ taserId, stateData })
+                            if (result) { signOut() }
                         }}
                         >
                             Log Out
@@ -71,10 +72,12 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
             <Router basepath={BASE}>
                 <NotFound default />
                 <Home className="section" user={user} path="/" />
-                {user && (<TaserUi className="section" path="/taser/:taserId" user={user} 
+                {user && (<TaserUi className="section" path="/taser/:taserId" user={user}
                     authAdmin={authAdmin}
-                    dispatchAuthAdmin={dispatchAuthAdmin} 
-                    />)}
+                    dispatchAuthAdmin={dispatchAuthAdmin}
+                    userAuthId={userAuthId}
+                    setUserAuthId={setUserAuthId}
+                />)}
                 <SignIn
                     className="section"
                     path="/login"
@@ -82,11 +85,11 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
                     signIns={{ signInWithGoogle, signInWithEmailAndPassword }}
                     handleFirstSignInUser={handleFirstSignInUser}
                 />
-                {user && authAdmin && (<TaserInfo className="section" path="/admin/taser" user={user} authAdmin={authAdmin} />)}
-                {user && authAdmin && (<UserEditor className="section" path="/admin/:taserId/users" user={user} />)}
-                {user && authAdmin && (<VacationEditor className="section" path="/admin/:taserId/vacations" user={user} />)}
-                {user && authAdmin && (<DesiderataEditor className="section" path="/admin/:taserId/desideratas" user={user} />)}
-                {user && authAdmin && (<RenfortEditor className="section" path="/admin/:taserId/renforts" user={user} />)}
+                {user && authAdminBool && (<TaserInfo className="section" path="/admin/taser" user={user} authAdmin={authAdmin} />)}
+                {user && authAdminBool && (<UserEditor className="section" path="/admin/:taserId/users" user={user} />)}
+                {user && authAdminBool && (<VacationEditor className="section" path="/admin/:taserId/vacations" user={user} />)}
+                {user && authAdminBool && (<DesiderataEditor className="section" path="/admin/:taserId/desideratas" user={user} />)}
+                {user && authAdminBool && (<RenfortEditor className="section" path="/admin/:taserId/renforts" user={user} />)}
             </Router>
         </Layout>
     )

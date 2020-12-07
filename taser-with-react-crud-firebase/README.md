@@ -18,7 +18,7 @@ firebase deploy
 ```
 Answer this questions during firebase deploy process:<br />
 ? What do you want to use as your public directory? build<br />
-? Configure as a single-page app (rewrite all urls to /index.html)? No<br />
+? Configure as a single-page app (rewrite all urls to /index.html)? Yes<br />
 ? Set up automatic builds and deploys with GitHub? No<br />
 ? File build/index.html already exists. Overwrite? No<br />
 
