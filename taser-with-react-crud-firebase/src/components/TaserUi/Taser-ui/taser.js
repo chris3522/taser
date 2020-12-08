@@ -181,7 +181,6 @@ export default function Taser({
     const handleSubmit = async ({ ...args }) => {
         const { taserUsers, loginEntry, isAuthAdmin } = args
         const userId = taserUsers.filter(user => user.name === loginEntry)[0] && taserUsers.filter(user => user.name === loginEntry)[0].id ? taserUsers.filter(user => user.name === loginEntry)[0].id : false
-        const userName = taserUsers.filter(user => user.name === loginEntry)[0] && taserUsers.filter(user => user.name === loginEntry)[0].id ? taserUsers.filter(user => user.name === loginEntry)[0].name : false
         if (buttonConnectName === false) {
             switch (loginEntry) {
                 case accessAdmin:
@@ -196,7 +195,7 @@ export default function Taser({
                     isAuthAdmin && (alert("Administrateur connecté : connexion impossible"))
                     break;
                 default:
-                    userId && !isAuthAdmin && (setUserAuthId(userName))
+                    userId && !isAuthAdmin && (setUserAuthId(userId))
                     userId && !isAuthAdmin && (setButtonConnectName(true))
                     userId && isAuthAdmin && (alert("Administrateur connecté : connexion impossible"))
             }
@@ -275,7 +274,10 @@ export default function Taser({
                     <SignInUsers className={''}
                         handleSubmit={(loginEntry) => handleSubmit({ taserUsers, loginEntry, isAuthAdmin })}
                         handleSave={() => handleSave({ actionDays })}
-                        buttonConnectName={buttonConnectName} displayConnectInfo={displayConnectInfo} userAuthId={userAuthId} />
+                        buttonConnectName={buttonConnectName} 
+                        displayConnectInfo={displayConnectInfo} 
+                        userAuthId={userAuthId}
+                        taserUsers={taserUsers} />
                 </div>
                 <div className={"row section"}>
                     <h5>Stats</h5>
