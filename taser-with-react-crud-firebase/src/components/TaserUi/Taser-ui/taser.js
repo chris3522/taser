@@ -14,7 +14,7 @@ import * as actions from './Reducer/actions'
 import { renfortCreateList } from '../../../lib/helpers'
 import C from './Reducer/constants'
 
-import { SignInUsers } from 'components'
+import { SignInUsers, Statistics } from 'components'
 import uiPass from '../../../lib/env'
 
 const accessAllLines = uiPass.PWDTASERUI
@@ -31,7 +31,7 @@ export default function Taser({
     taserVacations,
     authAdmin,
     userAuthId,
-    buttonConnectName, setButtonConnectName, displayConnectInfo, setDisplayConnectInfo, 
+    buttonConnectName, setButtonConnectName, displayConnectInfo, setDisplayConnectInfo,
     setUserAuthId,
     mutateTaserAuthAdmin,
     isExtraYear,
@@ -162,7 +162,7 @@ export default function Taser({
     //handlers for signin Authorization inside App (not login App)
     /*********************************************************** */
     let isAuthAdmin = authAdmin.connected.connected
-    
+
     console.log('userAuthId: ' + userAuthId)
     const connected = {
         "connected": true,
@@ -275,9 +275,21 @@ export default function Taser({
                     <SignInUsers className={''}
                         handleSubmit={(loginEntry) => handleSubmit({ taserUsers, loginEntry, isAuthAdmin })}
                         handleSave={() => handleSave({ actionDays })}
-                        buttonConnectName={buttonConnectName} displayConnectInfo={displayConnectInfo} userAuthId={userAuthId}/>
+                        buttonConnectName={buttonConnectName} displayConnectInfo={displayConnectInfo} userAuthId={userAuthId} />
                 </div>
-                
+                <div className={"row section"}>
+                    <h5>Stats</h5>
+                    <Statistics 
+                        dataDaysPersistence={dataDaysPersistence}
+                        tabVacationsAndDesideratas={tabVacationsAndDesideratas}
+                        taserUsers={taserUsers}
+                        yearDays={[yearDays.year]}
+                        yearDaysNext={[yearDaysNext.year]}
+                        yearDaysPrev={[yearDaysPrev.year]}
+                        yearDaysSelect={isExtraYear && yearDaysSelect.year ? [yearDaysSelect.year] : []}
+                    />
+                </div>
+
             </div>
         )
     }
