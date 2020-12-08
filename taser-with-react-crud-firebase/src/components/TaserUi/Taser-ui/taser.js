@@ -279,7 +279,7 @@ export default function Taser({
                 </div>
                 <div className={"row section"}>
                     <h5>Stats</h5>
-                    <Statistics 
+                    <Statistics
                         dataDaysPersistence={dataDaysPersistence}
                         tabVacationsAndDesideratas={tabVacationsAndDesideratas}
                         taserUsers={taserUsers}

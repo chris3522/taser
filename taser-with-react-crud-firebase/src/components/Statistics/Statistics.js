@@ -7,7 +7,8 @@ import styles from "./Statistics.module.css"
 
 const Statistics = ({ className, dataDaysPersistence, tabVacationsAndDesideratas, taserUsers,
     yearDays, yearDaysNext, yearDaysPrev, yearDaysSelect }) => {
-
+    const [dataDaysYear, setDataDaysYear] = useState([])
+    const [display, setDisplay] = useState(styles.displayNone)
     /*****sort vacations********* */
     function compare(a, b) {
         if (a.nature > b.nature) {
@@ -153,36 +154,36 @@ const Statistics = ({ className, dataDaysPersistence, tabVacationsAndDesideratas
         }, 0)
     }
     /******add a stat to each cell of cartesian product tab********* */
-    const [dataDaysYear, setDataDaysYear] = useState([])
-    const reduceStats = userVacGrid.map(userThisVac => {
+    
+    const reduceStats = userVacGrid ? userVacGrid.map(userThisVac => {
         return userThisVac.concat(reduceDays(userThisVac[0], userThisVac[1], dataDaysYear))
-    })
+    }) : []
 
-    const reduceFerieStats = userFerieGrid.map(userThisVac => {
+    const reduceFerieStats = userFerieGrid ? userFerieGrid.map(userThisVac => {
         return userThisVac.concat(reduceFerieDays(userThisVac[0], userThisVac[1], dataDaysYear))
-    })
-    const reduceWeekendStats = userWeekendGrid.map(userThisVac => {
+    }) :[]
+    const reduceWeekendStats = userWeekendGrid ? userWeekendGrid.map(userThisVac => {
         return userThisVac.concat(reduceWeekendDays(userThisVac[0], userThisVac[1], dataDaysYear))
-    })
+    }):[]
 
-    const reduceRequiredVacSunday = userRequiredVacSundayGrid.map(userThisVac => {
+    const reduceRequiredVacSunday = userRequiredVacSundayGrid ? userRequiredVacSundayGrid.map(userThisVac => {
         return userThisVac.concat(reduceRequiredVacSundayDays(userThisVac[0], userThisVac[1], dataDaysYear))
-    })
+    }): []
 
-    const reduceRequiredVacSaturday = userRequiredVacSaturdayGrid.map(userThisVac => {
+    const reduceRequiredVacSaturday = userRequiredVacSaturdayGrid ? userRequiredVacSaturdayGrid.map(userThisVac => {
         return userThisVac.concat(reduceRequiredVacSaturdayDays(userThisVac[0], userThisVac[1], dataDaysYear))
-    })
+    }):[]
 
-    const reduceRequiredVacFriday = userRequiredVacFridayGrid.map(userThisVac => {
+    const reduceRequiredVacFriday = userRequiredVacFridayGrid ? userRequiredVacFridayGrid.map(userThisVac => {
         return userThisVac.concat(reduceRequiredVacFridayDays(userThisVac[0], userThisVac[1], dataDaysYear))
-    })
+    }):[]
 
-    const reduceStatsAll = reduceStats.concat(reduceFerieStats).concat(reduceWeekendStats).concat(reduceRequiredVacSunday).concat(reduceRequiredVacSaturday).concat(reduceRequiredVacFriday)
+    const reduceStatsAll = reduceStats.concat(reduceFerieStats).concat(reduceWeekendStats).concat(reduceRequiredVacSunday).concat(reduceRequiredVacSaturday)
+    .concat(reduceRequiredVacFriday)
     
     /***************define years data********************** */
     const yearsList = [...yearDays, ...yearDaysNext, ...yearDaysPrev, ...yearDaysSelect]
     const inputYear = useRef(null)
-    const [display, setDisplay] = useState(styles.displayNone)
 
     const onSubmit = (e) => {
         e.preventDefault()
