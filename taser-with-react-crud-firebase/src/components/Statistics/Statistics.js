@@ -32,9 +32,21 @@ const Statistics = ({ className, dataDaysPersistence, tabVacationsAndDesideratas
 
     /************Fériés et weekend func search******** */
     const isWeekend = (date) => {
-        return parseInt(moment(date,"YYYYMMDD").format('E'),0) > 5
+        return parseInt(moment(date, "YYYYMMDD").format('E'), 0) > 5
     }
-   
+
+    const isSunday = (date) => {
+        return moment(date, "YYYYMMDD").weekday() === 6
+    }
+
+    const isSaturday = (date) => {
+        return moment(date, "YYYYMMDD").weekday() === 5
+    }
+
+    const isFriday = (date) => {
+        return moment(date, "YYYYMMDD").weekday() === 4
+    }
+
     /****set user and vac tab heads******** */
     const userNamesSet = taserUsers.reduce((acc, user) => {
         return acc.concat({ name: user.name, id: user.id })
@@ -44,8 +56,29 @@ const Statistics = ({ className, dataDaysPersistence, tabVacationsAndDesideratas
     }, [])
 
     const ferieSet = ["Feries"]
+
     const weekendSet = ["Weekend"]
 
+    const requiredVacSundaySet = tabVacationsAndDesideratas.reduce((acc, vac) => {
+        if (vac.isRequired === "required") {
+            acc.push(`${vac.name}+Di`)
+        }
+        return acc
+    }, [])
+
+    const requiredVacSaturdaySet = tabVacationsAndDesideratas.reduce((acc, vac) => {
+        if (vac.isRequired === "required") {
+            acc.push(`${vac.name}+Sa`)
+        }
+        return acc
+    }, [])
+
+    const requiredVacFridaySet = tabVacationsAndDesideratas.reduce((acc, vac) => {
+        if (vac.isRequired === "required") {
+            acc.push(`${vac.name}+Ve`)
+        }
+        return acc
+    }, [])
     /*******cartesian product*************** */
     const userVacGrid = cartesianProduct(userNamesSet, vacNamesSet)
     const reduceDays = (user, vacName, days) => {
@@ -58,7 +91,7 @@ const Statistics = ({ className, dataDaysPersistence, tabVacationsAndDesideratas
     }
 
     const userFerieGrid = cartesianProduct(userNamesSet, ferieSet)
-    const reduceFerieDays = (user, ferie, days) => {
+    const reduceFerieDays = (user, vacName, days) => {
         return days.reduce((acc, day) => {
             let day2 = moment(day.dayNumber, "YYYYMMDD")
             if (user.id === day.userId && day2.isFerie()) {
@@ -69,7 +102,7 @@ const Statistics = ({ className, dataDaysPersistence, tabVacationsAndDesideratas
     }
 
     const userWeekendGrid = cartesianProduct(userNamesSet, weekendSet)
-    const reduceWeekendDays = (user, weekend, days) => {
+    const reduceWeekendDays = (user, vacName, days) => {
         return days.reduce((acc, day) => {
             if (user.id === day.userId && isWeekend(day.dayNumber)) {
                 acc++
@@ -78,6 +111,47 @@ const Statistics = ({ className, dataDaysPersistence, tabVacationsAndDesideratas
         }, 0)
     }
 
+    const userRequiredVacSundayGrid = cartesianProduct(userNamesSet, requiredVacSundaySet)
+    const reduceRequiredVacSundayDays = (user, vacName, days) => {
+        return days.reduce((acc, day) => {
+            let vacName2 = vacName.replace('+Di', '')
+            if (user.id === day.userId
+                && day.isRequired === "required"
+                && vacName2 === day.name
+                && isSunday(day.dayNumber)) {
+                acc++
+            }
+            return acc
+        }, 0)
+    }
+
+    const userRequiredVacSaturdayGrid = cartesianProduct(userNamesSet, requiredVacSaturdaySet)
+    const reduceRequiredVacSaturdayDays = (user, vacName, days) => {
+        return days.reduce((acc, day) => {
+            let vacName2 = vacName.replace('+Sa', '')
+            if (user.id === day.userId
+                && day.isRequired === "required"
+                && vacName2 === day.name
+                && isSaturday(day.dayNumber)) {
+                acc++
+            }
+            return acc
+        }, 0)
+    }
+
+    const userRequiredVacFridayGrid = cartesianProduct(userNamesSet, requiredVacFridaySet)
+    const reduceRequiredVacFridayDays = (user, vacName, days) => {
+        return days.reduce((acc, day) => {
+            let vacName2 = vacName.replace('+Ve', '')
+            if (user.id === day.userId
+                && day.isRequired === "required"
+                && vacName2 === day.name
+                && isFriday(day.dayNumber)) {
+                acc++
+            }
+            return acc
+        }, 0)
+    }
     /******add a stat to each cell of cartesian product tab********* */
     const [dataDaysYear, setDataDaysYear] = useState([])
     const reduceStats = userVacGrid.map(userThisVac => {
@@ -91,7 +165,20 @@ const Statistics = ({ className, dataDaysPersistence, tabVacationsAndDesideratas
         return userThisVac.concat(reduceWeekendDays(userThisVac[0], userThisVac[1], dataDaysYear))
     })
 
-    const reduceStatsAll = reduceStats.concat(reduceFerieStats).concat(reduceWeekendStats)
+    const reduceRequiredVacSunday = userRequiredVacSundayGrid.map(userThisVac => {
+        return userThisVac.concat(reduceRequiredVacSundayDays(userThisVac[0], userThisVac[1], dataDaysYear))
+    })
+
+    const reduceRequiredVacSaturday = userRequiredVacSaturdayGrid.map(userThisVac => {
+        return userThisVac.concat(reduceRequiredVacSaturdayDays(userThisVac[0], userThisVac[1], dataDaysYear))
+    })
+
+    const reduceRequiredVacFriday = userRequiredVacFridayGrid.map(userThisVac => {
+        return userThisVac.concat(reduceRequiredVacFridayDays(userThisVac[0], userThisVac[1], dataDaysYear))
+    })
+
+    const reduceStatsAll = reduceStats.concat(reduceFerieStats).concat(reduceWeekendStats).concat(reduceRequiredVacSunday).concat(reduceRequiredVacSaturday).concat(reduceRequiredVacFriday)
+    
     /***************define years data********************** */
     const yearsList = [...yearDays, ...yearDaysNext, ...yearDaysPrev, ...yearDaysSelect]
     const inputYear = useRef(null)
@@ -125,13 +212,16 @@ const Statistics = ({ className, dataDaysPersistence, tabVacationsAndDesideratas
                 </div>
             </form>
 
-            <table className={`${display}`}>
+            <table className={`${display} ${styles.statuiscroll}`}>
                 <thead>
                     <tr>
                         <th></th>
                         {vacNamesSet.map((vac, i) => <th key={i}>{vac}</th>)}
                         <th>Fériés</th>
                         <th>Jours de Weekend</th>
+                        {requiredVacSundaySet.map((vac, i) => <th key={i}>{vac}</th>)}
+                        {requiredVacSaturdaySet.map((vac, i) => <th key={i}>{vac}</th>)}
+                        {requiredVacFridaySet.map((vac, i) => <th key={i}>{vac}</th>)}
                     </tr>
                 </thead>
                 <tbody>
