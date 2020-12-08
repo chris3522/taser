@@ -25,11 +25,14 @@ const connectedDefaultState = { connected: { connected: false, adminUid: undefin
 const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) => {
     const NotFound = () => <p>Sorry, nothing here</p>
 
-    /*********************define admin connected state  *********************** */
+    /*********************define agent admin connected state  ****************** */
     const [userAuthId, setUserAuthId] = useState(false)
     const [authAdmin, dispatchAuthAdmin] = useReducer(reducers.connect, connectedDefaultState)
     let authAdminBool = authAdmin && authAdmin.connected && authAdmin.connected.connected && (userAuthId ? true : false)
-    /***********************init admin connected state state************************* */
+    /*********************define agents connected state  *********************** */
+    const [buttonConnectName, setButtonConnectName] = useState(false)
+    const [displayConnectInfo, setDisplayConnectInfo] = useState(authAdminBool ? 'displayBlock' : 'displayNone')
+    /***********************init agent admin connected state ******************* */
     const [firstInit, setFirstInit] = useState(false)
     useEffect(() => {
         if (user && !firstInit) {
@@ -39,9 +42,7 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
             setFirstInit(true)
         }
     }, [firstInit, user, dispatchAuthAdmin, setFirstInit])
-    // console.log('authAdmin: '+authAdmin)
-    //A un user loggé en admin correspond un tableau de service
-    //console.log('*****'+process.env.REACT_APP_BASEPATH)
+
     const handleFirstSignInUser = async (taserId) => {
         const data = await api_root_tasers.getTasers()
         const dataArray = data.filter(taser => taser.id === taserId)
@@ -77,6 +78,10 @@ const App = ({ signInWithGoogle, signInWithEmailAndPassword, signOut, user }) =>
                     dispatchAuthAdmin={dispatchAuthAdmin}
                     userAuthId={userAuthId}
                     setUserAuthId={setUserAuthId}
+                    buttonConnectName={buttonConnectName}
+                    setButtonConnectName={setButtonConnectName}
+                    displayConnectInfo={displayConnectInfo}
+                    setDisplayConnectInfo={setDisplayConnectInfo}
                 />)}
                 <SignIn
                     className="section"

@@ -5,17 +5,16 @@ import styles from './SignInUsers.module.css'
 const SubmitButton = props =>
     <button {...props} className={`four columns ${styles.button}`} >{props.children}</button>
 
-const UserForm = ({ onClick, children, auth }) => {
+const UserForm = ({ onClick, children, userAuthId }) => {
     const inputUser = useRef(null)
 
     const handleClick = (e) => {
         e.preventDefault()
-        onClick(inputUser.current.value)
+        onClick(inputUser.current ? inputUser.current.value : undefined)
     }
-
     return (
         <div className="row">
-            <input className="four columns" ref={inputUser} type="text" placeholder="Nom"/>
+            {!userAuthId && <input className="four columns" ref={inputUser} type="text" placeholder="Nom"/>}
             <SubmitButton onClick={handleClick} >{children}</SubmitButton>
         </div>
     )

@@ -31,6 +31,7 @@ export default function Taser({
     taserVacations,
     authAdmin,
     userAuthId,
+    buttonConnectName, setButtonConnectName, displayConnectInfo, setDisplayConnectInfo, 
     setUserAuthId,
     mutateTaserAuthAdmin,
     isExtraYear,
@@ -161,9 +162,7 @@ export default function Taser({
     //handlers for signin Authorization inside App (not login App)
     /*********************************************************** */
     let isAuthAdmin = authAdmin.connected.connected
-    const [buttonConnectName, setButtonConnectName] = useState(false)
-    const [displayConnectInfo, setDisplayConnectInfo] = useState(isAuthAdmin ? 'displayBlock' : 'displayNone')
-    //const [userAuthId, setUserAuthId] = useState()
+    
     console.log('userAuthId: ' + userAuthId)
     const connected = {
         "connected": true,
@@ -182,6 +181,7 @@ export default function Taser({
     const handleSubmit = async ({ ...args }) => {
         const { taserUsers, loginEntry, isAuthAdmin } = args
         const userId = taserUsers.filter(user => user.name === loginEntry)[0] && taserUsers.filter(user => user.name === loginEntry)[0].id ? taserUsers.filter(user => user.name === loginEntry)[0].id : false
+        const userName = taserUsers.filter(user => user.name === loginEntry)[0] && taserUsers.filter(user => user.name === loginEntry)[0].id ? taserUsers.filter(user => user.name === loginEntry)[0].name : false
         if (buttonConnectName === false) {
             switch (loginEntry) {
                 case accessAdmin:
@@ -196,7 +196,7 @@ export default function Taser({
                     isAuthAdmin && (alert("Administrateur connecté : connexion impossible"))
                     break;
                 default:
-                    userId && !isAuthAdmin && (setUserAuthId(userId))
+                    userId && !isAuthAdmin && (setUserAuthId(userName))
                     userId && !isAuthAdmin && (setButtonConnectName(true))
                     userId && isAuthAdmin && (alert("Administrateur connecté : connexion impossible"))
             }
@@ -231,12 +231,6 @@ export default function Taser({
         return (
 
             <div>
-                <div className={"row"}>
-                    <SignInUsers className={''}
-                        handleSubmit={(loginEntry) => handleSubmit({ taserUsers, loginEntry, isAuthAdmin })}
-                        handleSave={() => handleSave({ actionDays })}
-                        buttonConnectName={buttonConnectName} displayConnectInfo={displayConnectInfo} />
-                </div>
                 <div className={"row"}><h5>{name}</h5> </div>
                 {
                     [...Array(parseInt(numberOfTasers))].map((n, i) => {
@@ -277,7 +271,13 @@ export default function Taser({
                     }
 
                     )}
-
+                <div className={"row"}>
+                    <SignInUsers className={''}
+                        handleSubmit={(loginEntry) => handleSubmit({ taserUsers, loginEntry, isAuthAdmin })}
+                        handleSave={() => handleSave({ actionDays })}
+                        buttonConnectName={buttonConnectName} displayConnectInfo={displayConnectInfo} userAuthId={userAuthId}/>
+                </div>
+                
             </div>
         )
     }

@@ -24,7 +24,7 @@ let dayDate = moment().format('YYYY-MM-DD')
 /************************************************ */
 
 
-const TaserUi = ({ className, taserId, user, authAdmin, dispatchAuthAdmin, userAuthId, setUserAuthId }) => {
+const TaserUi = ({ className, taserId, user, authAdmin, dispatchAuthAdmin, userAuthId, setUserAuthId,buttonConnectName, setButtonConnectName, displayConnectInfo, setDisplayConnectInfo }) => {
     const [selectedDay, setSelectedDay] = useState(undefined)
     const currentYear = moment().year()
     const nextYear = moment().add(1, 'year').year()
@@ -118,6 +118,10 @@ const TaserUi = ({ className, taserId, user, authAdmin, dispatchAuthAdmin, userA
                     authAdmin={authAdmin}
                     userAuthId={userAuthId}
                     setUserAuthId={setUserAuthId}
+                    buttonConnectName={buttonConnectName}
+                    setButtonConnectName={setButtonConnectName}
+                    displayConnectInfo={displayConnectInfo}
+                    setDisplayConnectInfo={setDisplayConnectInfo}
                     mutateTaserAuthAdmin={mutateTaserAuthAdmin}
                     yearDays={yearDays}
                     yearDaysPrev={yearDaysPrev}
