@@ -16,13 +16,13 @@ import * as api_root_desideratas from "../../api/desideratas"
 import * as api_root_days from "../../api/days"
 import * as actions from '../TaserInfo/Reducer/actions'
 
+import * as api_root_users_django from "../../api/api-django/users"
 
 //dayDate init with daypicker
 /************************************************ */
 //let dayDate = '2020-06-03'
 let dayDate = moment().format('YYYY-MM-DD')
 /************************************************ */
-
 
 const TaserUi = ({ className, taserId, user, authAdmin, dispatchAuthAdmin, userAuthId, setUserAuthId,buttonConnectName, setButtonConnectName, displayConnectInfo, setDisplayConnectInfo }) => {
     const [selectedDay, setSelectedDay] = useState(undefined)
@@ -63,9 +63,15 @@ const TaserUi = ({ className, taserId, user, authAdmin, dispatchAuthAdmin, userA
     const { data: taserVacations, error: errorVacations } = useSWR([taserId, "vacations"], api_root_vacations.getVacations)
     const { data: taserDesideratas, error: errorDesideratas } = useSWR([taserId, "desideratas"], api_root_desideratas.getDesideratas)
 
+/**test django */
+/*const { data: taserUserDjango, error: errorUsersDjango } = useSWR([taserId, "users2Django"], api_root_users_django.getUsers)
+console.log(taserUserDjango)
+console.log(taserUsers)*/
+
     /********Connected Admin fecth init********** */
 
     const { data: taserAuthAdmin, mutate: mutateTaserAuthAdmin } = useSWR([taserId, "authAdmin"], api_root_connect.getConnected)
+
     const [firstInit, setFirstInit] = useState(false)
     useEffect(() => {
         if (!firstInit && taserAuthAdmin) {
@@ -73,6 +79,7 @@ const TaserUi = ({ className, taserId, user, authAdmin, dispatchAuthAdmin, userA
             setFirstInit(true)
         }
     }, [taserAuthAdmin, firstInit, setFirstInit, dispatchAuthAdmin])
+
     if (errorInfo) return <p>Error loading data! 1</p>
     else if (errorUsers) return <p>Error loading data! 2</p>
     else if (errorVacations) return <p>Error loading data! 3</p>
